@@ -554,7 +554,7 @@ body {
 
 /* Backgrounds */
 .bg-1 {
-  background-image: url("../images/floor3.jpeg");
+  background-image: url("../images/floor3.jpg");
 }
 
 /* Header */
@@ -946,7 +946,7 @@ body {
 .project-container {
   max-width: 240px;
   border-radius: 5px;
-  background-color: #5cb85c;
+  /* background-color: #5cb85c; */
   color: #fff;
   cursor: pointer;
   box-shadow: 2px 2px 5px 3px #5cb85c27;
@@ -968,6 +968,7 @@ body {
   margin: 1.2rem auto;
   font-size: 1.2rem;
   font-weight: 600;
+  color: #444;
 }
 .project_details {
   text-align: center;
@@ -1389,6 +1390,63 @@ Change widths as necessary
   font-size: 150%;
   font-family: "Amaranth";
   color: white;
+}
+
+/* Book */
+.book-section {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-gap: 1.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.book-container {
+  max-width: 240px;
+  border-radius: 5px;
+  /* background-color: #5cb85c; */
+  color: #fff;
+  box-shadow: 2px 2px 5px 3px #5cb85c27;
+}
+
+.book-img-container {
+  width: 100%;
+  border-radius: 5px 5px 0px 0px;
+}
+
+.book-img-container img {
+  width: 100%;
+  border-radius: 5px 5px 0px 0px;
+  margin-bottom: 0px;
+}
+
+.book-title {
+  text-align: center;
+  margin: 1.2rem auto;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #444;
+}
+.book_details {
+  text-align: center;
+  display: block;
+  font-size: 2em;
+  margin: 0;
+  font-weight: bold;
+}
+input[type="text"],
+.book_description,
+input[type="url"] {
+  width: 85%;
+  padding: 12px 20px;
+  margin: 5px 26px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+.book_description {
+  max-width: 85%;
 }
 
 td {

@@ -66,7 +66,7 @@
             <a href="#about">
               <i class="icon-user"></i>
               <span>
-                i am ...
+                I am ...
               </span>
             </a>
           </li>
@@ -75,7 +75,7 @@
             <a href="#resume">
               <i class="icon-file-text"></i>
               <span>
-                i have ...
+                I have ...
               </span>
             </a>
           </li>
@@ -84,7 +84,16 @@
             <a href="#portfolio">
               <i class="icon-heart"></i>
               <span>
-                i did ...
+                I did ...
+              </span>
+            </a>
+          </li>
+
+          <li class='tab'>
+            <a href="#books">
+              <i class="icon-heart"></i>
+              <span>
+                I read ...
               </span>
             </a>
           </li>
@@ -93,7 +102,7 @@
             <a href="#contact">
               <i class="icon-envelope"></i>
               <span>
-                i am in ...
+                I am in ...
               </span>
             </a>
           </li>
@@ -120,12 +129,12 @@
                     Node.JS developer
                   </h4>
                   <p style="text-align: justify;">
-                    In short i am a fan of tech, I love to bring my eagerness to learn to bear, 
-                    on my daily life. I love to hands on with intellectual challenges and change my mindset.
+                    In short i am a fan of tech, useful and concise on my daily life. I count myself as a Prosumer.
+                    I love to hands on with intellectual challenges and change my mindset. Learning motivate me.
                     I am renowned to concentration and former to hard-worker. I like to be useful rather 
                     an employee with high salary.
                     <br />
-                    <blockquote>Everything rises & falls on leadership. John C. Maxwell</blockquote>
+                    <blockquote>Everything rises & falls on leadership. <b>John C. Maxwell</b></blockquote>
                   </p>
                 </div>
               </div>
@@ -413,6 +422,12 @@
                   </div>
                   <p class="project-title">Blog</p>
                 </div>
+                <div class="project-container">
+                  <div class="project-img-container" onclick="document.getElementById('project-boilerplate-modal-wrapper').style.display='block'">
+                    <img src="./images/project-boilerplate.jpeg" alt="Blog">
+                  </div>
+                  <p class="project-title">Project Boilerplate</p>
+                </div>
               </div>
               <div id="matchmaking-modal-wrapper" class="modal">
                 <div class="modal-content animate">
@@ -423,7 +438,7 @@
                   </div>
                   <div class="container">
                     <input type="text" value="Matchmaking system" readonly />
-                    <textarea class="project_description" rows="7" style="text-align: justify; resize: none;" readonly>I used to design a matchmaking system to pass the right contractor to the right lead based on some dynamic & static parameters. One of them was location, I implement a way to detect when the specified contractor location is within the lead's project area.</textarea>
+                    <textarea class="project_description" rows="7" style="text-align: justify; resize: none;" readonly>I develop and maintain a matchmaking system to pass the right Contractor to the right Lead based on some dynamic & static parameters. The Contractor's and Lead's location is One of those parameters, Based on their location system decides How much score the Contractor will receive.</textarea>
                     <input type="url" value="Project rights reserved by Salam Sakhteman" readonly>
                     <input type="text" value="MongoDB & ExpressJS" readonly>
                   </div>
@@ -484,14 +499,56 @@
                   <div class="container">
                     <input type="text" value="Blog" readonly />
                     <textarea class="project_description" rows="4" style="text-align: justify; resize: none;" readonly>I develop a simple NodeJS weblog just for learning purpose. You can create post, category, comment, and tag. In it you can define multiple admins.</textarea>
-                    <input type="url" value="https://github.com/nodejsdeveloperskh/node.js-weblog" readonly>
+                    <a class="project_description" href="https://github.com/nodejsdeveloperskh/node.js-weblog" target="_blank">GitHub repository</a>
                     <input type="text" value="PostgreSQL, ExpressJS, EJS, Bootstrap, HTML, CSS" readonly>
+                  </div>
+                </div>
+              </div>
+              <div id="project-boilerplate-modal-wrapper" class="modal">
+                <div class="modal-content animate">
+                  <div class="imgcontainer">
+                    <span onclick="document.getElementById('project-boilerplate-modal-wrapper').style.display='none'" class="close" title="Close PopUp">&times;</span>
+                    <img src="images/project-boilerplate.jpeg" alt="Blog" class="avatar">
+                    <h1 class="project_details" style="text-align:center">Project Details</h1>
+                  </div>
+                  <div class="container">
+                    <input type="text" value="Project Boilerplate" readonly />
+                    <textarea class="project_description" rows="4" style="text-align: justify; resize: none;" readonly>I actively develope and maintain my own project boilerplate, I am developing NestJS, ExpressJS and routing-controllers boilerplates with MongoDB and PostgreSQL.</textarea>
+                    <a class="project_description" href="https://github.com/nodejsdeveloperskh/project-schema" target="_blank">GitHub repository</a>
+                    <input type="text" value="ExpressJS, NestJS, routing-controllers, PostgreSQL, MongoDB" readonly>
                   </div>
                 </div>
               </div>
             </section>
           </div>
           <!-- End Projects tab -->
+          <!-- ----------------------------------------------------------------------------------- -->
+          <!-- ----------------------------------------------------------------------------------- -->
+          <!-- Books Tab Data -->
+          <div id="books">
+            <section class="clearfix">
+              <div class="book-section">
+                <div class="book-container">
+                  <div class="book-img-container">
+                    <img src="./images/zero-marginal-cost-society.jpg" alt="Zero Marginal Cost Society">
+                  </div>
+                  <p class="book-title">Zero Marginal Cost Society</p>
+                </div>
+                <div class="book-container">
+                  <div class="book-img-container">
+                    <img src="./images/originals-adam-grant.jpg" alt="Originals - Adam Grant">
+                  </div>
+                  <p class="book-title">Originals</p>
+                </div>
+                <div class="book-container">
+                  <div class="book-img-container">
+                    <img src="./images/no-limit.jpg" alt="No Limits: Blow the CAP Off Your Capacity">
+                  </div>
+                  <p class="book-title">No Limits: Blow the CAP Off Your Capacity</p>
+                </div>
+            </section>
+          </div>
+          <!-- End Books tab -->
           <!-- ----------------------------------------------------------------------------------- -->
           <!-- Contact Tab Data -->
           <div id="contact">
