@@ -2,31 +2,31 @@
     {
         "name": "Zero Marginal Cost Society",
         "author": "Jeremy Rifkin",
-        "imageSrc": "zero-marginal-cost-society.jpg",
+        "imageSrc": "./zero-marginal-cost-society.jpg",
         "link": "https://www.thezeromarginalcostsociety.com/"
     },
     {
         "name": "The Pragmatic Programmer",
         "author": "Andy Hunt and Dave Thomas",
-        "imageSrc": "tpp.jpg",
+        "imageSrc": "./tpp.jpg",
         "link": "https://www.amazon.com/Pragmatic-Programmer-journey-mastery-Anniversary-ebook/dp/B07VRS84D1"
     },
     {
         "name": "Node.JS Design Patterns",
         "author": "Luciano Mammino and Mario Casciaro",
-        "imageSrc": "ndp.jpeg",
+        "imageSrc": "./ndp.jpeg",
         "link": "https://www.nodejsdesignpatterns.com/"
     },
     {
         "name": "Originals",
         "author": "Adam Grant",
-        "imageSrc": "originals-adam-grant.jpg",
+        "imageSrc": "./originals-adam-grant.jpg",
         "link": "https://adamgrant.net/book/originals/"
     },
     {
         "name": "No Limits: Blow the CAP Off Your Capacity",
         "author": "John C. Maxwell",
-        "imageSrc": "no-limit.jpg",
+        "imageSrc": "./no-limit.jpg",
         "link": "https://www.amazon.com/No-Limits-Blow-Your-Capacity/dp/1455548286"
     }
 ]
