@@ -8,8 +8,8 @@ env:
   NODE_VERSION: 19.7.0
 
 jobs:
-  buildGhPages:
-    runs-on: ubuntu-latest
+  build-gh-pages:
+    runs-on: ubuntu-22.04
     permissions:
       contents: write
     concurrency:
