@@ -1,6 +1,7 @@
 import { Avatar, Box, Grid, Typography } from '@mui/material';
 import Typed from 'react-typed';
 import avatarSrc from '../assets/me.jpg';
+import { MyParticles } from './MyParticles';
 export function Home() {
     return (
         <>
@@ -50,7 +51,7 @@ export function Home() {
                     Maxwell
                 </Typography>
             </Box>
-            {/* <MyParticles /> */}
+            <MyParticles />
         </>
     );
 }
