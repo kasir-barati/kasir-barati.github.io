@@ -1,0 +1,124 @@
+[
+    {
+        "year": "Aug 2019 - Aug 2020",
+        "position": "Web Developer",
+        "company": "None",
+        "description": [
+            "Designed and analyzed a Docker web app using ExpressJS, PostgreSQL, Bootstrap 4, HTML/CSS, and Handlebars, showcasing my skills in web development and design.",
+            "Demonstrated proficiency in Docker and its automation capabilities, allowing for task automation and optimized workflow.",
+            "Collaborated effectively with team members to identify and solve problems."
+        ],
+        "skills": [
+            "Node.js",
+            "Docker",
+            "PostgreSQL",
+            "Git",
+            "Nginx",
+            "JavaScript",
+            "Systems Analysis",
+            "Database Analysis",
+            "Leadership"
+        ]
+    },
+    {
+        "year": "Sep 2020 - Dec 2020",
+        "position": "Web Developer",
+        "company": "Andishe Gostar Rahayaft Raha",
+        "description": [
+            "I worked with PostgreSQL, ExpressJS, JavaScript, and Gitlab CI as a backend developer, demonstrating my proficiency in these technologies.",
+            "Successfully implemented the Authentication module for an ECommerce website, improving the security of the website.",
+            "Engaged in system analysis and design, contributing to the development of the software.",
+            "Conducted a Proof of Concept for full-text search in PostgreSQL, showcasing my problem-solving skills and ability to identify and evaluate potential solutions."
+        ],
+        "skills": [
+            "Node.js",
+            "Docker",
+            "PostgreSQL",
+            "Git",
+            "JavaScript",
+            "Systems Analysis",
+            "Database Analysis"
+        ]
+    },
+    {
+        "year": "Jan 2021 - Mar 2022",
+        "position": "Backend Developer",
+        "company": "Salamsakhteman",
+        "description": [
+            "Utilized MongoDB, NestJS, ExpressJS, Docker, Nginx, and Gitlab CI as a skilled Backend Engineer.",
+            "Developed a matchmaking system, which relieved the sales team of a tedious task, resulting in increased productivity.",
+            "Significantly improved code quality and readability by refactoring the entire backend application from JavaScript to TypeScript. Contributed approximately 40% of the overall refactor effort."
+        ],
+        "skills": [
+            "Node.js",
+            "Docker",
+            "MongoDB",
+            "CI/CD",
+            "Git",
+            "JavaScript",
+            "Systems Analysis",
+            "Database Analysis",
+            "Data Migration",
+            "Typescript",
+            "Scrum"
+        ]
+    },
+    {
+        "year": "Mar 2022, Aug 2022",
+        "position": "Fullstack Engineer & DevOps Engineer",
+        "company": "Spad.co",
+        "description": [
+            "Utilized NestJS, PostgreSQL, Nginx, and Docker in my role as a backend developer, showcasing my proficiency in these technologies.",
+            "Successfully configured an Ubuntu server and Nginx, enabling smooth deployment and maintenance of web applications.",
+            "Developed a custom module that acted as an API wrapper for Partocrs, making it easier for us to work with Partocrs.",
+            "Utilized Ansible to configure servers and improving overall efficiency.",
+            "Developed a ticketing system that improved communication and workflow between customers and customer management department, resulting in a more productive and organized work environment.",
+            "Designed and prototyped a web application for apartment booking, showcasing exceptional problem-solving skills and demonstrating expertise in software engineering."
+        ],
+        "skills": [
+            "Node.js",
+            "NestJS",
+            "Docker",
+            "PostgreSQL",
+            "MongoDB",
+            "CI/CD",
+            "Git",
+            "Nginx",
+            "JavaScript",
+            "Systems Analysis",
+            "Database Analysis",
+            "Typescript",
+            "Ansible"
+        ]
+    },
+    {
+        "year": "Dec 2022 - Mar 2023",
+        "position": "Fullstack Engineer",
+        "company": "ClimatePartner",
+        "description": [
+            "I worked with NestJS, React, Typescript, PostgreSQL, MongoDB, Keycloak, Terraform, and Docker.",
+            "As the security champion for my team, I took ownership of ensuring the safety of our software.",
+            "I demonstrated a proactive approach to taking responsibility and was always willing to go above and beyond to ensure project success.",
+            "I successfully implemented Test-Driven Development (TDD) in both frontend and backend.",
+            "I regularly shared my in-depth knowledge of MongoDB with my team, providing valuable insights and helping to improve their understanding and use of the database technology."
+        ],
+        "skills": [
+            "Node.js",
+            "NestJS",
+            "ReactJS",
+            "MongoDB",
+            "PostgreSQL",
+            "TDD - Test Driven Design",
+            "CI/CD",
+            "Keycloak",
+            "Git",
+            "Trunk Base Development",
+            "Terraform",
+            "Material UI",
+            "AWS",
+            "JavaScript",
+            "Typescript",
+            "Scrum"
+        ]
+    }
+]
