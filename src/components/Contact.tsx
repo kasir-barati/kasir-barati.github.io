@@ -1,6 +1,7 @@
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import RedditIcon from '@mui/icons-material/Reddit';
 import { Box, Button, Stack } from '@mui/material';
 
 export function Contact() {
@@ -40,6 +41,15 @@ export function Contact() {
                     target="_blank"
                 >
                     <AlternateEmailIcon />
+                </Button>
+                <Button
+                    size="large"
+                    variant="contained"
+                    color="success"
+                    href="https://www.reddit.com/user/m-jawad-b-khorasani"
+                    target="_blank"
+                >
+                    <RedditIcon />
                 </Button>
             </Stack>
         </Box>

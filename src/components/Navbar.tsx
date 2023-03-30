@@ -3,6 +3,7 @@ import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from '@mui/icons-material/Menu';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 import {
     AppBar,
     Avatar,
@@ -20,6 +21,7 @@ import {
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import avatarSrc from '../assets/me.jpg';
+import { Book } from './Book';
 import { Contact } from './Contact';
 import { Home } from './Home';
 import { Portfolio } from './Portfolio';
@@ -49,6 +51,12 @@ export const navBarItems = [
         text: 'Contact',
         href: '/contact',
         component: <Contact />,
+    },
+    {
+        icon: <MenuBookIcon />,
+        text: 'Book',
+        href: '/book',
+        component: <Book />,
     },
 ];
 
