@@ -1,0 +1,16 @@
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      time: "18:00"
+      # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+      timezone: "Asia/Tokyo"
+    open-pull-request-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-type: ["version-update:semver-major"]
