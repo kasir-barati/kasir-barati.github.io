@@ -8,11 +8,13 @@ import {
     ListItemAvatar,
     ListItemText,
     Paper,
+    Rating,
     SxProps,
     Theme,
     Typography,
     useTheme,
 } from '@mui/material';
+import languages from '../data/languages.json';
 import skills from '../data/skills.json';
 import workExperiences from '../data/work-experiences.json';
 
@@ -148,6 +150,34 @@ export function Resume() {
             textAlign="center"
             bgcolor="rgba(34, 51, 51, 0.8)"
         >
+            <Typography variant="h4" sx={headSx}>
+                Languages
+            </Typography>
+            <Grid container spacing={2} justifyContent="center">
+                {languages.map((language) => (
+                    <Grid
+                        item
+                        bgcolor="white"
+                        borderRadius={7}
+                        padding={3}
+                        marginX={1}
+                    >
+                        <Typography variant="body1">
+                            {language.name}
+                        </Typography>
+                        <Rating
+                            name={language.name}
+                            value={language.level.number}
+                            precision={0.5}
+                            getLabelText={() => language.level.label}
+                            readOnly={true}
+                        />
+                        <Typography variant="body1">
+                            {language.level.label}
+                        </Typography>
+                    </Grid>
+                ))}
+            </Grid>
             <Typography variant="h4" sx={headSx}>
                 Skills
             </Typography>

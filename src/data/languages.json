@@ -1,0 +1,23 @@
+[
+    {
+        "name": "English",
+        "level": {
+            "label": "Professional working proficiency",
+            "number": 3.5
+        }
+    },
+    {
+        "name": "German",
+        "level": {
+            "label": "Elementary proficiency",
+            "number": 1
+        }
+    },
+    {
+        "name": "Persian",
+        "level": {
+            "label": "Native or bilingual proficiency",
+            "number": 5
+        }
+    }
+]
