@@ -157,7 +157,11 @@ export function Resume() {
                 {languages.map((language) => (
                     <Grid
                         item
-                        bgcolor="white"
+                        bgcolor={
+                            theme.palette.mode === 'dark'
+                                ? '#222'
+                                : '#fff'
+                        }
                         borderRadius={7}
                         padding={3}
                         margin={1}
