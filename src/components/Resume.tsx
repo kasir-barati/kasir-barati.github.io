@@ -160,7 +160,7 @@ export function Resume() {
                         bgcolor="white"
                         borderRadius={7}
                         padding={3}
-                        marginX={1}
+                        margin={1}
                     >
                         <Typography variant="body1">
                             {language.name}
