@@ -7,14 +7,14 @@ import {
     MenuBook as MenuBookIcon,
 } from '@mui/icons-material';
 import { useMediaQuery } from '@mui/material';
+import { Book } from '../pages/Book.page';
+import { Contact } from '../pages/Contact.page';
+import { Home } from '../pages/Home.page';
+import { Portfolio } from '../pages/Portfolio.page';
+import { Resume } from '../pages/Resume.page';
 import { PostList } from '../pages/posts/PostList.page';
-import { Book } from './Book';
-import { Contact } from './Contact';
 import { DesktopNavbar } from './DesktopNavbar.component';
-import { Home } from './Home';
 import { MobileNavbar } from './MobileNavbar.component';
-import { Portfolio } from './Portfolio';
-import { Resume } from './Resume';
 
 export const navBarItems = [
     {

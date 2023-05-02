@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks/redux.hook';
 import { toggleTheme } from '../redux/theme.slice';
 import { Link } from './Link.component';
-import { navBarItems } from './Navbar';
+import { navBarItems } from './Navbar.component';
 
 export function DesktopNavbar() {
     const [searchText, setSearchText] = useState<string>();

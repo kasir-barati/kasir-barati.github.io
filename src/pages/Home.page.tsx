@@ -1,7 +1,7 @@
 import { Avatar, Box, Grid, Typography } from '@mui/material';
 import Typed from 'react-typed';
 import avatarSrc from '../assets/me.jpg';
-import { MyParticles } from './MyParticles';
+import { MyParticles } from '../components/MyParticles.component';
 export function Home() {
     return (
         <>

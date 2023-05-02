@@ -23,7 +23,7 @@ import avatarSrc from '../assets/me.jpg';
 import { useAppDispatch, useAppSelector } from '../hooks/redux.hook';
 import { toggleTheme } from '../redux/theme.slice';
 import { Link } from './Link.component';
-import { navBarItems } from './Navbar';
+import { navBarItems } from './Navbar.component';
 
 export function MobileNavbar() {
     const [isMobileNavBarOpen, setIsMobileNavBarOpen] =
