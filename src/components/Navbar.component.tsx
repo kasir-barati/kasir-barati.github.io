@@ -11,8 +11,8 @@ import { Book } from '../pages/Book.page';
 import { Contact } from '../pages/Contact.page';
 import { Home } from '../pages/Home.page';
 import { Portfolio } from '../pages/Portfolio.page';
+import { PostList } from '../pages/PostList.page';
 import { Resume } from '../pages/Resume.page';
-import { PostList } from '../pages/posts/PostList.page';
 import { DesktopNavbar } from './DesktopNavbar.component';
 import { MobileNavbar } from './MobileNavbar.component';
 
@@ -49,7 +49,7 @@ export const navBarItems = [
     },
     {
         icon: <FormatBoldIcon />,
-        text: 'My Blog',
+        text: 'My Posts',
         href: '/posts',
         component: <PostList />,
     },

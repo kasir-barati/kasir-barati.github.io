@@ -145,15 +145,15 @@ export function DesktopNavbar() {
                             (navBarItem) =>
                                 navBarItem.href !== '/posts',
                         )
-                        .map((navBarItem, index) => {
+                        .map((navBarItem) => {
                             return (
                                 <Tooltip
                                     title={navBarItem.text}
                                     arrow
+                                    key={navBarItem.href}
                                 >
                                     <IconButton
                                         size="large"
-                                        key={index}
                                         onClick={() =>
                                             handleNavigateToPage(
                                                 navBarItem.href,

@@ -1,0 +1,22 @@
+[
+    {
+        "title": "Write test for nanostores",
+        "description": "I wrote a post about a tiny lovely react state management tool in React because I really felt lack of any kind of tut about nanostores and how we should use it or write test for it. BTW I really appreciate you if you also write something about it after a while that you used it.",
+        "href": "https://www.linkedin.com/pulse/write-test-nanostores-kasir-barati/"
+    },
+    {
+        "title": "MongoDB Schema Design",
+        "description": "I love MongoDB and I cannot help but to share what I've learned about how we design a MongoDB database schema. So here we go. Please do not forget to share it with your friends!",
+        "href": "https://www.linkedin.com/pulse/mongodb-schema-design-kasir-barati/"
+    },
+    {
+        "title": "Teamwork skill as a developer",
+        "description": "Kinda I felt always that even though I am a software engineer and I have to translate business logic to 0 and 1 but I need to communicate and connect to humans more than computers. So basically I organized my though and wrote something on LinkedIn. But of course it is not finished, it won't be :)",
+        "href": "https://www.linkedin.com/pulse/teamwork-skill-developer-kasir-barati/"
+    },
+    {
+        "title": "NestJS + PassportJS in depth not shallow",
+        "description": "I truly admire the beauty of Node.js ecosystem but sometimes I get a heart attack when I realize that OK there is not enough resource about a topic and then after recovery I wrote something about it. Here we go, another post from me to delve into NestJS and Passport and how they work.",
+        "href": "https://www.linkedin.com/pulse/nestjs-passportjs-depth-shallow-kasir-barati/"
+    }
+]

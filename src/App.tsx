@@ -1,13 +1,14 @@
 import { CssBaseline } from '@mui/material';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import { Navbar, navBarItems } from './components/Navbar.component';
+import { Notification } from './components/Notification.component';
 import { ThemeProvider } from './providers/Theme.provider';
 
 function App() {
     return (
         <ThemeProvider>
-            <BrowserRouter>
+            <HashRouter>
                 <CssBaseline />
                 <Navbar />
                 <Routes>
@@ -19,7 +20,8 @@ function App() {
                         />
                     ))}
                 </Routes>
-            </BrowserRouter>
+                <Notification />
+            </HashRouter>
         </ThemeProvider>
     );
 }

@@ -26,6 +26,7 @@ export function Portfolio() {
                                 maxWidth: 345,
                                 margin: '3rem auto',
                             }}
+                            key={project.imageSrc}
                         >
                             <CardActionArea>
                                 <CardMedia
@@ -57,6 +58,7 @@ export function Portfolio() {
                                         variant="outlined"
                                         target="_blank"
                                         href={link.address}
+                                        key={link.address}
                                     >
                                         {link.buttonName}
                                     </Button>
