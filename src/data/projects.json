@@ -22,5 +22,29 @@
                 "address": "https://github.com/kasir-barati/simple-gui-for-docker-swarm"
             }
         ]
+    },
+    {
+        "name": "smart-novel",
+        "imageSrc": "./black.jpg",
+        "alt": "Smart-Novel",
+        "description": "A novel reading application",
+        "links": [
+            {
+                "buttonName": "GitHub",
+                "address": "https://github.com/kasir-barati/smart-novel"
+            }
+        ]
+    },
+    {
+        "name": "Beatrice",
+        "imageSrc": "./white.jpg",
+        "alt": "Beatrice, LLM-powered AI assistant for smart-novel",
+        "description": "An AI assistant for the smart-novel application",
+        "links": [
+            {
+                "buttonName": "GitHub",
+                "address": "https://github.com/kasir-barati/smart-novel-beatrice"
+            }
+        ]
     }
 ]

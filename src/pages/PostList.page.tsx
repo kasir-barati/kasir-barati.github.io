@@ -6,7 +6,7 @@ import {
     CardContent,
     CardMedia,
     Grid,
-    Typography,
+    Typography
 } from '@mui/material';
 import posts from '../data/posts.json';
 
@@ -15,12 +15,12 @@ export function PostList() {
         <Box padding={2}>
             <Grid container justifyItems="center" spacing={2}>
                 {posts.map((post) => (
-                    <Grid item xs={12} md={4}>
+                    <Grid key={post.id} item xs={12} md={4}>
                         <Card>
                             <CardMedia
                                 component="img"
                                 height={130}
-                                image={'./black.jpg'}
+                                image={post.imageSrc}
                                 alt={''}
                             />
                             <CardContent>
@@ -29,9 +29,23 @@ export function PostList() {
                                 </Typography>
                                 <Typography
                                     variant="body2"
-                                    color="secondary.main"
+                                    color="textSecondary"
                                 >
                                     {post.description}
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    align="center"
+                                    color="white"
+                                >
+                                    {post.tags.map((tag, index) => (
+                                        <>
+                                            {tag}{' '}
+                                            {index !==
+                                                post.tags.length -
+                                                    1 && ' . '}
+                                        </>
+                                    ))}
                                 </Typography>
                             </CardContent>
                             <CardActions>

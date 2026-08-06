@@ -1,22 +1,68 @@
 [
     {
+        "id": "6388e57e-6b2d-483b-adb4-f88107585536",
         "title": "Write test for nanostores",
         "description": "I wrote a post about a tiny lovely react state management tool in React because I really felt lack of any kind of tut about nanostores and how we should use it or write test for it. BTW I really appreciate you if you also write something about it after a while that you used it.",
-        "href": "https://www.linkedin.com/pulse/write-test-nanostores-kasir-barati/"
+        "href": "https://www.linkedin.com/pulse/write-test-nanostores-kasir-barati/",
+        "imageSrc": "./white.jpg",
+        "tags": ["ReactJS", "State Management", "TDD", "nanostores"]
     },
     {
+        "id": "6388e57e-6b2d-483b-adb4-f88107585537",
         "title": "MongoDB Schema Design",
         "description": "I love MongoDB and I cannot help but to share what I've learned about how we design a MongoDB database schema. So here we go. Please do not forget to share it with your friends!",
-        "href": "https://www.linkedin.com/pulse/mongodb-schema-design-kasir-barati/"
+        "href": "https://www.linkedin.com/pulse/mongodb-schema-design-kasir-barati/",
+        "imageSrc": "./black.jpg",
+        "tags": [
+            "NoSQL",
+            "MongoDB",
+            "System Design",
+            "Database Design"
+        ]
     },
     {
+        "id": "6388e57e-6b2d-483b-adb4-f88107585538",
         "title": "Teamwork skill as a developer",
-        "description": "Kinda I felt always that even though I am a software engineer and I have to translate business logic to 0 and 1 but I need to communicate and connect to humans more than computers. So basically I organized my though and wrote something on LinkedIn. But of course it is not finished, it won't be :)",
-        "href": "https://www.linkedin.com/pulse/teamwork-skill-developer-kasir-barati/"
+        "description": "I felt always that even though I am a software engineer and I have to translate business logic to 0 and 1 but I need to communicate and connect to humans more than computers. So basically I organized my though and wrote something on LinkedIn. But of course it ain't finished, it won't be ;)",
+        "href": "https://www.linkedin.com/pulse/teamwork-skill-developer-kasir-barati/",
+        "imageSrc": "./white.jpg",
+        "tags": [
+            "Teamwork",
+            "Communication",
+            "Collaboration",
+            "Soft Skills"
+        ]
     },
     {
+        "id": "6388e57e-6b2d-483b-adb4-f88107585539",
         "title": "NestJS + PassportJS in depth not shallow",
         "description": "I truly admire the beauty of Node.js ecosystem but sometimes I get a heart attack when I realize that OK there is not enough resource about a topic and then after recovery I wrote something about it. Here we go, another post from me to delve into NestJS and Passport and how they work.",
-        "href": "https://www.linkedin.com/pulse/nestjs-passportjs-depth-shallow-kasir-barati/"
+        "href": "https://www.linkedin.com/pulse/nestjs-passportjs-depth-shallow-kasir-barati/",
+        "imageSrc": "./black.jpg",
+        "tags": [
+            "Node.js",
+            "NestJS",
+            "PassportJS",
+            "TS/JS",
+            "Authentication",
+            "Authorization",
+            "JWT"
+        ]
+    },
+    {
+        "id": "6388e57e-6b2d-483b-adb4-f88107585540",
+        "title": "Slack + n8n + AI - Event-Driven Integration",
+        "description": "End-to-end integration combining Slack's Events API, n8n orchestration, and LangChain-powered AI agents. This architecture demonstrates how to build intelligent chat assistants for Slack using OpenAI models. You can also learn more about the underlying patterns and architecture in this post.",
+        "href": "./slack-n8n.html",
+        "imageSrc": "./white.jpg",
+        "tags": [
+            "n8n",
+            "Slack",
+            "OpenAI",
+            "Event-Driven Architecture",
+            "Webhooks",
+            "Orchestration",
+            "Choreography"
+        ]
     }
 ]

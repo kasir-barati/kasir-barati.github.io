@@ -2,11 +2,11 @@
     {
         "year": "Aug 2019 - Aug 2020",
         "position": "Web Developer",
-        "company": "None",
+        "company": "ArianaCloud",
         "description": [
-            "Designed and analyzed a Docker web app using ExpressJS, PostgreSQL, Bootstrap 4, HTML/CSS, and Handlebars, showcasing my skills in web development and design.",
-            "Demonstrated proficiency in Docker and its automation capabilities, allowing for task automation and optimized workflow.",
-            "Collaborated effectively with team members to identify and solve problems."
+            "Designed, analyzed, and eventually developed the MVP web application for a Platform as a Service provider.",
+            "Collaborated closely with our SysAdmin to utilize Docker and its automation capabilities, enabling us to grasp the requirements and having a clearer picture of our needs.",
+            "Collaborated and on-boarded our new frontend developer to enhance UI's beauty."
         ],
         "skills": [
             "Node.js",
@@ -25,10 +25,10 @@
         "position": "Web Developer",
         "company": "Andishe Gostar Rahayaft Raha",
         "description": [
-            "I worked with PostgreSQL, ExpressJS, JavaScript, and Gitlab CI as a backend developer, demonstrating my proficiency in these technologies.",
-            "Successfully implemented the Authentication module for an ECommerce website, improving the security of the website.",
+            "Implemented the Auth module for an ECommerce web app with the help of my senior team lead.",
             "Engaged in system analysis and design, contributing to the development of the software.",
-            "Conducted a Proof of Concept for full-text search in PostgreSQL, showcasing my problem-solving skills and ability to identify and evaluate potential solutions."
+            "Conducted a Proof of Concept for full-text search in PostgreSQL, showcasing my problem-solving skills and ability to identify and evaluate potential solutions.",
+            "Close collaboration with other colleagues in order to complete tasks and tickets."
         ],
         "skills": [
             "Node.js",
@@ -45,9 +45,9 @@
         "position": "Backend Developer",
         "company": "Salamsakhteman",
         "description": [
-            "Utilized MongoDB, NestJS, ExpressJS, Docker, Nginx, and Gitlab CI as a skilled Backend Engineer.",
-            "Developed a matchmaking system, which relieved the sales team of a tedious task, resulting in increased productivity.",
-            "Significantly improved code quality and readability by refactoring the entire backend application from JavaScript to TypeScript. Contributed approximately 40% of the overall refactor effort."
+            "Developed a matchmaking system, which relieved the sales team of a tedious task; finding the right cabinetmaker for each customer based on the parameters they had.",
+            "Refactored a large portion of the codebase from JavaScript to TypeScript, contributing approximately 40% of the migration effort.",
+            "Advocated for adopting NestJS, helping modernize the backend stack and improve maintainability."
         ],
         "skills": [
             "Node.js",
@@ -68,12 +68,11 @@
         "position": "Fullstack Engineer & DevOps Engineer",
         "company": "Spad.co",
         "description": [
-            "Utilized NestJS, PostgreSQL, Nginx, and Docker in my role as a backend developer, showcasing my proficiency in these technologies.",
+            "Researched, and learned Ansible in order to configure servers smoothly and automate tedious tasks.",
+            "Developed the backend for a ticketing system and an apartment booking, and then collaborated with frontend engineers to deliver best possible UI/UX.",
             "Successfully configured an Ubuntu server and Nginx, enabling smooth deployment and maintenance of web applications.",
-            "Developed a custom module that acted as an API wrapper for Partocrs, making it easier for us to work with Partocrs.",
-            "Utilized Ansible to configure servers and improving overall efficiency.",
-            "Developed a ticketing system that improved communication and workflow between customers and customer management department, resulting in a more productive and organized work environment.",
-            "Designed and prototyped a web application for apartment booking, showcasing exceptional problem-solving skills and demonstrating expertise in software engineering."
+            "Developed a custom wrapper for Partocrs in NestJS, making it easier for us to work with Partocrs.",
+            "Engaged in technical discussions with my team lead and my peer devs to stay in touch with the new technologies and ways of doing things."
         ],
         "skills": [
             "Node.js",
@@ -96,11 +95,9 @@
         "position": "Fullstack Engineer",
         "company": "ClimatePartner",
         "description": [
-            "I worked with NestJS, React, Typescript, PostgreSQL, MongoDB, Keycloak, Terraform, and Docker.",
             "As the security champion for my team, I took ownership of ensuring the safety of our software.",
-            "I demonstrated a proactive approach to taking responsibility and was always willing to go above and beyond to ensure project success.",
-            "I successfully implemented Test-Driven Development (TDD) in both frontend and backend.",
-            "I regularly shared my in-depth knowledge of MongoDB with my team, providing valuable insights and helping to improve their understanding and use of the database technology."
+            "Collaborated closely with product and engineering teams to quickly gain domain knowledge and contribute effectively to climate-focused software solutions.",
+            "Provided technical guidance on MongoDB data modeling and query optimization, helping improve the team's understanding and usage of the database."
         ],
         "skills": [
             "Node.js",
@@ -108,7 +105,7 @@
             "ReactJS",
             "MongoDB",
             "PostgreSQL",
-            "TDD - Test Driven Design",
+            "TDD",
             "CI/CD",
             "Keycloak",
             "Git",
@@ -119,6 +116,74 @@
             "JavaScript",
             "Typescript",
             "Scrum"
+        ]
+    },
+    {
+        "year": "Jul 2023 - Apr 2024",
+        "position": "Fullstack Developer",
+        "company": "RYTLE",
+        "description": [
+            "Applied Test-Driven Development (TDD) to improve code quality and facilitate predictable deployments.",
+            "Identified and removed duplicated business logic by introducing reusable abstractions and shared interfaces.",
+            "Designed and implemented performant RESTful APIs focusing on scalability, idempotency, and real-world client usage patterns. Advocated for standards-compliant API design by leveraging HTTP semantics and RFC guidelines to improve consistency, reliability, and developer experience."
+        ],
+        "skills": [
+            "Scrum",
+            "Node.js",
+            "Docker",
+            "Microservices",
+            "Typescript",
+            "TDD",
+            "IaC",
+            "CI/CD",
+            "Fullstack Development",
+            "Git",
+            "NestJS",
+            "Figma",
+            "Terraform",
+            "JavaScript",
+            "PostgreSQL",
+            "FusionAuth",
+            "GitFlow",
+            "ReactJS",
+            "NextJS",
+            "Tailwindcss",
+            "Cypress",
+            "Storybook"
+        ]
+    },
+    {
+        "year": "Jan 2025 - Aug 2026",
+        "position": "Cloud Backend Engineer",
+        "company": "Korial",
+        "description": [
+            "Led the design and implementation of an event-driven production workflow, replacing a synchronous integration approach and helping reduce technical debt while improving service autonomy.",
+            "Led the migration of a business-critical feature between services, improving ownership boundaries and providing valuable insights that informed subsequent architectural refactoring efforts.",
+            "Designed and implemented a proof of concept using RabbitMQ, applying Outbox and Inbox patterns to evaluate fault-tolerant asynchronous communication.",
+            "Strengthened software delivery quality by promoting automated testing practices and implementing Jenkins pipeline guardrails that helped identify issues earlier in the development lifecycle.",
+            "Collaborated to shape & evolve GraphQL APIs with a strong focus on developer experience, usability, and performance while considering their impact on database efficiency and scalability"
+        ],
+        "skills": [
+            "GraphQL",
+            "NestJS",
+            "Node.js",
+            "MongoDB",
+            "Docker",
+            "Typescript",
+            "JavaScript",
+            "Git",
+            "CI/CD",
+            "Microservices",
+            "RabbitMQ",
+            "gRPC",
+            "AWS",
+            "E2E",
+            "PostgreSQL",
+            "RESTful APIs",
+            "Scrum",
+            "TDD",
+            "Python",
+            "Go"
         ]
     }
 ]
