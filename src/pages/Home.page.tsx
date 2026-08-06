@@ -34,8 +34,7 @@ export function Home() {
                     <Typed
                         strings={[
                             'Fullstack Engineer',
-                            'DevOps Engineer',
-                            'Security Engineer',
+                            'Backend Engineer',
                         ]}
                         typeSpeed={37}
                         backSpeed={47}
