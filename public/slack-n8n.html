@@ -34,8 +34,8 @@
                 position: relative;
             }
 
-            /* ---- Home Button ---- */
-            .home-btn {
+            /* ---- Posts Button ---- */
+            .posts-btn {
                 position: absolute;
                 display: inline-flex;
                 align-items: center;
@@ -56,16 +56,16 @@
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
                 z-index: 10;
             }
-            .home-btn:hover {
+            .posts-btn:hover {
                 background: #0f172a;
                 transform: translateY(-2px);
                 box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
             }
-            .home-btn:active {
+            .posts-btn:active {
                 transform: translateY(0);
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             }
-            .home-btn svg {
+            .posts-btn svg {
                 width: 20px;
                 fill: currentColor;
                 flex-shrink: 0;
@@ -300,25 +300,25 @@
                 .explanation table {
                     font-size: 0.85rem;
                 }
-                .home-btn {
+                .posts-btn {
                     top: 12px;
                     right: 12px;
                     padding: 6px 14px;
                     font-size: 0.8rem;
                 }
-                .home-btn svg {
+                .posts-btn svg {
                     width: 16px;
                     height: 16px;
                 }
-                .home-btn span.label-text {
+                .posts-btn span.label-text {
                     display: none;
                 }
             }
             @media (max-width: 480px) {
-                .home-btn {
+                .posts-btn {
                     padding: 6px 10px;
                 }
-                .home-btn svg {
+                .posts-btn svg {
                     width: 18px;
                     height: 18px;
                 }
@@ -332,7 +332,7 @@
                 <h1>Slack → n8n → AI — Event-Driven Integration</h1>
                 <a
                     href="/#/posts"
-                    class="home-btn"
+                    class="posts-btn"
                     title="Go to Posts"
                 >
                     <svg
