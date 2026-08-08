@@ -64,5 +64,18 @@
             "Orchestration",
             "Choreography"
         ]
+    },
+    {
+        "id": "0b14315b-0536-4e3f-9510-72ec60d37326",
+        "title": "Webhooks Architecture in n8n",
+        "description": "Webhooks are an essential part of modern integration strategies. In this post, we'll explore how to design and implement webhooks and how they are implemented in n8n.",
+        "href": "./webhooks-n8n.html",
+        "imageSrc": "./black.jpg",
+        "tags": [
+            "n8n",
+            "webhook",
+            "Architecture",
+            "Event-Driven Architecture"
+        ]
     }
 ]
