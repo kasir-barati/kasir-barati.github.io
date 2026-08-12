@@ -9,263 +9,12 @@
         <title>
             Webhook Architecture: n8n vs Custom Implementation
         </title>
-        <style>
-            * {
-                box-sizing: border-box;
-                margin: 0;
-                padding: 0;
-            }
-            body {
-                font-family: 'Segoe UI', Roboto, system-ui,
-                    -apple-system, sans-serif;
-                background: black;
-                padding: 2rem 1.5rem;
-                color: #0f172a;
-            }
-            .container {
-                max-width: 1400px;
-                margin: 0 auto;
-                position: relative;
-            }
-            h1 {
-                font-size: 2.2rem;
-                font-weight: 700;
-                letter-spacing: -0.02em;
-                background: linear-gradient(
-                    145deg,
-                    #ffff00,
-                    #f0f,
-                    #fb82f6
-                );
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-                margin-bottom: 0.5rem;
-                border-bottom: 3px solid #e2e8f0;
-                padding-bottom: 0.75rem;
-            }
-            .subhead {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                flex-wrap: wrap;
-                margin-bottom: 2rem;
-                gap: 1rem;
-            }
-            .subhead p {
-                color: lightgray;
-                font-size: 1.1rem;
-            }
-            .copy-card {
-                background: #1e293b;
-                color: #f1f5f9;
-                padding: 0.8rem 1.5rem;
-                border-radius: 12px;
-                border-left: 6px solid #3b82f6;
-                font-family: 'Courier New', monospace;
-                font-size: 0.9rem;
-                word-break: break-word;
-                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-                cursor: pointer;
-                transition: 0.2s;
-            }
-            .copy-card:hover {
-                background: #0f172a;
-                transform: scale(1.01);
-            }
-            .copy-card span {
-                color: #94a3b8;
-                font-family: 'Segoe UI', sans-serif;
-                margin-right: 10px;
-            }
-            .diagram-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 2rem;
-                margin: 2rem 0;
-            }
-            /* ---- Posts Button ---- */
-            .posts-btn {
-                position: absolute;
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                right: 0;
-                padding: 10px 18px;
-                background: #1e293b;
-                color: #f1f5f9;
-                border: none;
-                border-radius: 30px;
-                font-size: 0.95rem;
-                font-weight: 600;
-                font-family: inherit;
-                cursor: pointer;
-                text-decoration: none;
-                transition: background 0.2s ease, transform 0.15s ease,
-                    box-shadow 0.2s ease;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-                z-index: 10;
-            }
-            .posts-btn:hover {
-                background: #0f172a;
-                transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-            }
-            .posts-btn:active {
-                transform: translateY(0);
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            }
-            .posts-btn svg {
-                width: 20px;
-                fill: currentColor;
-                flex-shrink: 0;
-            }
-            /* ---- Responsive ---- */
-            @media (max-width: 700px) {
-                .posts-btn {
-                    top: 12px;
-                    right: 12px;
-                    padding: 6px 14px;
-                    font-size: 0.8rem;
-                }
-                .posts-btn svg {
-                    width: 16px;
-                    height: 16px;
-                }
-                .posts-btn span.label-text {
-                    display: none;
-                }
-            }
-            @media (max-width: 480px) {
-                .posts-btn {
-                    padding: 6px 10px;
-                }
-                .posts-btn svg {
-                    width: 18px;
-                    height: 18px;
-                }
-            }
-            @media (max-width: 1000px) {
-                .diagram-grid {
-                    grid-template-columns: 1fr;
-                    gap: 3rem;
-                }
-            }
-            .diagram-card {
-                background: #ffffff;
-                border-radius: 20px;
-                box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
-                padding: 1.5rem 1rem 1rem 1rem;
-                border: 1px solid #e9edf2;
-                transition: 0.2s;
-            }
-            .diagram-card:hover {
-                border-color: #b9d1f0;
-            }
-            .diagram-card h2 {
-                font-size: 1.4rem;
-                font-weight: 600;
-                display: flex;
-                align-items: center;
-                gap: 0.75rem;
-                margin-bottom: 0.25rem;
-                padding-left: 0.5rem;
-            }
-            .diagram-card h2 small {
-                font-size: 0.8rem;
-                font-weight: 400;
-                color: #475569;
-                background: #f1f5f9;
-                padding: 0.15rem 0.8rem;
-                border-radius: 30px;
-            }
-            .diagram-card svg {
-                width: 100%;
-                height: auto;
-                display: block;
-                border-radius: 12px;
-                background: #fbfdff;
-            }
-            .explanation {
-                margin-top: 2.5rem;
-                background: #ffffff;
-                border-radius: 20px;
-                padding: 2rem 2rem 1.8rem;
-                box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.05);
-                border: 1px solid #e9edf2;
-            }
-            .explanation h3 {
-                font-size: 1.5rem;
-                font-weight: 600;
-                margin-bottom: 1rem;
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-            }
-            .explanation-grid {
-                display: grid;
-                grid-template-columns: repeat(
-                    auto-fit,
-                    minmax(280px, 1fr)
-                );
-                gap: 1.5rem;
-                margin-top: 0.5rem;
-            }
-            .exp-item {
-                background: #f8fafc;
-                padding: 1.2rem 1.5rem;
-                border-radius: 14px;
-                border-left: 5px solid #3b82f6;
-            }
-            .exp-item h4 {
-                font-weight: 600;
-                color: #0f172a;
-                margin-bottom: 0.4rem;
-            }
-            .exp-item p,
-            .exp-item li {
-                color: #334155;
-                font-size: 0.95rem;
-                line-height: 1.6;
-            }
-            .exp-item ul {
-                padding-left: 1.2rem;
-                margin-top: 0.3rem;
-            }
-            .exp-item a {
-                color: #2563eb;
-                text-decoration: none;
-                font-weight: 500;
-            }
-            .exp-item a:hover {
-                text-decoration: underline;
-            }
-            .badge {
-                background: #dbeafe;
-                color: #1e40af;
-                font-size: 0.7rem;
-                font-weight: 600;
-                padding: 0.15rem 0.7rem;
-                border-radius: 20px;
-                margin-left: 0.5rem;
-            }
-            .footer-note {
-                margin-top: 2rem;
-                text-align: center;
-                font-size: 0.9rem;
-                color: #64748b;
-                border-top: 1px solid #e2e8f0;
-                padding-top: 1.5rem;
-            }
-            .footer-note strong {
-                color: #0f172a;
-            }
-        </style>
+        <link rel="stylesheet" href="./n8n-post.css" />
     </head>
-    <body>
-        <div class="container">
-            <header style="display: flex; align-items: center">
-                <h1>⚡ Dynamic Webhook Routing</h1>
+    <body class="post-page">
+        <div class="post-container">
+            <header class="post-header">
+                <h1 class="post-title">⚡ Dynamic Webhook Routing</h1>
                 <a
                     href="/#/posts"
                     class="posts-btn"
@@ -284,19 +33,19 @@
                     <span class="label-text">Posts</span>
                 </a>
             </header>
-            <div class="subhead">
-                <p>
-                    n8n's event-driven system (left) vs. a generic
-                    Node.js/Python implementation (right).
-                </p>
-            </div>
+            <p class="post-subtitle">
+                n8n's event-driven system (left) vs. a generic
+                Node.js/Python implementation (right).
+            </p>
 
             <div class="diagram-grid">
                 <!-- DIAGRAM 1: N8N ARCHITECTURE -->
                 <div class="diagram-card">
-                    <h2>
+                    <h2 class="diagram-card__title">
                         🧩 n8n Implementation
-                        <small>Event-driven + Route Map</small>
+                        <small class="diagram-card__tag"
+                            >Event-driven + Route Map</small
+                        >
                     </h2>
                     <svg
                         viewBox="0 0 580 720"
@@ -892,9 +641,11 @@
 
                 <!-- DIAGRAM 2: GENERIC IMPLEMENTATION (Node.js / Python) -->
                 <div class="diagram-card">
-                    <h2>
+                    <h2 class="diagram-card__title">
                         🛠️ Generic (Node.js / Python)
-                        <small>Dict + Async Workers</small>
+                        <small class="diagram-card__tag"
+                            >Dict + Async Workers</small
+                        >
                     </h2>
                     <svg
                         viewBox="0 0 580 720"
