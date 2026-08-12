@@ -7,329 +7,14 @@
             content="width=device-width, initial-scale=1.0"
         />
         <title>Slack + n8n + AI - Technical Architecture</title>
-        <style>
-            /* ---- Global Reset & Base ---- */
-            * {
-                box-sizing: border-box;
-                margin: 0;
-                padding: 0;
-            }
-            body {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                min-height: 100vh;
-                margin: 20px;
-                background: #0b0e14;
-                font-family: system-ui, -apple-system, 'Segoe UI',
-                    Roboto, 'Helvetica Neue', sans-serif;
-            }
-            .diagram-container {
-                background: lightgray;
-                border-radius: 20px;
-                padding: 30px 30px 40px;
-                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
-                max-width: 1240px;
-                width: 100%;
-                position: relative;
-            }
-
-            /* ---- Posts Button ---- */
-            .posts-btn {
-                position: absolute;
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                right: 30px;
-                padding: 10px 18px;
-                background: #1e293b;
-                color: #f1f5f9;
-                border: none;
-                border-radius: 30px;
-                font-size: 0.95rem;
-                font-weight: 600;
-                font-family: inherit;
-                cursor: pointer;
-                text-decoration: none;
-                transition: background 0.2s ease, transform 0.15s ease,
-                    box-shadow 0.2s ease;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-                z-index: 10;
-            }
-            .posts-btn:hover {
-                background: #0f172a;
-                transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-            }
-            .posts-btn:active {
-                transform: translateY(0);
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            }
-            .posts-btn svg {
-                width: 20px;
-                fill: currentColor;
-                flex-shrink: 0;
-            }
-
-            /* ---- SVG ---- */
-            svg {
-                display: block;
-                width: 100%;
-                height: auto;
-                background: transparent;
-            }
-
-            /* ---- Explanation Area ---- */
-            .explanation {
-                background: lightgray;
-                border-radius: 16px;
-                padding: 30px 35px;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-                border-left: 6px solid #2b6cb0;
-                line-height: 1.7;
-                color: #1e293b;
-            }
-            .explanation h2 {
-                font-size: 1.6rem;
-                font-weight: 700;
-                margin-top: 0;
-                margin-bottom: 0.5rem;
-                color: #0f172a;
-                border-bottom: 3px solid #e2e8f0;
-                padding-bottom: 0.6rem;
-            }
-            .explanation h3 {
-                font-size: 1.25rem;
-                font-weight: 600;
-                margin-top: 2rem;
-                margin-bottom: 0.75rem;
-                color: #1e40af;
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-            }
-            .explanation h4 {
-                font-size: 1.05rem;
-                font-weight: 600;
-                margin-top: 1.5rem;
-                margin-bottom: 0.4rem;
-                color: #1e293b;
-            }
-            .explanation p {
-                margin-bottom: 1rem;
-                font-size: 1rem;
-            }
-            .explanation ul,
-            .explanation ol {
-                padding-left: 1.5rem;
-                margin-bottom: 1rem;
-            }
-            .explanation li {
-                margin-bottom: 0.4rem;
-            }
-            .explanation code {
-                background: #eef2f6;
-                padding: 0.15rem 0.5rem;
-                border-radius: 4px;
-                font-size: 0.9em;
-                font-family: 'JetBrains Mono', 'Fira Code', monospace;
-                color: #0b2d4b;
-            }
-            .explanation a {
-                color: #1e4f8a;
-                text-decoration: none;
-                font-weight: 500;
-            }
-            .explanation a:hover {
-                text-decoration: underline;
-            }
-
-            /* ---- Badges ---- */
-            .pattern-badge {
-                display: inline-block;
-                background: #1e4f8a;
-                color: white;
-                padding: 0 12px;
-                border-radius: 20px;
-                font-size: 0.8rem;
-                font-weight: 600;
-                margin-right: 6px;
-                line-height: 1.8;
-            }
-
-            /* ---- Toggle (details) ---- */
-            .toggle {
-                margin: 0.75rem 0;
-            }
-            .toggle summary {
-                list-style: none;
-                cursor: pointer;
-                display: inline-flex;
-                align-items: center;
-                gap: 0.5rem;
-                font-weight: 600;
-                color: #1e293b;
-                padding: 0.3rem 0;
-            }
-            .toggle summary::-webkit-details-marker {
-                display: none;
-            }
-            .toggle summary::-moz-list-bullet {
-                display: none;
-            }
-            .indicator {
-                display: inline-block;
-                transition: transform 0.2s ease;
-                font-size: 1.2rem;
-                line-height: 1;
-                cursor: pointer;
-            }
-            .indicator::before {
-                content: '›';
-            }
-            .toggle[open] .indicator {
-                transform: rotate(90deg);
-            }
-            .toggle .content {
-                border: 2px dashed #cbd5e1;
-                padding: 1rem 1.25rem;
-                margin: 0.5rem 0 0.75rem 0;
-                border-radius: 10px;
-                background: #fafcff;
-            }
-
-            /* ---- Tables ---- */
-            .explanation table {
-                border-collapse: collapse;
-                width: 100%;
-                margin: 0.75rem 0;
-                font-size: 0.95rem;
-            }
-            .explanation th,
-            .explanation td {
-                border: 1px solid #d1d9e6;
-                padding: 0.5rem 0.75rem;
-                text-align: left;
-                vertical-align: top;
-            }
-            .explanation th {
-                background: #eef2f6;
-                font-weight: 600;
-            }
-            .explanation tr:nth-child(even) {
-                background: #f8fafc;
-            }
-
-            /* ---- Alerts ---- */
-            .alert {
-                padding: 0.75rem 1.25rem;
-                margin: 0.75rem 0;
-                border-radius: 8px;
-                border-left: 4px solid #94a3b8;
-                background: #f8fafc;
-            }
-            .alert .title {
-                font-weight: 700;
-                font-size: 0.95rem;
-                display: flex;
-                align-items: center;
-                gap: 0.4rem;
-                margin-bottom: 0.2rem;
-            }
-            .alert .content {
-                font-size: 0.95rem;
-            }
-            .alert.tip {
-                background: #e6f6e6;
-                border-left-color: #2da44e;
-            }
-            .alert.tip .title {
-                color: #1a7f37;
-            }
-            .alert.caution {
-                background: #ffebe9;
-                border-left-color: #cf222e;
-            }
-            .alert.caution .title {
-                color: #a0111a;
-            }
-
-            /* ---- Code blocks inside details ---- */
-            .code-block {
-                background: #f1f5f9;
-                border: 1px solid #d1d9e6;
-                border-radius: 8px;
-                padding: 1rem;
-                overflow-x: auto;
-                font-family: 'JetBrains Mono', 'Fira Code', monospace;
-                font-size: 0.85rem;
-                line-height: 1.6;
-                margin: 0.5rem 0;
-            }
-            .code-block code {
-                background: transparent;
-                padding: 0;
-                font-family: inherit;
-                font-size: inherit;
-                color: #0b2d4b;
-            }
-
-            /* ---- Note box ---- */
-            .note-box {
-                background: #eef6ff;
-                border-radius: 10px;
-                padding: 1rem 1.25rem;
-                border-left: 4px solid #2563eb;
-                margin: 1.25rem 0;
-            }
-            .note-box strong {
-                color: #1e3a8a;
-            }
-
-            /* ---- Responsive ---- */
-            @media (max-width: 700px) {
-                .diagram-container {
-                    padding: 15px;
-                }
-                .explanation {
-                    padding: 20px;
-                }
-                .explanation h2 {
-                    font-size: 1.3rem;
-                }
-                .explanation table {
-                    font-size: 0.85rem;
-                }
-                .posts-btn {
-                    top: 12px;
-                    right: 12px;
-                    padding: 6px 14px;
-                    font-size: 0.8rem;
-                }
-                .posts-btn svg {
-                    width: 16px;
-                    height: 16px;
-                }
-                .posts-btn span.label-text {
-                    display: none;
-                }
-            }
-            @media (max-width: 480px) {
-                .posts-btn {
-                    padding: 6px 10px;
-                }
-                .posts-btn svg {
-                    width: 18px;
-                    height: 18px;
-                }
-            }
-        </style>
+        <link rel="stylesheet" href="./n8n-post.css" />
     </head>
-    <body>
-        <div class="diagram-container">
-            <!-- ============ HOME BUTTON ============ -->
-            <header style="display: flex; align-items: center">
-                <h1>Slack → n8n → AI — Event-Driven Integration</h1>
+    <body class="post-page">
+        <div class="post-container">
+            <header class="post-header">
+                <h1 class="post-title">
+                    Slack → n8n → AI — Event-Driven Integration
+                </h1>
                 <a
                     href="/#/posts"
                     class="posts-btn"
@@ -350,6 +35,7 @@
             </header>
 
             <!-- ============ SVG DIAGRAM ============ -->
+            <div class="diagram-single">
             <svg
                 viewBox="0 50 1100 780"
                 preserveAspectRatio="xMidYMid meet"
@@ -1102,6 +788,7 @@
                     Memory Buffer
                 </text>
             </svg>
+            </div>
 
             <!-- ============ EXPLANATION ============ -->
             <div class="explanation">
@@ -1147,9 +834,7 @@
                     </li>
                 </ol>
 
-                <hr
-                    style="border: 1px solid #e2e8f0; margin: 2rem 0"
-                />
+                <hr class="post-divider" />
 
                 <!-- === COMPONENT DEEP-DIVE === -->
                 <h2>🔧 Component Deep-Dive</h2>
@@ -1214,9 +899,7 @@
                     </li>
                 </ul>
 
-                <hr
-                    style="border: 1px solid #e2e8f0; margin: 2rem 0"
-                />
+                <hr class="post-divider" />
 
                 <!-- === ARCHITECTURAL PATTERNS === -->
                 <h2>🧩 Architectural Patterns</h2>
@@ -1523,9 +1206,7 @@
                     </div>
                 </details>
 
-                <hr
-                    style="border: 1px solid #e2e8f0; margin: 2rem 0"
-                />
+                <hr class="post-divider" />
 
                 <!-- === IMPLEMENTATION IN TRADITIONAL BACKEND === -->
                 <h2>💻 Implementation in Traditional Backend Code</h2>
@@ -1600,9 +1281,7 @@ app.post('/slack/events', (req, res) => {
                     </li>
                 </ul>
 
-                <hr
-                    style="border: 1px solid #e2e8f0; margin: 2rem 0"
-                />
+                <hr class="post-divider" />
 
                 <!-- === KEY TECHNICAL DETAILS & LINKS === -->
                 <h2>🔗 Key Technical Details &amp; Resources</h2>
@@ -1654,6 +1333,6 @@ app.post('/slack/events', (req, res) => {
             </div>
             <!-- end .explanation -->
         </div>
-        <!-- end .diagram-container -->
+        <!-- end .post-container -->
     </body>
 </html>
