@@ -36,758 +36,764 @@
 
             <!-- ============ SVG DIAGRAM ============ -->
             <div class="diagram-single">
-            <svg
-                viewBox="0 50 1100 780"
-                preserveAspectRatio="xMidYMid meet"
-                xmlns="http://www.w3.org/2000/svg"
-            >
-                <defs>
-                    <marker
-                        id="arrowhead"
-                        markerWidth="10"
-                        markerHeight="7"
-                        refX="10"
-                        refY="3.5"
-                        orient="auto"
+                <svg
+                    viewBox="0 50 1100 780"
+                    preserveAspectRatio="xMidYMid meet"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <defs>
+                        <marker
+                            id="arrowhead"
+                            markerWidth="10"
+                            markerHeight="7"
+                            refX="10"
+                            refY="3.5"
+                            orient="auto"
+                        >
+                            <polygon
+                                points="0 0, 10 3.5, 0 7"
+                                fill="#1e293b"
+                            />
+                        </marker>
+                        <marker
+                            id="arrowhead-dashed"
+                            markerWidth="10"
+                            markerHeight="7"
+                            refX="10"
+                            refY="3.5"
+                            orient="auto"
+                        >
+                            <polygon
+                                points="0 0, 10 3.5, 0 7"
+                                fill="#64748b"
+                            />
+                        </marker>
+                        <filter
+                            id="shadow"
+                            x="-5%"
+                            y="-5%"
+                            width="110%"
+                            height="110%"
+                        >
+                            <feDropShadow
+                                dx="0"
+                                dy="3"
+                                stdDeviation="5"
+                                flood-opacity="0.15"
+                            />
+                        </filter>
+                        <linearGradient
+                            id="n8nGrad"
+                            x1="0%"
+                            y1="0%"
+                            x2="100%"
+                            y2="100%"
+                        >
+                            <stop offset="0%" stop-color="#f0f5ff" />
+                            <stop
+                                offset="100%"
+                                stop-color="#e3edfc"
+                            />
+                        </linearGradient>
+                    </defs>
+
+                    <!-- ============ NODES ============ -->
+
+                    <!-- 1. User (Slack) -->
+                    <rect
+                        x="5"
+                        y="105"
+                        width="190"
+                        height="90"
+                        rx="14"
+                        fill="#a5f3fc"
+                        stroke="#38bdf8"
+                        stroke-width="2"
+                        filter="url(#shadow)"
+                    />
+                    <text
+                        x="30"
+                        y="138"
+                        class="node-title"
+                        fill="#0f172a"
+                        font-size="16"
+                        font-weight="600"
                     >
-                        <polygon
-                            points="0 0, 10 3.5, 0 7"
-                            fill="#1e293b"
-                        />
-                    </marker>
-                    <marker
-                        id="arrowhead-dashed"
-                        markerWidth="10"
-                        markerHeight="7"
-                        refX="10"
-                        refY="3.5"
-                        orient="auto"
+                        👤 Slack User
+                    </text>
+                    <text
+                        x="30"
+                        y="162"
+                        class="subtext-dark"
+                        fill="#334155"
+                        font-size="13"
                     >
-                        <polygon
-                            points="0 0, 10 3.5, 0 7"
-                            fill="#64748b"
-                        />
-                    </marker>
-                    <filter
-                        id="shadow"
-                        x="-5%"
-                        y="-5%"
-                        width="110%"
-                        height="110%"
+                        mentions @YourBot
+                    </text>
+                    <text
+                        x="30"
+                        y="180"
+                        class="label-small"
+                        fill="#64748b"
+                        font-size="10"
                     >
-                        <feDropShadow
-                            dx="0"
-                            dy="3"
-                            stdDeviation="5"
-                            flood-opacity="0.15"
-                        />
-                    </filter>
-                    <linearGradient
-                        id="n8nGrad"
-                        x1="0%"
-                        y1="0%"
-                        x2="100%"
-                        y2="100%"
+                        (event source)
+                    </text>
+
+                    <!-- 2. Slack App (Events API) -->
+                    <rect
+                        x="290"
+                        y="110"
+                        width="230"
+                        height="90"
+                        rx="14"
+                        fill="#4a154b"
+                        stroke="#3a0d3a"
+                        stroke-width="2"
+                        filter="url(#shadow)"
+                    />
+                    <text
+                        x="315"
+                        y="132"
+                        class="node-title"
+                        fill="#fff"
+                        font-size="16"
+                        font-weight="600"
                     >
-                        <stop offset="0%" stop-color="#f0f5ff" />
-                        <stop offset="100%" stop-color="#e3edfc" />
-                    </linearGradient>
-                </defs>
+                        Slack App
+                    </text>
+                    <text
+                        x="315"
+                        y="154"
+                        class="subtext-light"
+                        fill="#f0e6f0"
+                        font-size="13"
+                    >
+                        Events API
+                    </text>
+                    <text
+                        x="315"
+                        y="174"
+                        class="subtext-light"
+                        fill="#f0e6f0"
+                        font-size="12"
+                    >
+                        Socket Mode: OFF
+                    </text>
+                    <text
+                        x="315"
+                        y="192"
+                        class="subtext-light"
+                        fill="#c4a0c4"
+                        font-size="9"
+                    >
+                        OAuth 2.0 Bot Token (xoxb-…)
+                    </text>
 
-                <!-- ============ NODES ============ -->
+                    <!-- 3. n8n Workflow (box) -->
+                    <rect
+                        x="540"
+                        y="70"
+                        width="530"
+                        height="660"
+                        rx="18"
+                        fill="url(#n8nGrad)"
+                        stroke="#b0c4de"
+                        stroke-width="2.5"
+                        stroke-dasharray="8 4"
+                    />
+                    <text
+                        x="805"
+                        y="98"
+                        font-size="17"
+                        font-weight="700"
+                        fill="#1a365d"
+                        text-anchor="middle"
+                    >
+                        ⚙️ n8n Workflow (Orchestration Engine)
+                    </text>
 
-                <!-- 1. User (Slack) -->
-                <rect
-                    x="5"
-                    y="105"
-                    width="190"
-                    height="90"
-                    rx="14"
-                    fill="#a5f3fc"
-                    stroke="#38bdf8"
-                    stroke-width="2"
-                    filter="url(#shadow)"
-                />
-                <text
-                    x="30"
-                    y="138"
-                    class="node-title"
-                    fill="#0f172a"
-                    font-size="16"
-                    font-weight="600"
-                >
-                    👤 Slack User
-                </text>
-                <text
-                    x="30"
-                    y="162"
-                    class="subtext-dark"
-                    fill="#334155"
-                    font-size="13"
-                >
-                    mentions @YourBot
-                </text>
-                <text
-                    x="30"
-                    y="180"
-                    class="label-small"
-                    fill="#64748b"
-                    font-size="10"
-                >
-                    (event source)
-                </text>
+                    <!-- Slack Trigger node -->
+                    <rect
+                        x="640"
+                        y="125"
+                        width="230"
+                        height="85"
+                        rx="12"
+                        fill="#2563eb"
+                        stroke="#1e40af"
+                        stroke-width="2"
+                        filter="url(#shadow)"
+                    />
+                    <text
+                        x="670"
+                        y="153"
+                        class="node-title"
+                        fill="#fff"
+                        font-size="16"
+                        font-weight="600"
+                    >
+                        🔌 Slack Trigger
+                    </text>
+                    <text
+                        x="670"
+                        y="175"
+                        class="subtext-light"
+                        fill="#e0edff"
+                        font-size="13"
+                    >
+                        Webhook (Prod URL)
+                    </text>
+                    <text
+                        x="670"
+                        y="195"
+                        class="subtext-light"
+                        fill="#b8d4ff"
+                        font-size="10"
+                    >
+                        HTTP POST /webhook/…
+                    </text>
 
-                <!-- 2. Slack App (Events API) -->
-                <rect
-                    x="290"
-                    y="110"
-                    width="230"
-                    height="90"
-                    rx="14"
-                    fill="#4a154b"
-                    stroke="#3a0d3a"
-                    stroke-width="2"
-                    filter="url(#shadow)"
-                />
-                <text
-                    x="315"
-                    y="132"
-                    class="node-title"
-                    fill="#fff"
-                    font-size="16"
-                    font-weight="600"
-                >
-                    Slack App
-                </text>
-                <text
-                    x="315"
-                    y="154"
-                    class="subtext-light"
-                    fill="#f0e6f0"
-                    font-size="13"
-                >
-                    Events API
-                </text>
-                <text
-                    x="315"
-                    y="174"
-                    class="subtext-light"
-                    fill="#f0e6f0"
-                    font-size="12"
-                >
-                    Socket Mode: OFF
-                </text>
-                <text
-                    x="315"
-                    y="192"
-                    class="subtext-light"
-                    fill="#c4a0c4"
-                    font-size="9"
-                >
-                    OAuth 2.0 Bot Token (xoxb-…)
-                </text>
+                    <!-- AI Agent node -->
+                    <rect
+                        x="580"
+                        y="260"
+                        width="230"
+                        height="85"
+                        rx="12"
+                        fill="#ea580c"
+                        stroke="#c2410c"
+                        stroke-width="2"
+                        filter="url(#shadow)"
+                    />
+                    <text
+                        x="600"
+                        y="288"
+                        class="node-title"
+                        fill="#fff"
+                        font-size="16"
+                        font-weight="600"
+                    >
+                        🤖 AI Agent (LangChain)
+                    </text>
+                    <text
+                        x="600"
+                        y="310"
+                        class="subtext-light"
+                        fill="#fdf0e0"
+                        font-size="13"
+                    >
+                        Agent Executor
+                    </text>
+                    <text
+                        x="600"
+                        y="330"
+                        class="subtext-light"
+                        fill="#fad4a0"
+                        font-size="10"
+                    >
+                        ReAct / Tool-calling
+                    </text>
 
-                <!-- 3. n8n Workflow (box) -->
-                <rect
-                    x="540"
-                    y="70"
-                    width="530"
-                    height="660"
-                    rx="18"
-                    fill="url(#n8nGrad)"
-                    stroke="#b0c4de"
-                    stroke-width="2.5"
-                    stroke-dasharray="8 4"
-                />
-                <text
-                    x="805"
-                    y="98"
-                    font-size="17"
-                    font-weight="700"
-                    fill="#1a365d"
-                    text-anchor="middle"
-                >
-                    ⚙️ n8n Workflow (Orchestration Engine)
-                </text>
+                    <!-- OpenAI Chat Model (input) -->
+                    <rect
+                        x="310"
+                        y="400"
+                        width="210"
+                        height="75"
+                        rx="12"
+                        fill="#0f172a"
+                        stroke="#1e293b"
+                        stroke-width="2"
+                        filter="url(#shadow)"
+                    />
+                    <text
+                        x="335"
+                        y="428"
+                        class="node-title"
+                        fill="#fff"
+                        font-size="16"
+                        font-weight="600"
+                    >
+                        🧠 OpenAI Chat Model
+                    </text>
+                    <text
+                        x="335"
+                        y="450"
+                        class="subtext-light"
+                        fill="#cbd5e0"
+                        font-size="13"
+                    >
+                        gpt-4.0-mini
+                    </text>
 
-                <!-- Slack Trigger node -->
-                <rect
-                    x="640"
-                    y="125"
-                    width="230"
-                    height="85"
-                    rx="12"
-                    fill="#2563eb"
-                    stroke="#1e40af"
-                    stroke-width="2"
-                    filter="url(#shadow)"
-                />
-                <text
-                    x="670"
-                    y="153"
-                    class="node-title"
-                    fill="#fff"
-                    font-size="16"
-                    font-weight="600"
-                >
-                    🔌 Slack Trigger
-                </text>
-                <text
-                    x="670"
-                    y="175"
-                    class="subtext-light"
-                    fill="#e0edff"
-                    font-size="13"
-                >
-                    Webhook (Prod URL)
-                </text>
-                <text
-                    x="670"
-                    y="195"
-                    class="subtext-light"
-                    fill="#b8d4ff"
-                    font-size="10"
-                >
-                    HTTP POST /webhook/…
-                </text>
+                    <!-- Simple Memory (input) -->
+                    <rect
+                        x="735"
+                        y="435"
+                        width="250"
+                        height="75"
+                        rx="12"
+                        fill="#059669"
+                        stroke="#047857"
+                        stroke-width="2"
+                        filter="url(#shadow)"
+                    />
+                    <text
+                        x="760"
+                        y="458"
+                        class="node-title"
+                        fill="#fff"
+                        font-size="16"
+                        font-weight="600"
+                    >
+                        🧠 Simple Memory
+                    </text>
+                    <text
+                        x="760"
+                        y="480"
+                        class="subtext-light"
+                        fill="#e6fffa"
+                        font-size="13"
+                    >
+                        Buffer Window
+                    </text>
+                    <text
+                        x="760"
+                        y="498"
+                        class="subtext-light"
+                        fill="#c6f0d0"
+                        font-size="10"
+                    >
+                        (in prod: use a persistent DB)
+                    </text>
 
-                <!-- AI Agent node -->
-                <rect
-                    x="580"
-                    y="260"
-                    width="230"
-                    height="85"
-                    rx="12"
-                    fill="#ea580c"
-                    stroke="#c2410c"
-                    stroke-width="2"
-                    filter="url(#shadow)"
-                />
-                <text
-                    x="600"
-                    y="288"
-                    class="node-title"
-                    fill="#fff"
-                    font-size="16"
-                    font-weight="600"
-                >
-                    🤖 AI Agent (LangChain)
-                </text>
-                <text
-                    x="600"
-                    y="310"
-                    class="subtext-light"
-                    fill="#fdf0e0"
-                    font-size="13"
-                >
-                    Agent Executor
-                </text>
-                <text
-                    x="600"
-                    y="330"
-                    class="subtext-light"
-                    fill="#fad4a0"
-                    font-size="10"
-                >
-                    ReAct / Tool-calling
-                </text>
+                    <!-- Date & Time Tool (input) -->
+                    <rect
+                        x="850"
+                        y="325"
+                        width="210"
+                        height="75"
+                        rx="12"
+                        fill="#7c3aed"
+                        stroke="#6d28d9"
+                        stroke-width="2"
+                        filter="url(#shadow)"
+                    />
+                    <text
+                        x="870"
+                        y="353"
+                        class="node-title"
+                        fill="#fff"
+                        font-size="16"
+                        font-weight="600"
+                    >
+                        🕒 Date & Time Tool
+                    </text>
+                    <text
+                        x="870"
+                        y="375"
+                        class="subtext-light"
+                        fill="#e9d8fd"
+                        font-size="13"
+                    >
+                        Tool (function)
+                    </text>
+                    <text
+                        x="870"
+                        y="393"
+                        class="subtext-light"
+                        fill="#d4b8f0"
+                        font-size="10"
+                    >
+                        Returns current time
+                    </text>
 
-                <!-- OpenAI Chat Model (input) -->
-                <rect
-                    x="310"
-                    y="400"
-                    width="210"
-                    height="75"
-                    rx="12"
-                    fill="#0f172a"
-                    stroke="#1e293b"
-                    stroke-width="2"
-                    filter="url(#shadow)"
-                />
-                <text
-                    x="335"
-                    y="428"
-                    class="node-title"
-                    fill="#fff"
-                    font-size="16"
-                    font-weight="600"
-                >
-                    🧠 OpenAI Chat Model
-                </text>
-                <text
-                    x="335"
-                    y="450"
-                    class="subtext-light"
-                    fill="#cbd5e0"
-                    font-size="13"
-                >
-                    gpt-4.0-mini
-                </text>
+                    <!-- Send a Message node -->
+                    <rect
+                        x="580"
+                        y="530"
+                        width="230"
+                        height="85"
+                        rx="12"
+                        fill="#059669"
+                        stroke="#047857"
+                        stroke-width="2"
+                        filter="url(#shadow)"
+                    />
+                    <text
+                        x="605"
+                        y="558"
+                        class="node-title"
+                        fill="#fff"
+                        font-size="16"
+                        font-weight="600"
+                    >
+                        ✉️ Send a Message
+                    </text>
+                    <text
+                        x="605"
+                        y="580"
+                        class="subtext-light"
+                        fill="#e6fffa"
+                        font-size="13"
+                    >
+                        Slack API (chat.postMessage)
+                    </text>
+                    <text
+                        x="605"
+                        y="600"
+                        class="subtext-light"
+                        fill="#c6f0d0"
+                        font-size="10"
+                    >
+                        HTTP POST to slack.com
+                    </text>
 
-                <!-- Simple Memory (input) -->
-                <rect
-                    x="735"
-                    y="435"
-                    width="250"
-                    height="75"
-                    rx="12"
-                    fill="#059669"
-                    stroke="#047857"
-                    stroke-width="2"
-                    filter="url(#shadow)"
-                />
-                <text
-                    x="760"
-                    y="458"
-                    class="node-title"
-                    fill="#fff"
-                    font-size="16"
-                    font-weight="600"
-                >
-                    🧠 Simple Memory
-                </text>
-                <text
-                    x="760"
-                    y="480"
-                    class="subtext-light"
-                    fill="#e6fffa"
-                    font-size="13"
-                >
-                    Buffer Window
-                </text>
-                <text
-                    x="760"
-                    y="498"
-                    class="subtext-light"
-                    fill="#c6f0d0"
-                    font-size="10"
-                >
-                    (in prod: use a persistent DB)
-                </text>
+                    <!-- Slack App (send) -->
+                    <rect
+                        x="220"
+                        y="575"
+                        width="230"
+                        height="85"
+                        rx="14"
+                        fill="#4a154b"
+                        stroke="#3a0d3a"
+                        stroke-width="2"
+                        filter="url(#shadow)"
+                    />
+                    <text
+                        x="250"
+                        y="603"
+                        class="node-title"
+                        fill="#fff"
+                        font-size="16"
+                        font-weight="600"
+                    >
+                        Slack App (send)
+                    </text>
+                    <text
+                        x="250"
+                        y="625"
+                        class="subtext-light"
+                        fill="#f0e6f0"
+                        font-size="13"
+                    >
+                        chat.postMessage via Bot Token
+                    </text>
+                    <text
+                        x="250"
+                        y="645"
+                        class="subtext-light"
+                        fill="#c4a0c4"
+                        font-size="10"
+                    >
+                        OAuth 2.0 + scopes
+                    </text>
 
-                <!-- Date & Time Tool (input) -->
-                <rect
-                    x="850"
-                    y="325"
-                    width="210"
-                    height="75"
-                    rx="12"
-                    fill="#7c3aed"
-                    stroke="#6d28d9"
-                    stroke-width="2"
-                    filter="url(#shadow)"
-                />
-                <text
-                    x="870"
-                    y="353"
-                    class="node-title"
-                    fill="#fff"
-                    font-size="16"
-                    font-weight="600"
-                >
-                    🕒 Date & Time Tool
-                </text>
-                <text
-                    x="870"
-                    y="375"
-                    class="subtext-light"
-                    fill="#e9d8fd"
-                    font-size="13"
-                >
-                    Tool (function)
-                </text>
-                <text
-                    x="870"
-                    y="393"
-                    class="subtext-light"
-                    fill="#d4b8f0"
-                    font-size="10"
-                >
-                    Returns current time
-                </text>
+                    <!-- ============ ARROWS ============ -->
 
-                <!-- Send a Message node -->
-                <rect
-                    x="580"
-                    y="530"
-                    width="230"
-                    height="85"
-                    rx="12"
-                    fill="#059669"
-                    stroke="#047857"
-                    stroke-width="2"
-                    filter="url(#shadow)"
-                />
-                <text
-                    x="605"
-                    y="558"
-                    class="node-title"
-                    fill="#fff"
-                    font-size="16"
-                    font-weight="600"
-                >
-                    ✉️ Send a Message
-                </text>
-                <text
-                    x="605"
-                    y="580"
-                    class="subtext-light"
-                    fill="#e6fffa"
-                    font-size="13"
-                >
-                    Slack API (chat.postMessage)
-                </text>
-                <text
-                    x="605"
-                    y="600"
-                    class="subtext-light"
-                    fill="#c6f0d0"
-                    font-size="10"
-                >
-                    HTTP POST to slack.com
-                </text>
+                    <!-- 1. User -> Slack App -->
+                    <line
+                        x1="195"
+                        y1="145"
+                        x2="290"
+                        y2="145"
+                        stroke="#1e293b"
+                        stroke-width="2.5"
+                        marker-end="url(#arrowhead)"
+                    />
+                    <!-- Step number 1 -->
+                    <circle cx="210" cy="125" r="12" fill="#2563eb" />
+                    <text
+                        x="210"
+                        y="130"
+                        fill="#fff"
+                        font-size="12"
+                        font-weight="700"
+                        text-anchor="middle"
+                    >
+                        1
+                    </text>
+                    <text
+                        x="222"
+                        y="120"
+                        class="label"
+                        fill="#334155"
+                        font-size="11"
+                    >
+                        App Mention
+                    </text>
+                    <text
+                        x="222"
+                        y="108"
+                        class="label-small"
+                        fill="#64748b"
+                        font-size="9"
+                    >
+                        (event payload)
+                    </text>
 
-                <!-- Slack App (send) -->
-                <rect
-                    x="220"
-                    y="575"
-                    width="230"
-                    height="85"
-                    rx="14"
-                    fill="#4a154b"
-                    stroke="#3a0d3a"
-                    stroke-width="2"
-                    filter="url(#shadow)"
-                />
-                <text
-                    x="250"
-                    y="603"
-                    class="node-title"
-                    fill="#fff"
-                    font-size="16"
-                    font-weight="600"
-                >
-                    Slack App (send)
-                </text>
-                <text
-                    x="250"
-                    y="625"
-                    class="subtext-light"
-                    fill="#f0e6f0"
-                    font-size="13"
-                >
-                    chat.postMessage via Bot Token
-                </text>
-                <text
-                    x="250"
-                    y="645"
-                    class="subtext-light"
-                    fill="#c4a0c4"
-                    font-size="10"
-                >
-                    OAuth 2.0 + scopes
-                </text>
+                    <!-- 2. Slack App -> Slack Trigger -->
+                    <line
+                        x1="520"
+                        y1="145"
+                        x2="640"
+                        y2="145"
+                        stroke="#1e293b"
+                        stroke-width="2.5"
+                        marker-end="url(#arrowhead)"
+                    />
+                    <circle cx="535" cy="130" r="12" fill="#2563eb" />
+                    <text
+                        x="535"
+                        y="135"
+                        fill="#fff"
+                        font-size="12"
+                        font-weight="700"
+                        text-anchor="middle"
+                    >
+                        2
+                    </text>
+                    <text
+                        x="545"
+                        y="120"
+                        class="label"
+                        fill="#334155"
+                        font-size="11"
+                    >
+                        HTTP POST
+                    </text>
+                    <text
+                        x="545"
+                        y="108"
+                        class="label-small"
+                        fill="#64748b"
+                        font-size="9"
+                    >
+                        (JSON event)
+                    </text>
 
-                <!-- ============ ARROWS ============ -->
+                    <!-- 3. Slack Trigger -> AI Agent (vertical) -->
+                    <line
+                        x1="695"
+                        y1="210"
+                        x2="695"
+                        y2="260"
+                        stroke="#1e293b"
+                        stroke-width="2.5"
+                        marker-end="url(#arrowhead)"
+                    />
+                    <circle cx="715" cy="230" r="12" fill="#2563eb" />
+                    <text
+                        x="715"
+                        y="235"
+                        fill="#fff"
+                        font-size="12"
+                        font-weight="700"
+                        text-anchor="middle"
+                    >
+                        3
+                    </text>
 
-                <!-- 1. User -> Slack App -->
-                <line
-                    x1="195"
-                    y1="145"
-                    x2="290"
-                    y2="145"
-                    stroke="#1e293b"
-                    stroke-width="2.5"
-                    marker-end="url(#arrowhead)"
-                />
-                <!-- Step number 1 -->
-                <circle cx="210" cy="125" r="12" fill="#2563eb" />
-                <text
-                    x="210"
-                    y="130"
-                    fill="#fff"
-                    font-size="12"
-                    font-weight="700"
-                    text-anchor="middle"
-                >
-                    1
-                </text>
-                <text
-                    x="222"
-                    y="120"
-                    class="label"
-                    fill="#334155"
-                    font-size="11"
-                >
-                    App Mention
-                </text>
-                <text
-                    x="222"
-                    y="108"
-                    class="label-small"
-                    fill="#64748b"
-                    font-size="9"
-                >
-                    (event payload)
-                </text>
+                    <!-- 4. OpenAI -> AI Agent (dashed) -->
+                    <line
+                        x1="520"
+                        y1="437"
+                        x2="580"
+                        y2="325"
+                        stroke="#64748b"
+                        stroke-width="2"
+                        stroke-dasharray="6 4"
+                        marker-end="url(#arrowhead-dashed)"
+                    />
 
-                <!-- 2. Slack App -> Slack Trigger -->
-                <line
-                    x1="520"
-                    y1="145"
-                    x2="640"
-                    y2="145"
-                    stroke="#1e293b"
-                    stroke-width="2.5"
-                    marker-end="url(#arrowhead)"
-                />
-                <circle cx="535" cy="130" r="12" fill="#2563eb" />
-                <text
-                    x="535"
-                    y="135"
-                    fill="#fff"
-                    font-size="12"
-                    font-weight="700"
-                    text-anchor="middle"
-                >
-                    2
-                </text>
-                <text
-                    x="545"
-                    y="120"
-                    class="label"
-                    fill="#334155"
-                    font-size="11"
-                >
-                    HTTP POST
-                </text>
-                <text
-                    x="545"
-                    y="108"
-                    class="label-small"
-                    fill="#64748b"
-                    font-size="9"
-                >
-                    (JSON event)
-                </text>
+                    <!-- 5. Simple Memory -> AI Agent (dashed) -->
+                    <line
+                        x1="840"
+                        y1="435"
+                        x2="730"
+                        y2="345"
+                        stroke="#64748b"
+                        stroke-width="2"
+                        stroke-dasharray="6 4"
+                        marker-end="url(#arrowhead-dashed)"
+                    />
 
-                <!-- 3. Slack Trigger -> AI Agent (vertical) -->
-                <line
-                    x1="695"
-                    y1="210"
-                    x2="695"
-                    y2="260"
-                    stroke="#1e293b"
-                    stroke-width="2.5"
-                    marker-end="url(#arrowhead)"
-                />
-                <circle cx="715" cy="230" r="12" fill="#2563eb" />
-                <text
-                    x="715"
-                    y="235"
-                    fill="#fff"
-                    font-size="12"
-                    font-weight="700"
-                    text-anchor="middle"
-                >
-                    3
-                </text>
+                    <!-- 6. Date & Time -> AI Agent (dashed) -->
+                    <line
+                        x1="850"
+                        y1="360"
+                        x2="810"
+                        y2="330"
+                        stroke="#64748b"
+                        stroke-width="2"
+                        stroke-dasharray="6 4"
+                        marker-end="url(#arrowhead-dashed)"
+                    />
 
-                <!-- 4. OpenAI -> AI Agent (dashed) -->
-                <line
-                    x1="520"
-                    y1="437"
-                    x2="580"
-                    y2="325"
-                    stroke="#64748b"
-                    stroke-width="2"
-                    stroke-dasharray="6 4"
-                    marker-end="url(#arrowhead-dashed)"
-                />
+                    <!-- 7. AI Agent -> Send a Message (vertical) -->
+                    <line
+                        x1="695"
+                        y1="345"
+                        x2="695"
+                        y2="530"
+                        stroke="#1e293b"
+                        stroke-width="2.5"
+                        marker-end="url(#arrowhead)"
+                    />
+                    <circle cx="710" cy="440" r="12" fill="#2563eb" />
+                    <text
+                        x="710"
+                        y="445"
+                        fill="#fff"
+                        font-size="12"
+                        font-weight="700"
+                        text-anchor="middle"
+                    >
+                        4
+                    </text>
 
-                <!-- 5. Simple Memory -> AI Agent (dashed) -->
-                <line
-                    x1="840"
-                    y1="435"
-                    x2="730"
-                    y2="345"
-                    stroke="#64748b"
-                    stroke-width="2"
-                    stroke-dasharray="6 4"
-                    marker-end="url(#arrowhead-dashed)"
-                />
-
-                <!-- 6. Date & Time -> AI Agent (dashed) -->
-                <line
-                    x1="850"
-                    y1="360"
-                    x2="810"
-                    y2="330"
-                    stroke="#64748b"
-                    stroke-width="2"
-                    stroke-dasharray="6 4"
-                    marker-end="url(#arrowhead-dashed)"
-                />
-
-                <!-- 7. AI Agent -> Send a Message (vertical) -->
-                <line
-                    x1="695"
-                    y1="345"
-                    x2="695"
-                    y2="530"
-                    stroke="#1e293b"
-                    stroke-width="2.5"
-                    marker-end="url(#arrowhead)"
-                />
-                <circle cx="710" cy="440" r="12" fill="#2563eb" />
-                <text
-                    x="710"
-                    y="445"
-                    fill="#fff"
-                    font-size="12"
-                    font-weight="700"
-                    text-anchor="middle"
-                >
-                    4
-                </text>
-
-                <!-- 8. Send a Message -> Slack App (send) -->
-                <line
-                    x1="580"
-                    y1="575"
-                    x2="450"
-                    y2="610"
-                    stroke="#1e293b"
-                    stroke-width="2.5"
-                    marker-end="url(#arrowhead)"
-                />
-                <circle cx="550" cy="565" r="12" fill="#2563eb" />
-                <text
-                    x="550"
-                    y="570"
-                    fill="#fff"
-                    font-size="12"
-                    font-weight="700"
-                    text-anchor="middle"
-                >
-                    5
-                </text>
-                <text
-                    x="450"
-                    y="568"
-                    class="label"
-                    fill="#334155"
-                    font-size="11"
-                >
-                    POST to Slack API
-                </text>
-
-                <!-- 9. Slack App (send) -> User (diagonal return) -->
-                <line
-                    x1="290"
-                    y1="575"
-                    x2="120"
-                    y2="195"
-                    stroke="#1e293b"
-                    stroke-width="2.5"
-                    marker-end="url(#arrowhead)"
-                />
-                <circle cx="275" cy="505" r="12" fill="#2563eb" />
-                <text
-                    x="275"
-                    y="510"
-                    fill="#fff"
-                    font-size="12"
-                    font-weight="700"
-                    text-anchor="middle"
-                >
-                    6
-                </text>
-                <text
-                    x="290"
-                    y="510"
-                    class="label"
-                    fill="#334155"
-                    font-size="11"
-                >
-                    Response delivered
-                </text>
-
-                <!-- ============ LEGEND ============ -->
-                <line
-                    x1="60"
-                    y1="680"
-                    x2="120"
-                    y2="680"
-                    stroke="#1e293b"
-                    stroke-width="2.5"
-                    marker-end="url(#arrowhead)"
-                />
-                <text
-                    x="130"
-                    y="684"
-                    class="label"
-                    fill="#334155"
-                    font-size="12"
-                >
-                    Data flow (sync HTTP)
-                </text>
-                <line
-                    x1="60"
-                    y1="705"
-                    x2="120"
-                    y2="705"
-                    stroke="#64748b"
-                    stroke-width="2"
-                    stroke-dasharray="6 4"
-                    marker-end="url(#arrowhead-dashed)"
-                />
-                <text
-                    x="130"
-                    y="709"
-                    class="label"
-                    fill="#334155"
-                    font-size="12"
-                >
-                    AI Agent inputs (model, memory, tools)
-                </text>
-
-                <!-- Patterns summary -->
-                <rect
-                    x="40"
-                    y="740"
-                    width="1020"
-                    height="70"
-                    rx="10"
-                    fill="#e6edf8"
-                    stroke="#b0c4de"
-                    stroke-width="1.5"
-                />
-                <a href="./slack-n8n.workflow.json" target="_blank">
+                    <!-- 8. Send a Message -> Slack App (send) -->
+                    <line
+                        x1="580"
+                        y1="575"
+                        x2="450"
+                        y2="610"
+                        stroke="#1e293b"
+                        stroke-width="2.5"
+                        marker-end="url(#arrowhead)"
+                    />
+                    <circle cx="550" cy="565" r="12" fill="#2563eb" />
+                    <text
+                        x="550"
+                        y="570"
+                        fill="#fff"
+                        font-size="12"
+                        font-weight="700"
+                        text-anchor="middle"
+                    >
+                        5
+                    </text>
                     <text
                         x="450"
-                        y="768"
-                        font-size="14"
-                        fill="#1e40af"
-                        text-decoration="underline"
+                        y="568"
+                        class="label"
+                        fill="#334155"
+                        font-size="11"
+                    >
+                        POST to Slack API
+                    </text>
+
+                    <!-- 9. Slack App (send) -> User (diagonal return) -->
+                    <line
+                        x1="290"
+                        y1="575"
+                        x2="120"
+                        y2="195"
+                        stroke="#1e293b"
+                        stroke-width="2.5"
+                        marker-end="url(#arrowhead)"
+                    />
+                    <circle cx="275" cy="505" r="12" fill="#2563eb" />
+                    <text
+                        x="275"
+                        y="510"
+                        fill="#fff"
+                        font-size="12"
+                        font-weight="700"
+                        text-anchor="middle"
+                    >
+                        6
+                    </text>
+                    <text
+                        x="290"
+                        y="510"
+                        class="label"
+                        fill="#334155"
+                        font-size="11"
+                    >
+                        Response delivered
+                    </text>
+
+                    <!-- ============ LEGEND ============ -->
+                    <line
+                        x1="60"
+                        y1="680"
+                        x2="120"
+                        y2="680"
+                        stroke="#1e293b"
+                        stroke-width="2.5"
+                        marker-end="url(#arrowhead)"
+                    />
+                    <text
+                        x="130"
+                        y="684"
+                        class="label"
+                        fill="#334155"
+                        font-size="12"
+                    >
+                        Data flow (sync HTTP)
+                    </text>
+                    <line
+                        x1="60"
+                        y1="705"
+                        x2="120"
+                        y2="705"
+                        stroke="#64748b"
+                        stroke-width="2"
+                        stroke-dasharray="6 4"
+                        marker-end="url(#arrowhead-dashed)"
+                    />
+                    <text
+                        x="130"
+                        y="709"
+                        class="label"
+                        fill="#334155"
+                        font-size="12"
+                    >
+                        AI Agent inputs (model, memory, tools)
+                    </text>
+
+                    <!-- Patterns summary -->
+                    <rect
+                        x="40"
+                        y="740"
+                        width="1020"
+                        height="70"
+                        rx="10"
+                        fill="#e6edf8"
+                        stroke="#b0c4de"
+                        stroke-width="1.5"
+                    />
+                    <a
+                        href="./slack-n8n.workflow.json"
+                        target="_blank"
+                    >
+                        <text
+                            x="450"
+                            y="768"
+                            font-size="14"
+                            fill="#1e40af"
+                            text-decoration="underline"
+                            font-weight="500"
+                        >
+                            ⬇️ Download n8n workflow JSON
+                        </text>
+                    </a>
+                    <text
+                        x="250"
+                        y="795"
+                        class="label"
+                        fill="#1e293b"
+                        font-size="13"
                         font-weight="500"
                     >
-                        ⬇️ Download n8n workflow JSON
+                        ⚡ Patterns: Event-driven · Webhook ·
+                        Orchestration · AI Agent (ReAct) ·
+                        Tool-calling · Memory Buffer
                     </text>
-                </a>
-                <text
-                    x="250"
-                    y="795"
-                    class="label"
-                    fill="#1e293b"
-                    font-size="13"
-                    font-weight="500"
-                >
-                    ⚡ Patterns: Event-driven · Webhook ·
-                    Orchestration · AI Agent (ReAct) · Tool-calling ·
-                    Memory Buffer
-                </text>
-            </svg>
+                </svg>
             </div>
 
             <!-- ============ EXPLANATION ============ -->
