@@ -7,17 +7,25 @@
             content="width=device-width, initial-scale=1.0"
         />
         <title>Slack + n8n + AI - Technical Architecture</title>
-        <link rel="stylesheet" href="./n8n-post.css" />
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     </head>
-    <body class="post-page">
-        <div class="post-container">
-            <header class="post-header">
-                <h1 class="post-title">
+    <body
+        class="flex min-h-screen items-start justify-center bg-[#0b0e14] p-2.5 font-[system-ui,-apple-system,'Segoe_UI',Roboto,'Helvetica_Neue',sans-serif] text-slate-800 sm:p-5"
+    >
+        <div
+            class="relative w-full max-w-[1400px] rounded-[20px] bg-slate-100 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.35)] sm:p-[30px] sm:pb-10"
+        >
+            <header
+                class="mb-6 flex flex-wrap items-center justify-between gap-4 border-b-[3px] border-slate-200 pb-3"
+            >
+                <h1
+                    class="min-w-0 flex-1 text-[1.3rem] leading-[1.3] font-bold tracking-[-0.02em] text-slate-900 sm:text-[1.75rem]"
+                >
                     Slack → n8n → AI — Event-Driven Integration
                 </h1>
                 <a
                     href="/#/posts"
-                    class="posts-btn"
+                    class="z-10 inline-flex shrink-0 items-center gap-2 self-center rounded-full bg-slate-800 px-2.5 py-1.5 text-[0.8rem] font-semibold text-slate-100 no-underline shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition hover:-translate-y-0.5 hover:bg-slate-900 hover:shadow-[0_6px_20px_rgba(0,0,0,0.25)] active:translate-y-0 sm:px-[18px] sm:py-2.5 sm:text-[0.95rem]"
                     title="Go to Posts"
                 >
                     <svg
@@ -30,12 +38,12 @@
                             d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5L13 3.5zM8 13h8v2H8zm0 4h5v2H8z"
                         />
                     </svg>
-                    <span class="label-text">Posts</span>
+                    <span class="hidden sm:inline">Posts</span>
                 </a>
             </header>
 
             <!-- ============ SVG DIAGRAM ============ -->
-            <div class="diagram-single">
+            <div class="[&_svg]:block [&_svg]:h-auto [&_svg]:w-full">
                 <svg
                     viewBox="0 50 1100 780"
                     preserveAspectRatio="xMidYMid meet"
@@ -797,10 +805,14 @@
             </div>
 
             <!-- ============ EXPLANATION ============ -->
-            <div class="explanation">
+            <div
+                class="mt-8 rounded-2xl border border-[#e9edf2] border-l-[6px] border-l-blue-600 bg-white p-5 leading-[1.7] text-slate-800 shadow-[0_10px_20px_-10px_rgba(0,0,0,0.08)] sm:p-[30px] sm:px-[35px] [&_a]:font-medium [&_a]:text-[#1e4f8a] [&_a]:no-underline hover:[&_a]:underline [&_code]:rounded [&_code]:bg-[#eef2f6] [&_code]:px-2 [&_code]:py-[0.15rem] [&_code]:font-mono [&_code]:text-[0.9em] [&_code]:text-[#0b2d4b] [&_h2]:mb-2 [&_h2]:border-b-[3px] [&_h2]:border-slate-200 [&_h2]:pb-[0.6rem] [&_h2]:text-[1.3rem] [&_h2]:font-bold [&_h2]:text-slate-900 sm:[&_h2]:text-[1.6rem] [&_h3]:mt-8 [&_h3]:mb-3 [&_h3]:flex [&_h3]:items-center [&_h3]:gap-2 [&_h3]:text-[1.25rem] [&_h3]:font-semibold [&_h3]:text-blue-800 [&_h4]:mt-6 [&_h4]:mb-1.5 [&_h4]:text-[1.05rem] [&_h4]:font-semibold [&_h4]:text-slate-800 [&_p]:mb-4 [&_p]:text-base [&_ul]:mb-4 [&_ul]:pl-6 [&_ol]:mb-4 [&_ol]:pl-6 [&_li]:mb-1.5 [&_table]:my-3 [&_table]:w-full [&_table]:border-collapse [&_table]:text-[0.85rem] sm:[&_table]:text-[0.95rem] [&_th]:border [&_th]:border-[#d1d9e6] [&_th]:bg-[#eef2f6] [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:align-top [&_th]:font-semibold [&_td]:border [&_td]:border-[#d1d9e6] [&_td]:px-3 [&_td]:py-2 [&_td]:text-left [&_td]:align-top [&_tbody_tr:nth-child(even)]:bg-slate-50"
+            >
                 <!-- === OVERVIEW / HOW IT WORKS === -->
                 <h2>📘 How It Works - Step by Step</h2>
-                <div class="note-box">
+                <div
+                    class="mb-6 rounded-xl border-l-[5px] border-blue-600 bg-slate-50 p-5 text-slate-700"
+                >
                     <strong>⚠️ Asynchronous note:</strong> Slack
                     expects a quick <code>200 OK</code> response to
                     the webhook. In production, the actual processing
@@ -840,7 +852,7 @@
                     </li>
                 </ol>
 
-                <hr class="post-divider" />
+                <hr class="my-8 border-0 border-t border-slate-200" />
 
                 <!-- === COMPONENT DEEP-DIVE === -->
                 <h2>🔧 Component Deep-Dive</h2>
@@ -905,39 +917,54 @@
                     </li>
                 </ul>
 
-                <hr class="post-divider" />
+                <hr class="my-8 border-0 border-t border-slate-200" />
 
                 <!-- === ARCHITECTURAL PATTERNS === -->
                 <h2>🧩 Architectural Patterns</h2>
 
                 <p>
-                    <span class="pattern-badge">E</span>
+                    <span
+                        class="mr-1.5 inline-block rounded-[20px] bg-[#1e4f8a] px-3 text-[0.8rem] leading-[1.8] font-semibold text-white"
+                        >E</span
+                    >
                     <strong>Event-Driven Architecture</strong> - Slack
                     emits an event (app_mention) that triggers a chain
                     of actions, decoupling the source from processing.
                 </p>
                 <p>
-                    <span class="pattern-badge">W</span>
+                    <span
+                        class="mr-1.5 inline-block rounded-[20px] bg-[#1e4f8a] px-3 text-[0.8rem] leading-[1.8] font-semibold text-white"
+                        >W</span
+                    >
                     <strong>Webhook / HTTP Callback</strong> - Slack
                     pushes data to a predefined n8n endpoint via HTTP
                     POST (a synchronous push model from Slack's side).
                 </p>
                 <p>
-                    <span class="pattern-badge">A</span>
+                    <span
+                        class="mr-1.5 inline-block rounded-[20px] bg-[#1e4f8a] px-3 text-[0.8rem] leading-[1.8] font-semibold text-white"
+                        >A</span
+                    >
                     <strong>AI Agent Pattern (ReAct)</strong> - The
                     LangChain agent uses a reasoning loop to decide
                     which tools to call and generate responses, often
                     with memory.
                 </p>
                 <p>
-                    <span class="pattern-badge">T</span>
+                    <span
+                        class="mr-1.5 inline-block rounded-[20px] bg-[#1e4f8a] px-3 text-[0.8rem] leading-[1.8] font-semibold text-white"
+                        >T</span
+                    >
                     <strong>Tool-Calling / Function Calling</strong> -
                     The agent invokes external functions (tools) to
                     retrieve dynamic data (e.g., current time) or
                     perform actions.
                 </p>
                 <p>
-                    <span class="pattern-badge">M</span>
+                    <span
+                        class="mr-1.5 inline-block rounded-[20px] bg-[#1e4f8a] px-3 text-[0.8rem] leading-[1.8] font-semibold text-white"
+                        >M</span
+                    >
                     <strong>Memory Buffer</strong> - A sliding window
                     of conversation history provides context across
                     multiple interactions, mitigating the
@@ -945,16 +972,28 @@
                 </p>
 
                 <!-- Orchestration toggle (open by default) -->
-                <details class="toggle" open>
-                    <summary>
-                        <span class="pattern-badge">O</span>
+                <details
+                    class="my-3 [&[open]_.indicator]:rotate-90"
+                    open
+                >
+                    <summary
+                        class="flex cursor-pointer list-none items-center gap-2 py-1 font-semibold text-slate-800 [&::-webkit-details-marker]:hidden"
+                    >
+                        <span
+                            class="mr-1.5 inline-block rounded-[20px] bg-[#1e4f8a] px-3 text-[0.8rem] leading-[1.8] font-semibold text-white"
+                            >O</span
+                        >
                         <strong
                             >Orchestration (Workflow Engine)</strong
                         >
                         - n8n as the conductor
-                        <span class="indicator"></span>
+                        <span
+                            class="indicator inline-block cursor-pointer text-[1.2rem] leading-none transition-transform before:content-['›']"
+                        ></span>
                     </summary>
-                    <div class="content">
+                    <div
+                        class="my-2 mb-3 rounded-[10px] border-2 border-dashed border-slate-300 bg-[#fafcff] px-5 py-4"
+                    >
                         <p>
                             <strong
                                 >Orchestration vs. Choreography - a
@@ -1015,15 +1054,23 @@
                             </tbody>
                         </table>
 
-                        <details class="toggle">
-                            <summary>
+                        <details
+                            class="my-3 [&[open]_.indicator]:rotate-90"
+                        >
+                            <summary
+                                class="flex cursor-pointer list-none items-center gap-2 py-1 font-semibold text-slate-800 [&::-webkit-details-marker]:hidden"
+                            >
                                 <strong>
                                     ❓ Common FAQs about orchestration
                                     vs. choreography
                                 </strong>
-                                <span class="indicator"></span>
+                                <span
+                                    class="indicator inline-block cursor-pointer text-[1.2rem] leading-none transition-transform before:content-['›']"
+                                ></span>
                             </summary>
-                            <div class="content">
+                            <div
+                                class="my-2 mb-3 rounded-[10px] border-2 border-dashed border-slate-300 bg-[#fafcff] px-5 py-4"
+                            >
                                 <ul>
                                     <li>
                                         <strong
@@ -1182,16 +1229,28 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <div class="alert tip">
-                                    <div class="title">✅ OK</div>
-                                    <div class="content">
+                                <div
+                                    class="my-3 rounded-lg border-l-4 border-l-[#2da44e] bg-[#e6f6e6] px-5 py-3"
+                                >
+                                    <div
+                                        class="mb-1 flex items-center gap-1.5 text-[0.95rem] font-bold text-[#1a7f37]"
+                                    >
+                                        ✅ OK
+                                    </div>
+                                    <div class="text-[0.95rem]">
                                         “If Payment says ‘success',
                                         then call Order Service.”
                                     </div>
                                 </div>
-                                <div class="alert caution">
-                                    <div class="title">❌ NOT OK</div>
-                                    <div class="content">
+                                <div
+                                    class="my-3 rounded-lg border-l-4 border-l-[#cf222e] bg-[#ffebe9] px-5 py-3"
+                                >
+                                    <div
+                                        class="mb-1 flex items-center gap-1.5 text-[0.95rem] font-bold text-[#a0111a]"
+                                    >
+                                        ❌ NOT OK
+                                    </div>
+                                    <div class="text-[0.95rem]">
                                         “If total order value &gt;
                                         $1000, apply a 10% discount,
                                         recalculate tax, and then call
@@ -1212,7 +1271,7 @@
                     </div>
                 </details>
 
-                <hr class="post-divider" />
+                <hr class="my-8 border-0 border-t border-slate-200" />
 
                 <!-- === IMPLEMENTATION IN TRADITIONAL BACKEND === -->
                 <h2>💻 Implementation in Traditional Backend Code</h2>
@@ -1232,16 +1291,24 @@
                         legitimate.
                     </li>
                     <li>
-                        <details class="toggle">
-                            <summary>
+                        <details
+                            class="my-3 [&[open]_.indicator]:rotate-90"
+                        >
+                            <summary
+                                class="flex cursor-pointer list-none items-center gap-2 py-1 font-semibold text-slate-800 [&::-webkit-details-marker]:hidden"
+                            >
                                 <strong
                                     >Handle the URL verification
                                     handshake</strong
                                 >
                                 (required during setup)
-                                <span class="indicator"></span>
+                                <span
+                                    class="indicator inline-block cursor-pointer text-[1.2rem] leading-none transition-transform before:content-['›']"
+                                ></span>
                             </summary>
-                            <div class="content">
+                            <div
+                                class="my-2 mb-3 rounded-[10px] border-2 border-dashed border-slate-300 bg-[#fafcff] px-5 py-4"
+                            >
                                 <p>
                                     Slack sends a
                                     <code>url_verification</code>
@@ -1251,7 +1318,7 @@
                                     challenge value as plain text.
                                 </p>
                                 <pre
-                                    class="code-block"
+                                    class="overflow-x-auto rounded-lg bg-slate-900 p-4 text-sm text-slate-100"
                                 ><code>// Example Node.js (Express)
 app.post('/slack/events', (req, res) => {
   if (req.body.type === 'url_verification') {
@@ -1287,7 +1354,7 @@ app.post('/slack/events', (req, res) => {
                     </li>
                 </ul>
 
-                <hr class="post-divider" />
+                <hr class="my-8 border-0 border-t border-slate-200" />
 
                 <!-- === KEY TECHNICAL DETAILS & LINKS === -->
                 <h2>🔗 Key Technical Details &amp; Resources</h2>
