@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Observability Stack - Big Picture</title>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <style>
+        .arrow-lg {
+            font-size: 1.8rem;
+            line-height: 1;
+            color: #475569;
+        }
+
+        .component-box {
+            transition: box-shadow 0.2s, transform 0.1s;
+        }
+
+        .component-box:hover {
+            box-shadow: 0 8px 30px -6px rgba(0, 0, 0, 0.6);
+            transform: translateY(-1px);
+        }
+
+        .trigger-pulse {
+            animation: soft-pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes soft-pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-slate-900 text-slate-200 antialiased">
+    <div class="max-w-7xl mx-auto w-full py-10 sm:py-12">
+
+        <header class="mb-6 flex flex-wrap items-center justify-between gap-4 border-b-[3px] border-slate-200 pb-3">
+            <h1 class="min-w-0 flex-1 font-bold lg:text-3xl md:text-lg sm:text-s">
+                <svg class="w-10 inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+                    <path fill="#f5a800"
+                        d="M67.648 69.797c-5.246 5.25-5.246 13.758 0 19.008 5.25 5.246 13.758 5.246 19.004 0 5.25-5.25 5.25-13.758 0-19.008-5.246-5.246-13.754-5.246-19.004 0Zm14.207 14.219a6.649 6.649 0 0 1-9.41 0 6.65 6.65 0 0 1 0-9.407 6.649 6.649 0 0 1 9.41 0c2.598 2.586 2.598 6.809 0 9.407ZM86.43 3.672l-8.235 8.234a4.17 4.17 0 0 0 0 5.875l32.149 32.149a4.17 4.17 0 0 0 5.875 0l8.234-8.235c1.61-1.61 1.61-4.261 0-5.87L92.29 3.671a4.159 4.159 0 0 0-5.86 0ZM28.738 108.895a3.763 3.763 0 0 0 0-5.31l-4.183-4.187a3.768 3.768 0 0 0-5.313 0l-8.644 8.649-.016.012-2.371-2.375c-1.313-1.313-3.45-1.313-4.75 0-1.313 1.312-1.313 3.449 0 4.75l14.246 14.242a3.353 3.353 0 0 0 4.746 0c1.3-1.313 1.313-3.45 0-4.746l-2.375-2.375.016-.012Zm0 0" />
+                    <path fill="#425cc7"
+                        d="M72.297 27.313 54.004 45.605c-1.625 1.625-1.625 4.301 0 5.926L65.3 62.824c7.984-5.746 19.18-5.035 26.363 2.153l9.148-9.149c1.622-1.625 1.622-4.297 0-5.922L78.22 27.313a4.185 4.185 0 0 0-5.922 0ZM60.55 67.585l-6.672-6.672c-1.563-1.562-4.125-1.562-5.684 0l-23.53 23.54a4.036 4.036 0 0 0 0 5.687l13.331 13.332a4.036 4.036 0 0 0 5.688 0l15.132-15.157c-3.199-6.609-2.625-14.593 1.735-20.73Zm0 0" />
+                </svg>
+                OpenTelemetry Observability Stack
+            </h1>
+            <a href="/#/posts"
+                class="z-10 inline-flex shrink-0 items-center gap-2 self-center rounded-full bg-slate-800 px-2.5 py-1.5 text-[0.8rem] font-semibold text-slate-100 no-underline shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition hover:-translate-y-0.5 hover:bg-slate-900 hover:shadow-[0_6px_20px_rgba(0,0,0,0.25)] active:translate-y-0 sm:px-[18px] sm:py-2.5 sm:text-[0.95rem]"
+                title="Go to Posts">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                    <path
+                        d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5L13 3.5zM8 13h8v2H8zm0 4h5v2H8z" />
+                </svg>
+                <span class="hidden sm:inline">Posts</span>
+            </a>
+        </header>
+
+        <p class="text-slate-400 mb-6">
+            Backend App → OTel Collector → Loki (Logs) + Tempo (Traces)
+        </p>
+
+        <!-- MAIN DIAGRAM -->
+        <div class="bg-slate-800 rounded-2xl shadow-2xl border border-slate-700/70 p-6 sm:p-8 mb-10">
+            <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-center gap-4 lg:gap-3">
+
+                <!-- 1. BACKEND APP -->
+                <div
+                    class="component-box w-full lg:w-40 xl:w-48 bg-slate-900 rounded-2xl border border-slate-700 p-3 flex flex-col items-center justify-center border-l-4 border-l-blue-400 text-center flex-shrink-0">
+                    <span class="text-3xl sm:text-4xl">🚀</span>
+                    <span class="font-bold text-slate-100 text-xs sm:text-sm mt-0.5">Backend App</span>
+                    <span class="text-xs sm:text-xs text-slate-400 leading-tight">Generates logs &amp;
+                        traces</span>
+                    <span
+                        class="text-[9px] sm:text-xs text-slate-400 bg-slate-700 px-2 py-0.5 rounded mt-1 font-mono">OTLP
+                        (gRPC / HTTP)</span>
+                    <span class="text-[9px] sm:text-xs text-slate-500 font-mono mt-0.5">4317 ·
+                        4318</span>
+                </div>
+
+                <!-- ARROW (horizontal on desktop, vertical on mobile) -->
+                <div class="arrow-lg transform rotate-90 lg:rotate-0 flex-shrink-0 px-0 lg:px-1 self-center">
+                    ➡️
+                </div>
+
+                <!-- 2. OTEL COLLECTOR (Central Hub) -->
+                <div
+                    class="component-box w-full flex-1 lg:w-[26rem] xl:w-[32rem] bg-slate-900 rounded-2xl border border-slate-700 p-3 sm:p-4 flex-shrink-0 flex flex-col border-t-4 border-t-purple-400 min-h-[200px]">
+                    <div
+                        class="font-bold text-slate-200 text-center text-xs sm:text-sm border-b border-slate-700 pb-1 flex items-center justify-center gap-2 flex-wrap">
+                        <span>⚙️ OpenTelemetry Collector</span>
+                        <span
+                            class="text-[8px] sm:text-xs font-mono bg-purple-900/50 text-purple-300 px-2 py-0.5 rounded-full">hub</span>
+                    </div>
+
+                    <!-- Internal 3-column (stacked on mobile, row on sm+) -->
+                    <div class="flex-1 flex flex-col sm:flex-row gap-1.5 sm:gap-2 mt-1.5 min-h-0">
+
+                        <!-- RECEIVERS -->
+                        <div
+                            class="flex-1 bg-blue-950/30 rounded-xl p-1.5 sm:p-2 flex flex-col items-center justify-center border border-blue-800">
+                            <span class="font-semibold text-blue-300 text-s uppercase tracking-wide">Receivers</span>
+                            <span class="text-xs sm:text-xs text-slate-300">OTLP HTTP</span>
+                            <span class="text-xs sm:text-xs text-slate-300">OTLP gRPC</span>
+                            <span class="text-[8px] sm:text-xs text-slate-500">ingest</span>
+                        </div>
+
+                        <!-- PROCESSORS (with Batch Trigger Highlight) -->
+                        <div
+                            class="flex-[2] bg-green-950/30 rounded-xl p-1.5 sm:p-2 flex flex-col border border-green-800 relative">
+                            <span
+                                class="font-semibold text-green-300 text-s uppercase tracking-wide text-center">Processors</span>
+                            <div class="text-[9px] sm:text-sm text-slate-300 space-y-0.5 leading-tight">
+                                <div class="flex items-center gap-1"><span class="text-red-400 text-base">●</span> Tail
+                                    Sampling - <span class="font-medium">keep 100% errors</span></div>
+                                <div class="flex items-center gap-1"><span class="text-amber-400 text-base">◐</span>
+                                    Probabilistic - sample all
+                                    other logs besides errors (e.g. 10%)</div>
+                            </div>
+                            <!-- BATCH TRIGGER (responsive callout) -->
+                            <div
+                                class="mt-1 bg-yellow-950/60 border border-yellow-700 rounded-lg p-1 text-center text-[9px] sm:text-sm font-semibold text-yellow-200 shadow-sm trigger-pulse">
+                                <span class="underline decoration-dotted">Flushes when </span><br class="sm:hidden" />
+                                <span class="text-[8px] sm:text-xs font-normal">size ≥512 <span
+                                        class="mx-0.5 text-yellow-400">OR</span> timeout ≥5s</span>
+                            </div>
+                        </div>
+
+                        <!-- EXPORTERS -->
+                        <div
+                            class="flex-1 bg-rose-950/30 rounded-xl p-1.5 sm:p-2 flex flex-col items-center justify-center border border-rose-800">
+                            <span class="font-semibold text-rose-300 text-s uppercase tracking-wide">Exporters</span>
+                            <span class="text-xs sm:text-xs text-slate-300">→ Tempo (gRPC)</span>
+                            <span class="text-xs sm:text-xs text-slate-300">→ Loki (HTTP)</span>
+                            <span class="text-[8px] sm:text-xs text-slate-500">forward</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ARROW SPLIT (rotates on mobile) -->
+                <div class="flex flex-row lg:flex-col items-center gap-0 flex-shrink-0 px-0 lg:px-0.5 self-center">
+                    <div class="arrow-lg transform rotate-90 lg:rotate-0">➡️</div>
+                    <div class="arrow-lg text-[1.2rem] lg:text-[0.8rem] text-slate-600 leading-none mx-0.5 lg:mx-0">
+                        ┃</div>
+                    <div class="arrow-lg transform rotate-90 lg:rotate-0">➡️</div>
+                </div>
+
+                <!-- 3. LOKI + TEMPO (side-by-side on mobile, stacked on desktop) -->
+                <div class="flex flex-row lg:flex-col gap-3 w-full lg:w-40 xl:w-48 flex-shrink-0">
+
+                    <!-- LOKI -->
+                    <div
+                        class=" component-box flex-1 lg:w-full bg-slate-900 rounded-2xl border border-slate-700 p-3 sm:p-4 flex flex-row lg:flex-col items-center justify-center gap-2 lg:gap-0 border-l-4 border-l-orange-400">
+                        <svg class="w-10" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 512 512">
+                            <linearGradient id="a" x1="485.057" x2="485.057" y1="-705.376" y2="-74.565"
+                                gradientTransform="scale(1 -1)rotate(8.748 -271.56 -2903.464)"
+                                gradientUnits="userSpaceOnUse">
+                                <stop offset="0" style="stop-color:#faed1e" />
+                                <stop offset="1" style="stop-color:#f15b2b" />
+                            </linearGradient>
+                            <path d="m139.6 464.9-40.8 6.3 6.3 40.8 40.8-6.3z" style="fill:url(#a)" />
+                            <linearGradient id="b" x1="749.438" x2="749.438" y1="-705.376" y2="-74.565"
+                                gradientTransform="scale(1 -1)rotate(8.748 -271.56 -2903.464)"
+                                gradientUnits="userSpaceOnUse">
+                                <stop offset="0" style="stop-color:#faed1e" />
+                                <stop offset="1" style="stop-color:#f15b2b" />
+                            </linearGradient>
+                            <path d="M286.9 418.6 467 390.9l-6.3-40.8-180.1 27.7z" style="fill:url(#b)" />
+                            <linearGradient id="c" x1="614.329" x2="614.329" y1="-705.376" y2="-74.565"
+                                gradientTransform="scale(1 -1)rotate(8.748 -271.56 -2903.464)"
+                                gradientUnits="userSpaceOnUse">
+                                <stop offset="0" style="stop-color:#faed1e" />
+                                <stop offset="1" style="stop-color:#f15b2b" />
+                            </linearGradient>
+                            <path d="m216.7 387.6 6.3 40.8 40.8-6.2-6.3-40.9z" style="fill:url(#c)" />
+                            <linearGradient id="d" x1="549.698" x2="549.698" y1="-705.376" y2="-74.565"
+                                gradientTransform="scale(1 -1)rotate(8.748 -271.56 -2903.464)"
+                                gradientUnits="userSpaceOnUse">
+                                <stop offset="0" style="stop-color:#faed1e" />
+                                <stop offset="1" style="stop-color:#f15b2b" />
+                            </linearGradient>
+                            <path d="m209.8 495.9-6.3-40.8-40.8 6.3 6.2 40.8z" style="fill:url(#d)" />
+                            <linearGradient id="e" x1="485.065" x2="485.065" y1="-705.376" y2="-74.565"
+                                gradientTransform="scale(1 -1)rotate(8.748 -271.56 -2903.464)"
+                                gradientUnits="userSpaceOnUse">
+                                <stop offset="0" style="stop-color:#faed1e" />
+                                <stop offset="1" style="stop-color:#f15b2b" />
+                            </linearGradient>
+                            <path d="m95.2 448.1 40.8-6.3-6.2-40.8-40.8 6.3z" style="fill:url(#e)" />
+                            <linearGradient id="f" x1="749.433" x2="749.433" y1="-705.376" y2="-74.565"
+                                gradientTransform="scale(1 -1)rotate(8.748 -271.56 -2903.464)"
+                                gradientUnits="userSpaceOnUse">
+                                <stop offset="0" style="stop-color:#faed1e" />
+                                <stop offset="1" style="stop-color:#f15b2b" />
+                            </linearGradient>
+                            <path d="m470.6 414-180.2 27.7 6.3 40.8 180.1-27.7z" style="fill:url(#f)" />
+                            <linearGradient id="g" x1="614.338" x2="614.338" y1="-705.376" y2="-74.565"
+                                gradientTransform="scale(1 -1)rotate(8.748 -271.56 -2903.464)"
+                                gradientUnits="userSpaceOnUse">
+                                <stop offset="0" style="stop-color:#faed1e" />
+                                <stop offset="1" style="stop-color:#f15b2b" />
+                            </linearGradient>
+                            <path d="m226.6 451.5 6.2 40.8 40.8-6.2-6.2-40.9z" style="fill:url(#g)" />
+                            <linearGradient id="h" x1="549.702" x2="549.702" y1="-705.376" y2="-74.565"
+                                gradientTransform="scale(1 -1)rotate(8.748 -271.56 -2903.464)"
+                                gradientUnits="userSpaceOnUse">
+                                <stop offset="0" style="stop-color:#faed1e" />
+                                <stop offset="1" style="stop-color:#f15b2b" />
+                            </linearGradient>
+                            <path d="m159.1 438.3 40.8-6.3-6.2-40.8-40.9 6.3z" style="fill:url(#h)" />
+                            <linearGradient id="i" x1="473.159" x2="473.159" y1="-693.123" y2="-94.853"
+                                gradientTransform="scale(1 -1)rotate(8.748 -271.56 -2903.464)"
+                                gradientUnits="userSpaceOnUse">
+                                <stop offset="0" style="stop-color:#faed1e" />
+                                <stop offset="1" style="stop-color:#f15b2b" />
+                            </linearGradient>
+                            <path d="m85.4 384.2 17.2-2.6L52.4 55l-17.2 2.7z" style="fill:url(#i)" />
+                            <linearGradient id="j" x1="497.114" x2="497.114" y1="-709.717" y2="-67.381"
+                                gradientTransform="scale(1 -1)rotate(8.748 -271.56 -2903.464)"
+                                gradientUnits="userSpaceOnUse">
+                                <stop offset="0" style="stop-color:#faed1e" />
+                                <stop offset="1" style="stop-color:#f15b2b" />
+                            </linearGradient>
+                            <path d="m109.1 380.6 17.2-2.7L72.4 27.3 55.2 30z" style="fill:url(#j)" />
+                            <linearGradient id="k" x1="538.062" x2="538.062" y1="-724.295" y2="-43.24"
+                                gradientTransform="scale(1 -1)rotate(8.748 -271.56 -2903.464)"
+                                gradientUnits="userSpaceOnUse">
+                                <stop offset="0" style="stop-color:#faed1e" />
+                                <stop offset="1" style="stop-color:#f15b2b" />
+                            </linearGradient>
+                            <path d="m149.6 374.3 17.2-2.6L109.6 0 92.4 2.7z" style="fill:url(#k)" />
+                            <linearGradient id="l" x1="562.005" x2="562.005" y1="-701.646" y2="-80.743"
+                                gradientTransform="scale(1 -1)rotate(8.748 -271.56 -2903.464)"
+                                gradientUnits="userSpaceOnUse">
+                                <stop offset="0" style="stop-color:#faed1e" />
+                                <stop offset="1" style="stop-color:#f15b2b" />
+                            </linearGradient>
+                            <path d="m173.2 370.7 17.3-2.7-52.2-338.8-17.2 2.6z" style="fill:url(#l)" />
+                            <linearGradient id="m" x1="602.42" x2="602.42" y1="-675.539" y2="-123.976"
+                                gradientTransform="scale(1 -1)rotate(8.748 -271.56 -2903.464)"
+                                gradientUnits="userSpaceOnUse">
+                                <stop offset="0" style="stop-color:#faed1e" />
+                                <stop offset="1" style="stop-color:#f15b2b" />
+                            </linearGradient>
+                            <path d="m213.2 364.6 17.2-2.7-46.3-301-17.2 2.6z" style="fill:url(#m)" />
+                            <linearGradient id="n" x1="626.396" x2="626.396" y1="-683.496" y2="-110.797"
+                                gradientTransform="scale(1 -1)rotate(8.748 -271.56 -2903.464)"
+                                gradientUnits="userSpaceOnUse">
+                                <stop offset="0" style="stop-color:#faed1e" />
+                                <stop offset="1" style="stop-color:#f15b2b" />
+                            </linearGradient>
+                            <path d="m236.9 360.9 17.2-2.6L206 45.7l-17.2 2.6z" style="fill:url(#n)" />
+                        </svg>
+                        <div class="text-center">
+                            <span class="font-bold text-slate-100 text-xs sm:text-sm block">Loki</span>
+                            <span class="text-xs sm:text-xs text-slate-400">Logs</span>
+                            <span class="text-[9px] sm:text-xs text-slate-500 font-mono block">port
+                                3100</span>
+                        </div>
+                    </div>
+
+                    <!-- TEMPO -->
+                    <div
+                        class="component-box flex-1 lg:w-full bg-slate-900 rounded-2xl border border-slate-700 p-3 sm:p-4 flex flex-row lg:flex-col items-center justify-center gap-2 lg:gap-0 border-l-4 border-l-pink-400">
+                        <svg class="w-10" viewBox="0 0 96 80" xmlns="http://www.w3.org/2000/svg"
+                            style="vector-effect: non-scaling-stroke;" fill="none">
+                            <defs style="vector-effect: non-scaling-stroke;">
+                                <linearGradient style="vector-effect: non-scaling-stroke;" y2="0.57601" x2="0.22285"
+                                    y1="0.13494" x1="1.38426" id="a">
+                                    <stop style="vector-effect: non-scaling-stroke;" stop-color="#FFF100" />
+                                    <stop style="vector-effect: non-scaling-stroke;" stop-color="#F05A28" offset="1" />
+                                </linearGradient>
+                            </defs>
+                            <g>
+                                <title>Layer 1</title>
+                                <path stroke-width="10" id="svg_13" fill="url(#a)"
+                                    d="m8.2382,22.6923l-1.542,0c-0.9252,0 -1.6962,0.7693 -1.6962,1.6924c0,0.923 0.771,1.6922 1.6962,1.6922l1.542,0c0.9252,0 1.6962,-0.7692 1.6962,-1.6922c0,-0.9231 -0.771,-1.6924 -1.6962,-1.6924zm30.9938,24.3078l-1.542,0c-0.925,0 -1.696,0.7692 -1.696,1.6922c0,0.9231 0.771,1.6923 1.696,1.6923l1.542,0c0.925,0 1.696,-0.7692 1.696,-1.6923c-0.154,-0.923 -0.771,-1.6922 -1.696,-1.6922zm-1.388,-16.0001c0,-0.923 -0.771,-1.6922 -1.696,-1.6922l-5.551,0c-0.925,0 -1.6963,0.7692 -1.6963,1.6922c0,0.9231 0.7713,1.6923 1.6963,1.6923l5.551,0c0.925,0 1.696,-0.7692 1.696,-1.6923zm53.045,-10.4615l-1.697,-9.53846c-0.771,-3.84616 -3.546,-6.00004 -7.247,-6.00004l-65.6885,0c-2.9298,0 -4.9343,2.46154 -4.4717,5.38462l1.8503,10.15388c0,0.1539 0,0.1539 0,0.3077c0.1542,1.2308 -0.4626,1.6923 -0.9252,1.8461c-0.6168,0.3077 -1.0793,0.7692 -1.0793,1.5385c0,0.923 0.771,1.6923 1.6961,1.6923l73.0903,0c3.084,0.1539 5.088,-2.3077 4.472,-5.3846zm-22.205,38.3077c-0.771,-3.6924 -2.776,-5.0769 -5.243,-5.0769l-17.116,0l-0.308,0c-0.925,0 -1.696,0.7692 -1.696,1.6923c0,0.9231 0.616,1.5384 1.542,1.6923c0.616,0.1538 1.079,0.7692 1.542,2.6154l1.85,9.8461c0.463,2.9231 3.392,5.3846 6.476,5.3846l10.332,0c3.084,0 5.088,-2.4615 4.626,-5.3846l-2.005,-10.7692zm-22.976,-8.3077l18.813,0c0.154,0 0.308,0 0.462,0c1.696,-0.3077 1.851,-1.8462 1.542,-3.2308l-2.467,-13.0769c-0.617,-3.3846 -2.621,-4.7692 -5.243,-4.7692l-16.962,0l-0.308,0c-0.925,0 -1.696,0.7692 -1.696,1.6922c0,0.9231 0.617,1.5386 1.542,1.6924c0.617,0.1539 1.233,0.9231 1.542,2.7692l1.85,10c0.154,0.9231 -0.462,1.3846 -1.079,1.6923c-0.617,0.1538 -1.08,0.7692 -1.08,1.5385c0,0.923 0.771,1.6923 1.697,1.6923l1.387,0z" />
+                            </g>
+                        </svg>
+                        <div class="text-center">
+                            <span class="font-bold text-slate-100 text-xs sm:text-sm block">Tempo</span>
+                            <span class="text-xs sm:text-xs text-slate-400">Traces</span>
+                            <span class="text-[9px] sm:text-xs text-slate-500 font-mono block">port
+                                3200</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- FOOTER (key rules reminder, responsive) -->
+        <footer
+            class="flex-shrink-0 pt-3 border-t border-slate-700 text-sm sm:text-xs text-slate-400 flex flex-wrap items-center justify-center gap-2 sm:gap-4">
+            <span>⚡ <span class="font-medium text-slate-300">Batch flush:</span> 512 items <span
+                    class="text-slate-600">|</span> 5s</span>
+            <span>✅ <span class="font-medium text-slate-300">Errors:</span> 100% kept</span>
+            <span>🎯 <span class="font-medium text-slate-300">Healthy traces:</span> adjust % (e.g.
+                10%)</span>
+            <span class="text-slate-600">|</span>
+            <a href="https://github.com/kasir-barati/piper-tts-rest-api" target="_blank" rel="noopener noreferrer"
+                class="text-blue-400 hover:text-blue-300 hover:underline font-medium transition-colors">
+                📚 Example
+            </a>
+        </footer>
+
+    </div>
+
+</body>
+
+</html>
