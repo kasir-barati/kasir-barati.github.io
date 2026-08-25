@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Node.js Event Loop</title>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <style>
+        /* minimal custom – for code & smoothness */
+        .phase-card {
+            transition: box-shadow 0.2s, transform 0.1s;
+        }
+
+        .phase-card:hover {
+            box-shadow: 0 8px 30px -8px rgba(0, 0, 0, 0.5);
+            transform: translateY(-1px);
+        }
+
+        code {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.9em;
+        }
+
+        .code-block {
+            background: #0d1117;
+            color: #e6edf3;
+            padding: 1rem 1.25rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            tab-size: 2;
+            border: 1px solid #1e293b;
+            height: 100%;
+        }
+
+        .code-block .comment {
+            color: #8b949e;
+        }
+
+        .code-block .keyword {
+            color: #ff7b72;
+        }
+
+        .code-block .string {
+            color: #a5d6ff;
+        }
+
+        .code-block .func {
+            color: #d2a8ff;
+        }
+
+        .code-block .num {
+            color: #79c0ff;
+        }
+
+        .code-block .log {
+            color: #ffa657;
+        }
+
+        .flow-arrow {
+            color: #475569;
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .badge-micro {
+            background: #1e3a5f;
+            color: #93c5fd;
+        }
+
+        .badge-timer {
+            background: #5f3a1e;
+            color: #fcd34d;
+        }
+
+        .badge-io {
+            background: #1e5f3a;
+            color: #6ee7b7;
+        }
+
+        .badge-check {
+            background: #3b1e5f;
+            color: #c4b5fd;
+        }
+
+        .badge-close {
+            background: #5f1e2e;
+            color: #fca5a5;
+        }
+
+        .badge-next {
+            background: #1e2e5f;
+            color: #a5b4fc;
+        }
+
+        .badge-promise {
+            background: #5f1e4e;
+            color: #f9a8d4;
+        }
+
+        .terminal-output {
+            background: #0b0f17;
+            border: 1px solid #1e293b;
+        }
+
+        .terminal-output .emerald {
+            color: #34d399;
+        }
+
+        .terminal-output .amber {
+            color: #fbbf24;
+        }
+
+        .terminal-output .blue {
+            color: #60a5fa;
+        }
+
+        .terminal-output .pink {
+            color: #f472b6;
+        }
+
+        .terminal-output .yellow {
+            color: #facc15;
+        }
+
+        .terminal-output .violet {
+            color: #a78bfa;
+        }
+
+        .terminal-output .rose {
+            color: #fb7185;
+        }
+
+        .terminal-output .slate {
+            color: #64748b;
+        }
+
+        .terminal-output .cyan {
+            color: #22d3ee;
+        }
+
+        .terminal-output .orange {
+            color: #fb923c;
+        }
+
+        /* Ensure code columns are not stretched */
+        .code-column {
+            align-items: flex-start;
+        }
+
+        .code-column>div {
+            height: auto;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-900 text-slate-200 antialiased">
+    <div class="max-w-7xl mx-auto w-full py-10 sm:py-12">
+
+        <header class="mb-6 flex flex-wrap items-center justify-between gap-4 border-b-[3px] border-slate-200 pb-3">
+            <h1 class="min-w-0 flex-1 text-[1.3rem] leading-[1.3] font-bold tracking-[-0.02em] sm:text-[1.75rem]">
+                <svg class="w-10 inline" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg" fill="none">
+                    <path fill="#FFFF00" fill-rule="evenodd"
+                        d="M126.645 38.17c5.11-6.317 14.804-7.687 21.426-1.868a79.223 79.223 0 0 1 23.621 36.826 79.01 79.01 0 0 1-.578 47.096 79.246 79.246 0 0 1-27.272 38.441 79.654 79.654 0 0 1-44.308 16.233 79.695 79.695 0 0 1-45.728-11.671 79.326 79.326 0 0 1-31.04-35.482A79.02 79.02 0 0 1 17.4 80.951a79.118 79.118 0 0 1 13.323-31.142l-3.116-3.103C16.18 35.32 24.367 16 40.32 16h39.514c9.9 0 18 8.007 18 17.978v39.368c0 16.099-19.432 23.965-30.712 12.727l-2.721-2.71a33.174 33.174 0 0 0 .442 25.823 33.377 33.377 0 0 0 13.065 14.929 33.635 33.635 0 0 0 37.988-1.922 33.33 33.33 0 0 0 11.473-16.167 33.168 33.168 0 0 0 .243-19.773 33.308 33.308 0 0 0-9.4-15.004c-5.509-5.055-6.948-14.064-1.607-20.667l10.041-12.412ZM55.377 74.373a45.178 45.178 0 0 0-1.508 39.67 45.381 45.381 0 0 0 17.759 20.298 45.633 45.633 0 0 0 26.182 6.682 45.608 45.608 0 0 0 25.367-9.292 45.327 45.327 0 0 0 15.601-21.989 45.167 45.167 0 0 0 .331-26.925 45.313 45.313 0 0 0-12.785-20.41c-1.219-1.119-1.43-2.993-.39-4.278l10.04-12.412c1.04-1.285 2.934-1.492 4.176-.4a67.214 67.214 0 0 1 20.044 31.247 67.003 67.003 0 0 1-.49 39.944 67.248 67.248 0 0 1-23.144 32.619 67.648 67.648 0 0 1-37.633 13.786 67.696 67.696 0 0 1-38.842-9.912 67.327 67.327 0 0 1-26.345-30.114 67.018 67.018 0 0 1-4.554-39.688 67.164 67.164 0 0 1 17.76-34.165l-10.87-10.83C32.296 34.44 34.973 28 40.319 28h39.514c3.314 0 6 2.676 6 5.978v39.368c0 5.325-6.463 7.992-10.242 4.226L62.506 64.536a45.334 45.334 0 0 0-7.129 9.837Z"
+                        clip-rule="evenodd" />
+                </svg> Event Loop
+            </h1>
+            <a href="/#/posts"
+                class="z-10 inline-flex shrink-0 items-center gap-2 self-center rounded-full bg-slate-800 px-2.5 py-1.5 text-[0.8rem] font-semibold text-slate-100 no-underline shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition hover:-translate-y-0.5 hover:bg-slate-900 hover:shadow-[0_6px_20px_rgba(0,0,0,0.25)] active:translate-y-0 sm:px-[18px] sm:py-2.5 sm:text-[0.95rem]"
+                title="Go to Posts">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                    <path
+                        d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5L13 3.5zM8 13h8v2H8zm0 4h5v2H8z" />
+                </svg>
+                <span class="hidden sm:inline">Posts</span>
+            </a>
+        </header>
+
+        <!-- ===== VISUAL LOOP (STEPPER) ===== -->
+        <div class="bg-slate-800 rounded-2xl shadow-2xl border border-slate-700/70 p-6 sm:p-8 mb-10">
+            <p class="text-slate-400 text-s mb-5">
+                Click through the phases. "Next" from the last phase wraps back to the first, that's the loop. Before
+                the loop advances past any callback, not just once per phase, but after every single callback returns
+                Node drains nextTick, then Promise microtasks. A phase with five queued callbacks means five separate
+                microtask drains, one after each.
+            </p>
+
+            <div id="loop-dots" class="flex items-center justify-center gap-2 mb-5"></div>
+
+            <div id="loop-panel"
+                class="phase-card w-full rounded-xl px-6 py-6 text-center border transition-colors min-h-[190px] flex flex-col items-center justify-center">
+            </div>
+
+            <div class="mt-5 flex items-center justify-between">
+                <button id="loop-prev"
+                    class="inline-flex items-center gap-1.5 rounded-full bg-slate-700 hover:bg-slate-600 text-slate-100 px-4 py-2 text-sm font-semibold transition">
+                    ← Prev
+                </button>
+                <span id="loop-counter" class="text-slate-500 text-s font-mono"></span>
+                <button id="loop-next"
+                    class="inline-flex items-center gap-1.5 rounded-full bg-slate-700 hover:bg-slate-600 text-slate-100 px-4 py-2 text-sm font-semibold transition">
+                    Next →
+                </button>
+            </div>
+        </div>
+
+        <script>
+            const loopPhases = [
+                {
+                    label: '⏱ Timer Queue', sub: 'setTimeout / setInterval',
+                    desc: 'Runs callbacks whose timer has expired. A 0ms setTimeout lands here - not immediately.',
+                    bg: 'bg-amber-950/30', border: 'border-amber-800/50', badge: 'badge-timer', subColor: 'text-amber-200/80'
+                },
+                {
+                    label: '📁 I/O Queue (Poll)', sub: 'fs / net / child_process',
+                    desc: 'Executes I/O callbacks. If nothing is ready and no timers are due, the loop can block here waiting for events.',
+                    bg: 'bg-emerald-950/30', border: 'border-emerald-800/50', badge: 'badge-io', subColor: 'text-emerald-200/80'
+                },
+                {
+                    label: '✅ Check Queue', sub: 'setImmediate',
+                    desc: 'Runs callbacks scheduled with setImmediate, right after the poll phase completes.',
+                    bg: 'bg-violet-950/30', border: 'border-violet-800/50', badge: 'badge-check', subColor: 'text-violet-200/80'
+                },
+                {
+                    label: '🔒 Close Queue', sub: 'server / socket / stream close',
+                    desc: "Runs 'close' callbacks, e.g. socket.on('close', ...). The final phase before the loop repeats.",
+                    bg: 'bg-rose-950/30', border: 'border-rose-800/50', badge: 'badge-close', subColor: 'text-rose-200/80'
+                }
+            ];
+
+            let loopIdx = 0;
+            const loopPanel = document.getElementById('loop-panel');
+            const loopDots = document.getElementById('loop-dots');
+            const loopCounter = document.getElementById('loop-counter');
+
+            function renderLoop() {
+                const p = loopPhases[loopIdx];
+                loopPanel.className =
+                    `phase-card w-full rounded-xl px-6 py-6 text-center border transition-colors min-h-[190px] flex flex-col items-center justify-center ${p.bg} ${p.border}`;
+                loopPanel.innerHTML = `
+                    <div class="mb-5 pb-4 border-b border-slate-700/60 w-full flex items-center justify-center gap-2">
+                        <span class="badge-micro font-bold px-3 py-1 rounded-full text-s">microtasks</span>
+                        <span class="text-slate-400 text-s font-mono">drain fully (nextTick → Promise) before entering the queue</span>
+                    </div>
+                    <span class="${p.badge} font-bold px-3 py-1 rounded-full text-lg">${p.label}</span>
+                    <span class="block ${p.subColor} mt-2 font-mono text-s">${p.sub}</span>
+                    <p class="text-slate-300 text-s mt-4 max-w-md leading-relaxed">${p.desc}</p>
+                    <div class="mt-5 pt-4 border-t border-slate-700/60 w-full flex items-center justify-center gap-2">
+                        <span class="badge-micro font-bold px-3 py-1 rounded-full text-s">microtasks</span>
+                        <span class="text-slate-400 text-s font-mono">drain fully (nextTick → Promise) before the next phase</span>
+                    </div>
+                `;
+                loopDots.innerHTML = loopPhases.map((_, i) =>
+                    `<span class="w-2 h-2 rounded-full transition-colors ${i === loopIdx ? 'bg-blue-500' : 'bg-slate-600'}"></span>`
+                ).join('');
+                loopCounter.textContent = `${loopIdx + 1} / ${loopPhases.length}` +
+                    (loopIdx === loopPhases.length - 1 ? '  ⟳ next wraps to Timer' : '');
+            }
+
+            document.getElementById('loop-prev').addEventListener('click', () => {
+                loopIdx = (loopIdx - 1 + loopPhases.length) % loopPhases.length;
+                renderLoop();
+            });
+            document.getElementById('loop-next').addEventListener('click', () => {
+                loopIdx = (loopIdx + 1) % loopPhases.length;
+                renderLoop();
+            });
+
+            renderLoop();
+        </script>
+
+        <!-- ===== CLOSE QUEUE EXPLANATION ===== -->
+        <div class="bg-slate-800 rounded-2xl shadow-2xl border border-slate-700/70 p-6 sm:p-8 mb-10">
+            <h2 class="text-xl font-bold text-slate-100 flex items-center gap-2 mb-3">
+                <span class="text-2xl">🔒</span> What goes in the <span
+                    class="font-mono bg-rose-900/40 text-rose-200 px-2 py-0.5 rounded text-base">close</span> queue?
+            </h2>
+            <p class="text-slate-300 mb-4">
+                The <strong class="text-slate-100">close queue</strong> is the <em class="text-slate-100">final</em>
+                phase of the Node.js event loop.
+                It holds callbacks that are invoked when a resource is <strong class="text-slate-100">closed</strong>.
+                These are typically registered via <code
+                    class="bg-slate-700 px-1.5 py-0.5 rounded text-sm text-slate-200">.on('close', ...)</code>
+                or the callback passed to <code
+                    class="bg-slate-700 px-1.5 py-0.5 rounded text-sm text-slate-200">.close(...)</code>.
+            </p>
+
+            <div class="grid sm:grid-cols-2 gap-4 text-sm">
+                <div class="bg-slate-700/50 rounded-xl p-4 border border-slate-600">
+                    <span class="font-semibold text-slate-100">🖥 Server</span>
+                    <ul class="mt-1 space-y-1 text-slate-300 list-disc list-inside">
+                        <li><code
+                                class="bg-slate-800 px-1.5 py-0.5 rounded text-xs text-slate-200">server.close(callback)</code>
+                        </li>
+                        <li><code
+                                class="bg-slate-800 px-1.5 py-0.5 rounded text-xs text-slate-200">server.on('close', cb)</code>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-slate-700/50 rounded-xl p-4 border border-slate-600">
+                    <span class="font-semibold text-slate-100">🔌 Socket / Stream</span>
+                    <ul class="mt-1 space-y-1 text-slate-300 list-disc list-inside">
+                        <li><code
+                                class="bg-slate-800 px-1.5 py-0.5 rounded text-xs text-slate-200">socket.on('close', cb)</code>
+                        </li>
+                        <li><code
+                                class="bg-slate-800 px-1.5 py-0.5 rounded text-xs text-slate-200">stream.on('close', cb)</code>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-slate-700/50 rounded-xl p-4 border border-slate-600 sm:col-span-2">
+                    <span class="font-semibold text-slate-100">👶 Child Process</span>
+                    <ul class="mt-1 space-y-1 text-slate-300 list-disc list-inside">
+                        <li><code
+                                class="bg-slate-800 px-1.5 py-0.5 rounded text-xs text-slate-200">child.on('close', cb)</code>
+                            - emitted when the child process has terminated</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-4 bg-rose-950/30 border-l-4 border-rose-500 rounded-r-xl p-4 text-s text-rose-200">
+                <span class="font-semibold">⏳ When?</span>
+                The close queue runs <strong>after</strong> the check queue (<code
+                    class="bg-rose-900/40 px-1.5 py-0.5 rounded text-xs text-rose-200">setImmediate</code>)
+                and <strong>before</strong> the event loop restarts. Microtasks (nextTick &amp; Promise) are drained
+                <em>after every phase</em>, including after the close queue.
+            </div>
+        </div>
+
+        <!-- ===== SIDE-BY-SIDE CODE ===== -->
+        <div class="bg-slate-800 rounded-2xl shadow-2xl border border-slate-700/70 p-6 sm:p-8 mb-10">
+            <h2 class="text-xl font-bold text-slate-100 flex items-center gap-2 mb-4">
+                Node <svg class="w-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+                    <path fill="#83CD29"
+                        d="M112.771 30.334L68.674 4.729c-2.781-1.584-6.402-1.584-9.205 0L14.901 30.334C12.031 31.985 10 35.088 10 38.407v51.142c0 3.319 2.084 6.423 4.954 8.083l11.775 6.688c5.628 2.772 7.617 2.772 10.178 2.772 8.333 0 13.093-5.039 13.093-13.828v-50.49c0-.713-.371-1.774-1.071-1.774h-5.623C42.594 41 41 42.061 41 42.773v50.49c0 3.896-3.524 7.773-10.11 4.48L18.723 90.73c-.424-.23-.723-.693-.723-1.181V38.407c0-.482.555-.966.982-1.213l44.424-25.561c.415-.235 1.025-.235 1.439 0l43.882 25.555c.42.253.272.722.272 1.219v51.142c0 .488.183.963-.232 1.198l-44.086 25.576c-.378.227-.847.227-1.261 0l-11.307-6.749c-.341-.198-.746-.269-1.073-.086-3.146 1.783-3.726 2.02-6.677 3.043-.726.253-1.797.692.41 1.929l14.798 8.754a9.294 9.294 0 004.647 1.246c1.642 0 3.25-.426 4.667-1.246l43.885-25.582c2.87-1.672 4.23-4.764 4.23-8.083V38.407c0-3.319-1.36-6.414-4.229-8.073zM77.91 81.445c-11.726 0-14.309-3.235-15.17-9.066-.1-.628-.633-1.379-1.272-1.379h-5.731c-.709 0-1.279.86-1.279 1.566 0 7.466 4.059 16.512 23.453 16.512 14.039 0 22.088-5.455 22.088-15.109 0-9.572-6.467-12.084-20.082-13.886-13.762-1.819-15.16-2.738-15.16-5.962 0-2.658 1.184-6.203 11.374-6.203 9.105 0 12.461 1.954 13.842 8.091.118.577.645.991 1.24.991h5.754c.354 0 .692-.143.94-.396.24-.272.367-.613.335-.979-.891-10.568-7.912-15.493-22.112-15.493-12.631 0-20.166 5.334-20.166 14.275 0 9.698 7.497 12.378 19.622 13.577 14.505 1.422 15.633 3.542 15.633 6.395 0 4.955-3.978 7.066-13.309 7.066z" />
+                </svg> Snippet
+            </h2>
+            <p class="text-slate-300 text-s mb-5">
+                Run the demo with the probe preloaded to see each log line annotated with the loop iteration and the
+                phase.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 code-column">
+                <!-- Left: event-loop-demo.js -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1.5">
+                        <span
+                            class="text-s font-mono bg-slate-700 px-2 py-0.5 rounded text-slate-300">event-loop-demo.js</span>
+                        <span class="text-s text-slate-500">(main script)</span>
+                    </div>
+                    <div class="code-block">
+                        <pre><span class="keyword">const</span> fs = <span class="func">require</span>(<span class="string">'fs'</span>);
+<span class="keyword">const</span> http = <span class="func">require</span>(<span class="string">'http'</span>);
+
+console.<span class="func">log</span>(<span class="string">'=== Event Loop Order ===\n'</span>);
+
+<span class="comment">// -------- Close queue --------</span>
+<span class="keyword">const</span> server = http.<span class="func">createServer</span>((req, res) => res.<span class="func">end</span>(<span class="string">'OK'</span>));
+server.<span class="func">on</span>(<span class="string">'close'</span>, () => {
+  console.<span class="func">log</span>(<span class="string">'8. [Close] server closed'</span>);
+});
+
+server.<span class="func">listen</span>(<span class="num">0</span>, () => {
+  console.<span class="func">log</span>(<span class="string">`Server listening on port ${server.address().port}`</span>);
+  setImmediate(() => {
+    console.<span class="func">log</span>(<span class="string">'Closing server...'</span>);
+    server.<span class="func">close</span>();
+  });
+});
+
+<span class="comment">// -------- 1. Microtasks (nextTick) --------</span>
+process.<span class="func">nextTick</span>(() => {
+  console.<span class="func">log</span>(<span class="string">'1. [Micro] nextTick'</span>);
+});
+
+<span class="comment">// -------- 2. Microtasks (Promise) --------</span>
+Promise.<span class="func">resolve</span>().<span class="func">then</span>(() => {
+  console.<span class="func">log</span>(<span class="string">'2. [Micro] Promise'</span>);
+});
+
+<span class="comment">// -------- 3. Timer queue --------</span>
+setTimeout(() => {
+  console.<span class="func">log</span>(<span class="string">'3. [Timer] setTimeout 0ms'</span>);
+}, <span class="num">0</span>);
+
+<span class="comment">// -------- 4. I/O queue --------</span>
+fs.<span class="func">readFile</span>(__filename, () => {
+  console.<span class="func">log</span>(<span class="string">'4. [I/O] fs.readFile'</span>);
+});
+
+<span class="comment">// -------- 5. Check queue --------</span>
+setImmediate(() => {
+  console.<span class="func">log</span>(<span class="string">'5. [Check] setImmediate'</span>);
+});
+
+<span class="comment">// -------- Microtasks between phases --------</span>
+setTimeout(() => {
+  process.<span class="func">nextTick</span>(() => console.<span class="func">log</span>(<span class="string">'   [Micro] nextTick (after timer)'</span>));
+  Promise.<span class="func">resolve</span>().<span class="func">then</span>(() => console.<span class="func">log</span>(<span class="string">'   [Micro] Promise (after timer)'</span>));
+}, <span class="num">0</span>);
+
+fs.<span class="func">readFile</span>(__filename, () => {
+  process.<span class="func">nextTick</span>(() => console.<span class="func">log</span>(<span class="string">'   [Micro] nextTick (after I/O)'</span>));
+  Promise.<span class="func">resolve</span>().<span class="func">then</span>(() => console.<span class="func">log</span>(<span class="string">'   [Micro] Promise (after I/O)'</span>));
+});
+
+setImmediate(() => {
+  process.<span class="func">nextTick</span>(() => console.<span class="func">log</span>(<span class="string">'   [Micro] nextTick (after check)'</span>));
+  Promise.<span class="func">resolve</span>().<span class="func">then</span>(() => console.<span class="func">log</span>(<span class="string">'   [Micro] Promise (after check)'</span>));
+});
+
+server.<span class="func">on</span>(<span class="string">'close'</span>, () => {
+  process.<span class="func">nextTick</span>(() => console.<span class="func">log</span>(<span class="string">'   [Micro] nextTick (after close)'</span>));
+  Promise.<span class="func">resolve</span>().<span class="func">then</span>(() => console.<span class="func">log</span>(<span class="string">'   [Micro] Promise (after close)'</span>));
+});</pre>
+                    </div>
+                </div>
+
+                <!-- Right: probe-iter.js -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1.5">
+                        <span
+                            class="text-s font-mono bg-slate-700 px-2 py-0.5 rounded text-slate-300">probe-iter.js</span>
+                        <span class="text-s text-slate-500">(preload with <code
+                                class="bg-slate-700 px-1 py-0.5 rounded text-xs">-r</code>)</span>
+                    </div>
+                    <div class="code-block">
+                        <pre><span class="comment">// Annotates every log line with loop iteration + phase</span>
+<span class="keyword">const</span> async_hooks = <span class="func">require</span>(<span class="string">'async_hooks'</span>);
+<span class="keyword">const</span> types = <span class="keyword">new</span> <span class="func">Map</span>();
+
+async_hooks.<span class="func">createHook</span>({
+  <span class="func">init</span>(id, type) { types.<span class="func">set</span>(id, type); }
+}).<span class="func">enable</span>();
+
+<span class="keyword">let</span> iter = <span class="num">0</span>;
+<span class="comment">// a "sentinel" immediate re-armed every iteration marks each check phase</span>
+(
+  <span class="keyword">function</span> <span class="func">mark</span>() {
+    iter++;
+    <span class="keyword">const</span> im = <span class="func">setImmediate</span>(mark);
+    im.<span class="func">unref</span> && im.<span class="func">unref</span>();
+  }
+)();
+
+iter = <span class="num">0</span>;
+
+<span class="keyword">const</span> PHASE = {
+  Timeout: <span class="string">'TIMER phase'</span>,
+  Immediate: <span class="string">'CHECK phase'</span>,
+  FSREQCALLBACK: <span class="string">'POLL phase (I/O)'</span>,
+  TickObject: <span class="string">'nextTick drain'</span>,
+  PROMISE: <span class="string">'microtask drain'</span>
+};
+<span class="keyword">const</span> orig = console.<span class="func">log</span>.<span class="func">bind</span>(console);
+
+console.<span class="func">log</span> = (...a) => {
+  <span class="keyword">const</span> t = types.<span class="func">get</span>(async_hooks.<span class="func">executionAsyncId</span>()) || <span class="string">'sync'</span>;
+  orig(<span class="string">`[iter ${iter}] [${(PHASE[t] || t).padEnd(17)}] ${a.join(' ')}`</span>);
+};</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5 flex flex-wrap items-center gap-3 text-sm">
+                <span
+                    class="inline-flex items-center gap-1 bg-emerald-900/40 text-emerald-200 px-3 py-1.5 rounded-full border border-emerald-700/50">
+                    <span class="text-base">▶</span> Run with
+                    <code
+                        class="bg-emerald-800/40 px-1.5 py-0.5 rounded text-xs text-emerald-200">node -r ./probe-iter.js event-loop-demo.js</code>
+                </span>
+                <span class="text-slate-500 text-xs">- the probe wraps <code
+                        class="bg-slate-700 px-1 py-0.5 rounded text-xs">console.log</code></span>
+            </div>
+        </div>
+
+        <!-- ===== EXPECTED OUTPUT (instrumented) ===== -->
+        <div class="bg-slate-800 rounded-2xl shadow-2xl border border-slate-700/70 p-6 sm:p-8">
+            <h2 class="text-xl font-bold text-slate-100 flex items-center gap-2 mb-3">
+                <svg class="w-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#4cd964"
+                    stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 7l5 5l-5 5" />
+                    <path d="M12 19l7 0" />
+                </svg> Expected Console Output (with probe)
+            </h2>
+            <p class="text-slate-300 text-s mb-4">
+                Each line is prefixed with the loop iteration <code
+                    class="bg-slate-700 px-1.5 py-0.5 rounded text-xs text-slate-200">[iter X]</code> and the phase
+                name.
+                This reveals exactly when each callback executes.
+            </p>
+
+            <div class="terminal-output rounded-xl p-5 text-sm font-mono text-slate-200 overflow-x-auto">
+                <pre><span class="slate">[iter 0] [sync             ] === Event Loop Order ===</span>
+
+<span class="slate">[iter 0] [nextTick drain   ] Server listening on port 46159</span>
+<span class="blue">[iter 0] [nextTick drain   ] 1. [Micro] nextTick</span>
+<span class="pink">[iter 0] [microtask drain  ] 2. [Micro] Promise</span>
+<span class="yellow">[iter 0] [TIMER phase      ] 3. [Timer] setTimeout 0ms</span>
+<span class="blue">[iter 0] [nextTick drain   ]    [Micro] nextTick (after timer)</span>
+<span class="pink">[iter 0] [microtask drain  ]    [Micro] Promise (after timer)</span>
+
+<span class="violet">[iter 1] [CHECK phase      ] 5. [Check] setImmediate</span>
+<span class="blue">[iter 1] [nextTick drain   ]    [Micro] nextTick (after check)</span>
+<span class="pink">[iter 1] [microtask drain  ]    [Micro] Promise (after check)</span>
+
+<span class="cyan">[iter 1] [CHECK phase      ] Closing server...</span>
+<span class="rose">[iter 1] [nextTick drain   ] 8. [Close] server closed</span>
+<span class="blue">[iter 1] [nextTick drain   ]    [Micro] nextTick (after close)</span>
+<span class="pink">[iter 1] [microtask drain  ]    [Micro] Promise (after close)</span>
+
+<span class="emerald">[iter 3] [POLL phase (I/O) ] 4. [I/O] fs.readFile</span>
+<span class="blue">[iter 3] [nextTick drain   ]    [Micro] nextTick (after I/O)</span>
+<span class="pink">[iter 3] [microtask drain  ]    [Micro] Promise (after I/O)</span></pre>
+            </div>
+
+            <!-- ===== WHY THE ITERATION GAP ===== -->
+            <div class="mt-5 bg-slate-700/40 border border-slate-600 rounded-xl p-4 text-sm">
+                <h4 class="text-slate-100 font-semibold flex items-center gap-2">
+                    <span>🧠</span> Why <span class="text-emerald-400">iter 3</span> for I/O?
+                </h4>
+                <p class="text-slate-300 mt-1 leading-relaxed">
+                    The sentinel <code
+                        class="bg-slate-800 px-1.5 py-0.5 rounded text-s text-slate-200">setImmediate</code> increments
+                    <code class="bg-slate-800 px-1.5 py-0.5 rounded text-s text-slate-200">iter</code> on
+                    <em>every</em> check phase.
+                    The file read completes asynchronously and its callback is placed in the I/O queue.
+                    Because the file isn't ready during the first Poll phase (iter 0), the loop progresses to Check
+                    (iter 1) and Close.
+                    Once the file is read (which happens in the background), the callback is picked up in the
+                    <strong>next</strong> Poll phase,
+                    which is <span class="text-emerald-400">iter 3</span> (iter 2 would be the Poll phase where no I/O
+                    was ready again, so it moved on).
+                    <br />
+                    <br />
+                    This is what we meant by <strong>"Microtasks (nextTick & Promise) are drained after every phase,
+                        including
+                        after the close queue"</strong>
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

@@ -5,7 +5,12 @@
         "description": "I wrote a post about a tiny lovely react state management tool in React because I really felt lack of any kind of tut about nanostores and how we should use it or write test for it. BTW I really appreciate you if you also write something about it after a while that you used it.",
         "href": "https://www.linkedin.com/pulse/write-test-nanostores-kasir-barati/",
         "imageSrc": "./white.jpg",
-        "tags": ["ReactJS", "State Management", "TDD", "nanostores"]
+        "tags": [
+            "ReactJS",
+            "State Management",
+            "TDD",
+            "nanostores"
+        ]
     },
     {
         "id": "6388e57e-6b2d-483b-adb4-f88107585537",
@@ -76,6 +81,35 @@
             "webhook",
             "Architecture",
             "Event-Driven Architecture"
+        ]
+    },
+    {
+        "id": "ebaaac93-b703-4bdd-afb6-e57952b3b94b",
+        "title": "OpenTelemetry Observability Stack",
+        "description": "A visual diagram of an OpenTelemetry Observability Stack illustrating the flow of telemetry data from a backend application through an OpenTelemetry Collector, which processes and forwards logs to Loki and traces to Tempo.",
+        "href": "./observability-tempo-loki-grafana-otel.html",
+        "imageSrc": "./white.jpg",
+        "tags": [
+            "Architecture",
+            "Observability",
+            "Grafana",
+            "Loki",
+            "Tempo",
+            "Logs",
+            "Traces"
+        ]
+    },
+    {
+        "id": "141aff99-91b0-4468-897e-3ece80042f12",
+        "title": "Event Loop",
+        "description": "An interactive guide to the NodeJS Event Loop, visualizing how it executes codes in order.",
+        "href": "./event-loop.html",
+        "imageSrc": "./black.jpg",
+        "tags": [
+            "Node.js",
+            "Event Loop",
+            "Design Pattern",
+            "JavaScript"
         ]
     }
 ]
