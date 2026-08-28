@@ -1,4 +1,4 @@
-# Exported from Render on 2026-08-28T12:52:30Z
+# Exported from Render on 2026-08-28T20:56:31Z
 version: "1"
 projects:
 - name: My project
@@ -8,7 +8,7 @@ projects:
     - type: web
       name: twin
       runtime: python
-      repo: https://github.com/kasir-barati/twin
+      repo: https://github.com/kasir-barati/kasir-barati.github.io
       plan: free
       envVars:
       - key: GRADIO_SERVER_PORT
@@ -21,7 +21,8 @@ projects:
         sync: false
       - key: OPENAI_API_KEY
         sync: false
-      region: virginia
-      buildCommand: uv sync --frozen && uv cache prune --ci
+      region: frankfurt
+      buildCommand: rm -rf .venv && uv sync --frozen && uv cache prune --ci
       startCommand: make start
       autoDeployTrigger: commit
+      rootDir: twin
