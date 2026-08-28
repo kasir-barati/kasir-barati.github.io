@@ -1,0 +1,27 @@
+# Exported from Render on 2026-08-28T12:52:30Z
+version: "1"
+projects:
+- name: My project
+  environments:
+  - name: Production
+    services:
+    - type: web
+      name: twin
+      runtime: python
+      repo: https://github.com/kasir-barati/twin
+      plan: free
+      envVars:
+      - key: GRADIO_SERVER_PORT
+        sync: false
+      - key: GRADIO_SERVER_NAME
+        sync: false
+      - key: GMAIL_APP_PASSWORD
+        sync: false
+      - key: GMAIL_ADDRESS
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      region: virginia
+      buildCommand: uv sync --frozen && uv cache prune --ci
+      startCommand: make start
+      autoDeployTrigger: commit

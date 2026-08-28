@@ -1,0 +1,23 @@
+[project]
+name = "twin"
+version = "0.1.0"
+description = "My digital twin which can answer to potential clients/employers about me and my skills in professional sense."
+authors = [
+    { name = "Kasir Barati", email = "kasir.barati@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "requests",
+    "gradio",
+    "pypdf",
+    "openai",
+    "pydantic-settings>=2.15.0",
+]
+
+[tool.uv]
+package = false
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16.5",
+]
