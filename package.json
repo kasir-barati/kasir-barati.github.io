@@ -4,7 +4,8 @@
     "version": "0.0.1",
     "type": "module",
     "scripts": {
-        "dev": "vite",
+        "dev": "concurrently -n twin,web -c magenta,cyan \"make -C twin start\" \"vite\"",
+        "dev:web": "vite",
         "build": "tsc && vite build",
         "preview": "vite preview",
         "format": "prettier -w .",
@@ -27,6 +28,7 @@
         "@types/react": "^18.3.31",
         "@types/react-dom": "^18.3.7",
         "@vitejs/plugin-react": "^3.1.0",
+        "concurrently": "^9.2.1",
         "gh-pages": "^5.0.0",
         "prettier": "^2.8.8",
         "typescript": "^7.0.2",

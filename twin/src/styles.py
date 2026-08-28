@@ -1,8 +1,8 @@
 """Styling constants for the digital twin Gradio app."""
 
-GOLD = "#ecad0a"
-BLUE = "#209dd7"
-PURPLE = "#753991"
+TURQUOISE = "#40e0d0"
+BLUE = "#29b6f6"
+PURPLE = "#8b5cf6"
 
 EXAMPLES = [
     "Tell me about your background and experience.",
@@ -13,28 +13,33 @@ EXAMPLES = [
 
 CSS = """
 :root {
-  --twin-gold: #ecad0a;
-  --twin-blue: #209dd7;
-  --twin-purple: #753991;
-  --twin-bg: #0d0d10;
-  --twin-surface: #16161b;
-  --twin-surface-2: #1c1c22;
-  --twin-border: #2a2a32;
-  --twin-border-strong: #3a3a44;
-  --twin-text: #ececef;
-  --twin-muted: #8c8c95;
+  --twin-accent: #40e0d0;
+  --twin-accent-strong: #2bc4b4;
+  --twin-blue: #29b6f6;
+  --twin-purple: #8b5cf6;
+  --twin-bg: #10151a;
+  --twin-surface: #161c22;
+  --twin-surface-2: #1c242c;
+  --twin-border: rgba(64, 224, 208, 0.16);
+  --twin-border-strong: rgba(64, 224, 208, 0.38);
+  --twin-text: #eef2f4;
+  --twin-muted: #8b98a3;
+  --twin-radius: 14px;
+  --twin-radius-sm: 9px;
+  --twin-shadow: 0 20px 48px rgba(0, 0, 0, 0.45), 0 1px 0 rgba(255, 255, 255, 0.02) inset;
 }
 
 /* Light mode: Gradio adds `.dark` to <body> when dark; absence = light.
-   Only the neutral palette flips — gold/blue/purple accents stay identical. */
+   Only the neutral palette flips — accent/blue/purple stay identical. */
 body:not(.dark) {
-  --twin-bg: #f4f4f6;
+  --twin-bg: #f2f6f7;
   --twin-surface: #ffffff;
-  --twin-surface-2: #ededf0;
-  --twin-border: #dcdce2;
-  --twin-border-strong: #b8b8c0;
-  --twin-text: #1a1a20;
-  --twin-muted: #6a6a72;
+  --twin-surface-2: #eef3f4;
+  --twin-border: rgba(43, 196, 180, 0.22);
+  --twin-border-strong: rgba(43, 196, 180, 0.45);
+  --twin-text: #16211f;
+  --twin-muted: #5c6b70;
+  --twin-shadow: 0 16px 40px rgba(16, 33, 31, 0.12), 0 1px 0 rgba(255, 255, 255, 0.6) inset;
 }
 
 footer, .built-with, .show-api, .api-docs { display: none !important; }
@@ -45,37 +50,50 @@ html, body, gradio-app { background: var(--twin-bg) !important; }
 .gradio-container {
   background: var(--twin-bg) !important;
   color: var(--twin-text) !important;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
   width: 100% !important;
   max-width: 880px !important;
   min-width: 0 !important;
   margin: 0 auto !important;
-  padding: 32px 24px 48px !important;
+  padding: 28px 24px 40px !important;
 }
-.gradio-container .main, .gradio-container .contain, .gradio-container .wrap {
+.gradio-container .main, .gradio-container .wrap {
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
+}
+.gradio-container .contain {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  background: var(--twin-surface) !important;
+  border: 1px solid var(--twin-border) !important;
+  border-radius: var(--twin-radius) !important;
+  box-shadow: var(--twin-shadow) !important;
+  padding: 24px 24px 28px !important;
 }
 .gradio-container * { min-width: 0; }
 
 /* ---------- Title ---------- */
 .gradio-container h1 {
   color: var(--twin-text) !important;
-  font-size: 26px !important;
+  font-size: 24px !important;
   font-weight: 700 !important;
-  letter-spacing: -0.02em !important;
-  border-left: 3px solid var(--twin-gold);
+  letter-spacing: -0.01em !important;
+  border-left: 3px solid var(--twin-accent);
   padding-left: 12px !important;
   margin: 4px 0 8px !important;
   text-align: left !important;
 }
+.gradio-container .prose > p:first-of-type {
+  color: var(--twin-muted) !important;
+}
 
-/* ---------- Sharp corners on structural pieces ---------- */
-.chatbot, .chatbot *, .block, .form,
+/* ---------- Rounded corners on structural pieces ---------- */
+.chatbot, .block, .form,
 button, input, textarea,
 .examples button {
-  border-radius: 0 !important;
+  border-radius: var(--twin-radius-sm) !important;
 }
 
 /* ---------- Block surfaces ---------- */
@@ -92,9 +110,9 @@ button, input, textarea,
 
 /* ---------- Chatbot frame ---------- */
 .chatbot, .chatbot.block {
-  background: var(--twin-surface) !important;
+  background: var(--twin-surface-2) !important;
   border: 1px solid var(--twin-border) !important;
-  min-height: 460px !important;
+  min-height: 420px !important;
   box-shadow: none !important;
 }
 .chatbot .placeholder, .chatbot .placeholder * { color: var(--twin-muted) !important; }
@@ -133,7 +151,7 @@ button, input, textarea,
 .message-row.bot-row .bubble,
 .message-row[data-role="assistant"] .message,
 .message-row[data-role="assistant"] .message-bubble {
-  background: var(--twin-surface-2) !important;
+  background: var(--twin-surface) !important;
   color: var(--twin-text) !important;
 }
 
@@ -205,7 +223,7 @@ button, input, textarea,
 }
 .message-row .message a,
 .message-row .message-bubble a {
-  color: var(--twin-gold) !important;
+  color: var(--twin-accent) !important;
   text-decoration: underline;
 }
 
@@ -216,29 +234,30 @@ button, input, textarea,
 form[class*="input"] { align-items: stretch !important; }
 
 textarea, input[type="text"] {
-  background: var(--twin-surface) !important;
+  background: var(--twin-surface-2) !important;
   border: 1px solid var(--twin-border) !important;
   color: var(--twin-text) !important;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif !important;
   font-size: 14px !important;
   padding: 12px 14px !important;
   line-height: 1.4 !important;
   min-height: 48px !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 textarea:focus, input[type="text"]:focus {
-  border-color: var(--twin-gold) !important;
+  border-color: var(--twin-accent) !important;
   outline: none !important;
-  box-shadow: 0 0 0 1px var(--twin-gold) !important;
+  box-shadow: 0 0 0 3px rgba(64, 224, 208, 0.18) !important;
 }
 textarea::placeholder, input::placeholder { color: var(--twin-muted) !important; }
 
 /* ---------- Buttons ---------- */
 button {
-  font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace !important;
-  letter-spacing: 0.12em !important;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  letter-spacing: 0.02em !important;
   text-transform: uppercase !important;
-  font-size: 11px !important;
-  font-weight: 600 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
   border: 1px solid var(--twin-border) !important;
   background: transparent !important;
   color: var(--twin-text) !important;
@@ -249,9 +268,9 @@ button {
   align-items: center !important;
   justify-content: center !important;
   cursor: pointer;
-  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
-button:hover { border-color: var(--twin-gold) !important; color: var(--twin-gold) !important; }
+button:hover { border-color: var(--twin-accent) !important; color: var(--twin-accent) !important; }
 
 button.primary,
 button[variant="primary"],
@@ -259,23 +278,25 @@ button.submit,
 button.submit-button,
 .submit-button,
 button.lg.primary {
-  background: var(--twin-gold) !important;
-  border: 1px solid var(--twin-gold) !important;
-  color: #111111 !important;
+  background: var(--twin-accent) !important;
+  border: 1px solid var(--twin-accent) !important;
+  color: #0b1512 !important;
   min-height: 48px !important;
   align-self: stretch !important;
   padding: 0 14px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
+  box-shadow: 0 4px 14px rgba(64, 224, 208, 0.25) !important;
 }
 button.primary:hover,
 button.submit:hover,
 .submit-button:hover,
 button.lg.primary:hover {
-  background: #ffc320 !important;
-  border-color: #ffc320 !important;
-  color: #111111 !important;
+  background: var(--twin-accent-strong) !important;
+  border-color: var(--twin-accent-strong) !important;
+  color: #0b1512 !important;
+  box-shadow: 0 6px 18px rgba(64, 224, 208, 0.35) !important;
 }
 
 /* ---------- Submit-button icon: center vertically and size correctly ---------- */
@@ -289,7 +310,7 @@ button[variant="primary"] svg {
   margin: 0 auto !important;
   display: block !important;
   align-self: center !important;
-  color: #111111 !important;
+  color: #0b1512 !important;
   fill: currentColor !important;
   stroke: currentColor !important;
 }
@@ -302,12 +323,12 @@ button[variant="primary"] svg {
 }
 .examples table, .examples-table { background: transparent !important; border: 0 !important; }
 .examples button, .example, .examples td button, [data-testid="examples"] button {
-  background: var(--twin-surface) !important;
+  background: var(--twin-surface-2) !important;
   border: 1px solid var(--twin-border) !important;
   color: var(--twin-text) !important;
   text-transform: none !important;
   letter-spacing: 0 !important;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif !important;
   font-size: 13px !important;
   font-weight: 400 !important;
   padding: 10px 14px !important;
@@ -315,11 +336,12 @@ button[variant="primary"] svg {
   min-height: 0 !important;
   align-self: auto !important;
   display: inline-block !important;
+  transition: border-color 0.15s ease, color 0.15s ease;
 }
 .examples button:hover, .example:hover, [data-testid="examples"] button:hover {
   border-color: var(--twin-blue) !important;
   color: var(--twin-blue) !important;
-  background: var(--twin-surface) !important;
+  background: var(--twin-surface-2) !important;
 }
 
 /* ---------- Icon buttons (clear, retry, copy) ---------- */
@@ -334,21 +356,22 @@ button[variant="primary"] svg {
   align-items: center !important;
   justify-content: center !important;
 }
-.icon-button:hover, .chatbot .icon-button:hover { color: var(--twin-gold) !important; }
+.icon-button:hover, .chatbot .icon-button:hover { color: var(--twin-accent) !important; }
 
 /* ---------- Scrollbar ---------- */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: var(--twin-bg); }
-::-webkit-scrollbar-thumb { background: var(--twin-border-strong); }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--twin-border-strong); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--twin-purple); }
 
 /* ---------- Selection ---------- */
-::selection { background: var(--twin-gold); color: #111111; }
+::selection { background: var(--twin-accent); color: #0b1512; }
 
 /* ---------- Mobile ---------- */
 @media (max-width: 640px) {
-  .gradio-container { padding: 22px 14px 36px !important; }
-  .gradio-container h1 { font-size: 22px !important; }
+  .gradio-container { padding: 16px 12px 28px !important; }
+  .gradio-container .contain { padding: 18px 16px 22px !important; border-radius: 12px !important; }
+  .gradio-container h1 { font-size: 21px !important; }
 }
 """
 
