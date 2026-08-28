@@ -4,7 +4,7 @@
     "version": "0.0.1",
     "type": "module",
     "scripts": {
-        "dev": "concurrently -n twin,web -c magenta,cyan \"make -C twin start\" \"vite\"",
+        "dev": "concurrently -k -n twin,web -c magenta,cyan \"make -C twin start\" \"vite\"",
         "dev:web": "vite",
         "build": "tsc && vite build",
         "preview": "vite preview",
