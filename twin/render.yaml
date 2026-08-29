@@ -22,7 +22,11 @@ projects:
       - key: OPENAI_API_KEY
         sync: false
       region: frankfurt
+      # 👇 The command to build your app before each deploy.
       buildCommand: rm -rf .venv && uv sync --frozen && uv cache prune --ci
+      # 👇 The command to start your app with each deploy.
       startCommand: make start
+      # 👇 Automatically deploy the service whenever you update its code or configuration.
       autoDeployTrigger: commit
+      # 👇 Runs commands from this directory instead of the repository root, code changes outside of this directory do NOT trigger an auto-deploy. 
       rootDir: twin
