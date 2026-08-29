@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>Harness Engineering</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-slate-950 text-slate-200 antialiased selection:bg-cyan-400/30">
+    <header id="top" class="border-b border-slate-800 bg-slate-950/90">
+        <div class="mx-auto max-w-7xl px-5 py-5 sm:px-8">
+            <div class="flex items-center justify-between gap-4">
+                <h1 class="text-4xl font-black tracking-tight text-white sm:text-6xl">Harness Engineering</h1>
+                <a href="/#/posts"
+                    class="z-10 inline-flex shrink-0 items-center gap-2 self-center rounded-full bg-slate-800 px-2.5 py-1.5 text-[0.8rem] font-semibold text-slate-100 no-underline shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition hover:-translate-y-0.5 hover:bg-slate-900 hover:shadow-[0_6px_20px_rgba(0,0,0,0.25)] active:translate-y-0 sm:px-[18px] sm:py-2.5 sm:text-[0.95rem]"
+                    title="Go to Posts">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                        <path
+                            d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5L13 3.5zM8 13h8v2H8zm0 4h5v2H8z" />
+                    </svg>
+                    <span class="hidden sm:inline">Posts</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:py-20">
+        <div class="">
+            <p class="mb-4 text-sm font-medium uppercase tracking-[0.2em] text-cyan-400">
+                Harness engineering · practical note
+            </p>
+            <p class="mt-6 text-lg leading-8 text-slate-400">
+                If you are practicing harness engineering you probably have
+                <code class="rounded bg-slate-800 px-1.5 py-0.5 text-cyan-300">PROCESS.md</code>,
+                <code class="rounded bg-slate-800 px-1.5 py-0.5 text-cyan-300">REQUIREMENTS.md</code>,
+                <code class="rounded bg-slate-800 px-1.5 py-0.5 text-cyan-300">SELF_IMPROVE.md</code>, and maybe even a
+                <code class="rounded bg-slate-800 px-1.5 py-0.5 text-cyan-300">SELF_IMPROVE_LOG.md</code> for details
+                logs about what it improved each time, <strong>BUT</strong> what should be tracked by git and what
+                happens when the feature is shipped?
+            </p>
+        </div>
+
+        <section class="mt-12 grid gap-4 sm:grid-cols-4">
+            <article class="rounded-2xl border border-cyan-400/30 bg-cyan-400/10 p-5">
+                <div class="text-2xl">⚙️</div>
+                <h2 class="mt-3 font-semibold text-white"><code>PROCESS.md</code></h2>
+                <p class="mt-2 text-s leading-6 text-slate-400">
+                    Reusable loop. Keep it and let improvements compound.
+                </p>
+            </article>
+            <article class="rounded-2xl border border-cyan-400/30 bg-cyan-400/10 p-5">
+                <div class="text-2xl">🧭</div>
+                <h2 class="mt-3 font-semibold text-white"><code>SELF_IMPROVE.md</code></h2>
+                <p class="mt-2 text-s leading-6 text-slate-400">
+                    Reusable self-critique ritual. Keep the mechanism.
+                </p>
+            </article>
+            <article class="rounded-2xl border border-amber-400/30 bg-amber-400/10 p-5">
+                <div class="text-2xl">📋</div>
+                <h2 class="mt-3 font-semibold text-white"><code>REQUIREMENTS.md</code></h2>
+                <p class="mt-2 text-s leading-6 text-slate-400">
+                    Feature-specific work. Archive it in the GitHub issue/PR, then remove it.
+                </p>
+            </article>
+            <article class="rounded-2xl border border-amber-400/30 bg-amber-400/10 p-5">
+                <div class="text-2xl">🧪</div>
+                <h2 class="mt-3 font-semibold text-white"><code>SELF_IMPROVE_LOG.md</code></h2>
+                <p class="mt-2 text-s leading-6 text-slate-400">
+                    Mine it for durable lessons, then archive it in GitHub issue/PR.
+                </p>
+            </article>
+        </section>
+
+        <section class="mt-14 grid gap-10 lg:grid-cols-[1fr_300px]">
+            <article class="space-y-7 text-[1.05rem] leading-8 text-slate-300">
+                <p>
+                    The useful distinction is between <strong class="text-white">scaffolding</strong> and
+                    <strong class="text-white">feature state</strong>. The files may look similar from feature to
+                    feature, but they do not all have the same lifecycle.
+                </p>
+                <p>
+                    <strong class="text-cyan-300"><code>PROCESS.md</code></strong>
+                    and <strong class="text-cyan-300"><code>SELF_IMPROVE.md</code></strong> are usually the scaffolding.
+                    Once we have accumulated practical lessons, that knowledge is valuable institutional memory.
+                    Resetting them for every feature throws away exactly what harness engineering is meant to compound.
+                    <br />
+                    <strong>But not</strong> every rule learned deserves to be added to your
+                    <strong class="text-cyan-300"><code>AGENTS.md</code></strong> or
+                    <strong class="text-cyan-300"><code>CONTRIBUTING.md</code></strong>. That's were you can think about
+                    skills, <strong>but</strong> keep in mind skills have their own overhead; a separate file, a
+                    description that has to be specific enough to trigger correctly but not so narrow it never fires,
+                    and one more thing to keep in sync with the code. Skill description is the "index" now, helping LLMs
+                    to know when they should use them.
+                </p>
+                <p>
+                    <strong class="text-amber-300"><code>REQUIREMENTS.md</code></strong> is different: its job is to
+                    describe the current feature. When that feature ships, its requirements can live in the issue, PR,
+                    release notes, or simply git history. There is little reason to keep stale requirements at the repo
+                    root.
+                </p>
+                <p>
+                    <strong class="text-amber-300"><code>SELF_IMPROVE_LOG.md</code></strong> contains temporary entries,
+                    but then its discoveries are <span class="text-emerald-300">promoted</span> as durable lessons into
+                    the docs
+                    <small>(it can be a new skill, a new section or bullet point in
+                        <code class="text-cyan-300">AGENTS.md</code>/<code
+                            class="text-cyan-300">CONTRIBUTING.md</code>/any other permanent docs)</small>,
+                    once the log has been mined, archive it with the feature and let it go.
+                </p>
+
+                <div class="rounded-2xl border border-slate-700 bg-slate-900 p-6">
+                    <h2 class="text-xl font-semibold text-white">A simple lifecycle</h2>
+                    <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+                        <div class="rounded-xl bg-slate-800 px-4 py-3 text-center">Feature starts</div>
+                        <svg class="w-5 self-center" viewBox="0 0 16 16" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path d="M8 6L8 2L10 2L16 8L10 14L8 14L8 10L-1.74845e-07 10L-3.01991e-07 6L8 6Z"
+                                    fill="#aaaa00"></path>
+                            </g>
+                        </svg>
+                        <div class="rounded-xl bg-slate-800 px-4 py-3 text-center">Work + self-improvement</div>
+                        <svg class="w-5 self-center" viewBox="0 0 16 16" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path d="M8 6L8 2L10 2L16 8L10 14L8 14L8 10L-1.74845e-07 10L-3.01991e-07 6L8 6Z"
+                                    fill="#aaaa00"></path>
+                            </g>
+                        </svg>
+                        <div class="rounded-xl bg-cyan-400/15 px-4 py-3 text-center text-cyan-200">Promote durable
+                            lessons</div>
+                        <svg class="w-5 self-center" viewBox="0 0 16 16" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path d="M8 6L8 2L10 2L16 8L10 14L8 14L8 10L-1.74845e-07 10L-3.01991e-07 6L8 6Z"
+                                    fill="#aaaa00"></path>
+                            </g>
+                        </svg>
+                        <div class="rounded-xl bg-amber-400/15 px-4 py-3 text-center text-amber-200">Archive feature
+                            content</div>
+                    </div>
+                </div>
+
+                <p>
+                    So you should not delete all four files and recreate them from a templates or something like that.
+                    That creates unnecessary churn and makes the process forgetful. Instead, keep the mechanism, discard
+                    the content that has completed its lifecycle.
+                </p>
+            </article>
+
+            <aside class="h-fit rounded-2xl border border-slate-800 bg-slate-900 p-6 lg:sticky lg:top-6">
+                <h2 class="font-semibold text-white">Rule of thumb</h2>
+                <div class="mt-5 space-y-4 text-sm">
+                    <div><span class="font-semibold text-cyan-300">Keep</span>
+                        <p class="mt-1 text-slate-400">Reusable mechanisms and accumulated process knowledge.</p>
+                    </div>
+                    <div><span class="font-semibold text-amber-300">Archive</span>
+                        <p class="mt-1 text-slate-400">Feature requirements and raw improvement logs.</p>
+                    </div>
+                    <div><span class="font-semibold text-emerald-300">Promote</span>
+                        <p class="mt-1 text-slate-400">General lessons discovered during implementation.</p>
+                    </div>
+                </div>
+                <div class="mt-7 border-t border-slate-800 pt-6">
+                    <h3 class="text-sm font-semibold text-white">Further reading</h3>
+                    <ul class="mt-3 space-y-2 text-sm">
+                        <li>
+                            <a class="text-cyan-400 hover:text-cyan-300"
+                                href="https://openai.com/index/harness-engineering/" target="_blank" rel="noreferrer">
+                                OpenAI -- Harness engineering
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-slate-800">
+        <div
+            class="mx-auto flex md:justify-end max-w-7xl flex-col gap-3 px-5 py-8 text-sm text-slate-500 sm:px-8 sm:flex-row sm:items-center sm:justify-between">
+            <a href="#top" class="text-slate-300 hover:text-white">Back to top ↑</a>
+        </div>
+    </footer>
+</body>
+
+</html>

@@ -111,5 +111,18 @@
             "Design Pattern",
             "JavaScript"
         ]
+    },
+    {
+        "id": "82265cf1-ce3b-4681-a7e7-e7261ff42f69",
+        "title": "Harness Engineering",
+        "description": "In this post I am trying to share how I tend to do harness engineering while utilizing my new tool in my arsenal of tools",
+        "imageSrc": "./white.jpg",
+        "tags": [
+            "System Design",
+            "Database Design",
+            "Availability",
+            "Reliability"
+        ]
+    },
     }
 ]
