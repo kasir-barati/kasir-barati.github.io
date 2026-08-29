@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark">
     <title>Observability Stack - Big Picture</title>
     <script src="https://cdn.tailwindcss.com">
     </script>
@@ -41,30 +42,33 @@
     </style>
 </head>
 
-<body class="bg-slate-900 text-slate-200 antialiased">
-    <div class="max-w-7xl mx-auto w-full py-10 sm:py-12">
+<body class="min-h-screen bg-slate-950 text-slate-200 antialiased selection:bg-cyan-400/30">
+    <header id="top" class="border-b border-slate-800 bg-slate-950/90">
+        <div class="mx-auto max-w-7xl px-5 py-5 sm:px-8">
+            <div class="flex items-center justify-between gap-4">
+                <h1 class="flex min-w-0 flex-1 items-center gap-3 text-4xl font-black tracking-tight text-white sm:text-6xl">
+                    <svg class="w-10 shrink-0 sm:w-14" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+                        <path fill="#f5a800"
+                            d="M67.648 69.797c-5.246 5.25-5.246 13.758 0 19.008 5.25 5.246 13.758 5.246 19.004 0 5.25-5.25 5.25-13.758 0-19.008-5.246-5.246-13.754-5.246-19.004 0Zm14.207 14.219a6.649 6.649 0 0 1-9.41 0 6.65 6.65 0 0 1 0-9.407 6.649 6.649 0 0 1 9.41 0c2.598 2.586 2.598 6.809 0 9.407ZM86.43 3.672l-8.235 8.234a4.17 4.17 0 0 0 0 5.875l32.149 32.149a4.17 4.17 0 0 0 5.875 0l8.234-8.235c1.61-1.61 1.61-4.261 0-5.87L92.29 3.671a4.159 4.159 0 0 0-5.86 0ZM28.738 108.895a3.763 3.763 0 0 0 0-5.31l-4.183-4.187a3.768 3.768 0 0 0-5.313 0l-8.644 8.649-.016.012-2.371-2.375c-1.313-1.313-3.45-1.313-4.75 0-1.313 1.312-1.313 3.449 0 4.75l14.246 14.242a3.353 3.353 0 0 0 4.746 0c1.3-1.313 1.313-3.45 0-4.746l-2.375-2.375.016-.012Zm0 0" />
+                        <path fill="#425cc7"
+                            d="M72.297 27.313 54.004 45.605c-1.625 1.625-1.625 4.301 0 5.926L65.3 62.824c7.984-5.746 19.18-5.035 26.363 2.153l9.148-9.149c1.622-1.625 1.622-4.297 0-5.922L78.22 27.313a4.185 4.185 0 0 0-5.922 0ZM60.55 67.585l-6.672-6.672c-1.563-1.562-4.125-1.562-5.684 0l-23.53 23.54a4.036 4.036 0 0 0 0 5.687l13.331 13.332a4.036 4.036 0 0 0 5.688 0l15.132-15.157c-3.199-6.609-2.625-14.593 1.735-20.73Zm0 0" />
+                    </svg>
+                    <span>OpenTelemetry Observability Stack</span>
+                </h1>
+                <a href="/#/posts"
+                    class="z-10 inline-flex shrink-0 items-center gap-2 self-center rounded-full bg-slate-800 px-2.5 py-1.5 text-[0.8rem] font-semibold text-slate-100 no-underline shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition hover:-translate-y-0.5 hover:bg-slate-900 hover:shadow-[0_6px_20px_rgba(0,0,0,0.25)] active:translate-y-0 sm:px-[18px] sm:py-2.5 sm:text-[0.95rem]"
+                    title="Go to Posts">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                        <path
+                            d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5L13 3.5zM8 13h8v2H8zm0 4h5v2H8z" />
+                    </svg>
+                    <span class="hidden sm:inline">Posts</span>
+                </a>
+            </div>
+        </div>
+    </header>
 
-        <header class="mb-6 flex flex-wrap items-center justify-between gap-4 border-b-[3px] border-slate-200 pb-3">
-            <h1 class="min-w-0 flex-1 font-bold lg:text-3xl md:text-lg sm:text-s">
-                <svg class="w-10 inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-                    <path fill="#f5a800"
-                        d="M67.648 69.797c-5.246 5.25-5.246 13.758 0 19.008 5.25 5.246 13.758 5.246 19.004 0 5.25-5.25 5.25-13.758 0-19.008-5.246-5.246-13.754-5.246-19.004 0Zm14.207 14.219a6.649 6.649 0 0 1-9.41 0 6.65 6.65 0 0 1 0-9.407 6.649 6.649 0 0 1 9.41 0c2.598 2.586 2.598 6.809 0 9.407ZM86.43 3.672l-8.235 8.234a4.17 4.17 0 0 0 0 5.875l32.149 32.149a4.17 4.17 0 0 0 5.875 0l8.234-8.235c1.61-1.61 1.61-4.261 0-5.87L92.29 3.671a4.159 4.159 0 0 0-5.86 0ZM28.738 108.895a3.763 3.763 0 0 0 0-5.31l-4.183-4.187a3.768 3.768 0 0 0-5.313 0l-8.644 8.649-.016.012-2.371-2.375c-1.313-1.313-3.45-1.313-4.75 0-1.313 1.312-1.313 3.449 0 4.75l14.246 14.242a3.353 3.353 0 0 0 4.746 0c1.3-1.313 1.313-3.45 0-4.746l-2.375-2.375.016-.012Zm0 0" />
-                    <path fill="#425cc7"
-                        d="M72.297 27.313 54.004 45.605c-1.625 1.625-1.625 4.301 0 5.926L65.3 62.824c7.984-5.746 19.18-5.035 26.363 2.153l9.148-9.149c1.622-1.625 1.622-4.297 0-5.922L78.22 27.313a4.185 4.185 0 0 0-5.922 0ZM60.55 67.585l-6.672-6.672c-1.563-1.562-4.125-1.562-5.684 0l-23.53 23.54a4.036 4.036 0 0 0 0 5.687l13.331 13.332a4.036 4.036 0 0 0 5.688 0l15.132-15.157c-3.199-6.609-2.625-14.593 1.735-20.73Zm0 0" />
-                </svg>
-                OpenTelemetry Observability Stack
-            </h1>
-            <a href="/#/posts"
-                class="z-10 inline-flex shrink-0 items-center gap-2 self-center rounded-full bg-slate-800 px-2.5 py-1.5 text-[0.8rem] font-semibold text-slate-100 no-underline shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition hover:-translate-y-0.5 hover:bg-slate-900 hover:shadow-[0_6px_20px_rgba(0,0,0,0.25)] active:translate-y-0 sm:px-[18px] sm:py-2.5 sm:text-[0.95rem]"
-                title="Go to Posts">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                    <path
-                        d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5L13 3.5zM8 13h8v2H8zm0 4h5v2H8z" />
-                </svg>
-                <span class="hidden sm:inline">Posts</span>
-            </a>
-        </header>
-
+    <main class="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:py-20">
         <p class="text-slate-400 mb-6">
             Backend App → OTel Collector → Loki (Logs) + Tempo (Traces)
         </p>
@@ -299,9 +303,9 @@
             </div>
         </div>
 
-        <!-- FOOTER (key rules reminder, responsive) -->
-        <footer
-            class="flex-shrink-0 pt-3 border-t border-slate-700 text-sm sm:text-xs text-slate-400 flex flex-wrap items-center justify-center gap-2 sm:gap-4">
+        <!-- Key rules reminder, responsive -->
+        <div
+            class="mt-10 flex-shrink-0 pt-3 border-t border-slate-700 text-sm sm:text-xs text-slate-400 flex flex-wrap items-center justify-center gap-2 sm:gap-4">
             <span>⚡ <span class="font-medium text-slate-300">Batch flush:</span> 512 items <span
                     class="text-slate-600">|</span> 5s</span>
             <span>✅ <span class="font-medium text-slate-300">Errors:</span> 100% kept</span>
@@ -312,10 +316,15 @@
                 class="text-blue-400 hover:text-blue-300 hover:underline font-medium transition-colors">
                 📚 Example
             </a>
-        </footer>
+        </div>
+    </main>
 
-    </div>
-
+    <footer class="border-t border-slate-800">
+        <div
+            class="mx-auto flex md:justify-end max-w-7xl flex-col gap-3 px-5 py-8 text-sm text-slate-500 sm:px-8 sm:flex-row sm:items-center sm:justify-between">
+            <a href="#top" class="text-slate-300 hover:text-white">Back to top ↑</a>
+        </div>
+    </footer>
 </body>
 
 </html>

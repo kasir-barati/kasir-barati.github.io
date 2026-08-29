@@ -1,1411 +1,818 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0"
-        />
-        <title>Slack + n8n + AI - Technical Architecture</title>
-        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    </head>
-    <body
-        class="flex min-h-screen items-start justify-center bg-[#0b0e14] p-2.5 font-[system-ui,-apple-system,'Segoe_UI',Roboto,'Helvetica_Neue',sans-serif] text-slate-800 sm:p-5"
-    >
-        <div
-            class="relative w-full max-w-[1400px] rounded-[20px] bg-slate-100 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.35)] sm:p-[30px] sm:pb-10"
-        >
-            <header
-                class="mb-6 flex flex-wrap items-center justify-between gap-4 border-b-[3px] border-slate-200 pb-3"
-            >
-                <h1
-                    class="min-w-0 flex-1 text-[1.3rem] leading-[1.3] font-bold tracking-[-0.02em] text-slate-900 sm:text-[1.75rem]"
-                >
-                    Slack → n8n → AI — Event-Driven Integration
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>Event-Driven Integration of Slack & n8n</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="min-h-screen bg-slate-950 text-slate-200 antialiased selection:bg-cyan-400/30">
+    <header id="top" class="border-b border-slate-800 bg-slate-950/90">
+        <div class="mx-auto max-w-7xl px-5 py-5 sm:px-8">
+            <div class="flex items-center justify-between gap-4">
+                <h1 class="text-4xl font-black tracking-tight text-white sm:text-6xl">
+                    Event-Driven Integration of Slack & n8n
                 </h1>
-                <a
-                    href="/#/posts"
+                <a href="/#/posts"
                     class="z-10 inline-flex shrink-0 items-center gap-2 self-center rounded-full bg-slate-800 px-2.5 py-1.5 text-[0.8rem] font-semibold text-slate-100 no-underline shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition hover:-translate-y-0.5 hover:bg-slate-900 hover:shadow-[0_6px_20px_rgba(0,0,0,0.25)] active:translate-y-0 sm:px-[18px] sm:py-2.5 sm:text-[0.95rem]"
-                    title="Go to Posts"
-                >
-                    <svg
-                        viewBox="0 0 24 24"
-                        width="20"
-                        height="20"
-                        fill="currentColor"
-                    >
+                    title="Go to Posts">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                         <path
-                            d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5L13 3.5zM8 13h8v2H8zm0 4h5v2H8z"
-                        />
+                            d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5L13 3.5zM8 13h8v2H8zm0 4h5v2H8z" />
                     </svg>
                     <span class="hidden sm:inline">Posts</span>
                 </a>
-            </header>
-
-            <!-- ============ SVG DIAGRAM ============ -->
-            <div class="[&_svg]:block [&_svg]:h-auto [&_svg]:w-full">
-                <svg
-                    viewBox="0 50 1100 780"
-                    preserveAspectRatio="xMidYMid meet"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <defs>
-                        <marker
-                            id="arrowhead"
-                            markerWidth="10"
-                            markerHeight="7"
-                            refX="10"
-                            refY="3.5"
-                            orient="auto"
-                        >
-                            <polygon
-                                points="0 0, 10 3.5, 0 7"
-                                fill="#1e293b"
-                            />
-                        </marker>
-                        <marker
-                            id="arrowhead-dashed"
-                            markerWidth="10"
-                            markerHeight="7"
-                            refX="10"
-                            refY="3.5"
-                            orient="auto"
-                        >
-                            <polygon
-                                points="0 0, 10 3.5, 0 7"
-                                fill="#64748b"
-                            />
-                        </marker>
-                        <filter
-                            id="shadow"
-                            x="-5%"
-                            y="-5%"
-                            width="110%"
-                            height="110%"
-                        >
-                            <feDropShadow
-                                dx="0"
-                                dy="3"
-                                stdDeviation="5"
-                                flood-opacity="0.15"
-                            />
-                        </filter>
-                        <linearGradient
-                            id="n8nGrad"
-                            x1="0%"
-                            y1="0%"
-                            x2="100%"
-                            y2="100%"
-                        >
-                            <stop offset="0%" stop-color="#f0f5ff" />
-                            <stop
-                                offset="100%"
-                                stop-color="#e3edfc"
-                            />
-                        </linearGradient>
-                    </defs>
-
-                    <!-- ============ NODES ============ -->
-
-                    <!-- 1. User (Slack) -->
-                    <rect
-                        x="5"
-                        y="105"
-                        width="190"
-                        height="90"
-                        rx="14"
-                        fill="#a5f3fc"
-                        stroke="#38bdf8"
-                        stroke-width="2"
-                        filter="url(#shadow)"
-                    />
-                    <text
-                        x="30"
-                        y="138"
-                        class="node-title"
-                        fill="#0f172a"
-                        font-size="16"
-                        font-weight="600"
-                    >
-                        👤 Slack User
-                    </text>
-                    <text
-                        x="30"
-                        y="162"
-                        class="subtext-dark"
-                        fill="#334155"
-                        font-size="13"
-                    >
-                        mentions @YourBot
-                    </text>
-                    <text
-                        x="30"
-                        y="180"
-                        class="label-small"
-                        fill="#64748b"
-                        font-size="10"
-                    >
-                        (event source)
-                    </text>
-
-                    <!-- 2. Slack App (Events API) -->
-                    <rect
-                        x="290"
-                        y="110"
-                        width="230"
-                        height="90"
-                        rx="14"
-                        fill="#4a154b"
-                        stroke="#3a0d3a"
-                        stroke-width="2"
-                        filter="url(#shadow)"
-                    />
-                    <text
-                        x="315"
-                        y="132"
-                        class="node-title"
-                        fill="#fff"
-                        font-size="16"
-                        font-weight="600"
-                    >
-                        Slack App
-                    </text>
-                    <text
-                        x="315"
-                        y="154"
-                        class="subtext-light"
-                        fill="#f0e6f0"
-                        font-size="13"
-                    >
-                        Events API
-                    </text>
-                    <text
-                        x="315"
-                        y="174"
-                        class="subtext-light"
-                        fill="#f0e6f0"
-                        font-size="12"
-                    >
-                        Socket Mode: OFF
-                    </text>
-                    <text
-                        x="315"
-                        y="192"
-                        class="subtext-light"
-                        fill="#c4a0c4"
-                        font-size="9"
-                    >
-                        OAuth 2.0 Bot Token (xoxb-…)
-                    </text>
-
-                    <!-- 3. n8n Workflow (box) -->
-                    <rect
-                        x="540"
-                        y="70"
-                        width="530"
-                        height="660"
-                        rx="18"
-                        fill="url(#n8nGrad)"
-                        stroke="#b0c4de"
-                        stroke-width="2.5"
-                        stroke-dasharray="8 4"
-                    />
-                    <text
-                        x="805"
-                        y="98"
-                        font-size="17"
-                        font-weight="700"
-                        fill="#1a365d"
-                        text-anchor="middle"
-                    >
-                        ⚙️ n8n Workflow (Orchestration Engine)
-                    </text>
-
-                    <!-- Slack Trigger node -->
-                    <rect
-                        x="640"
-                        y="125"
-                        width="230"
-                        height="85"
-                        rx="12"
-                        fill="#2563eb"
-                        stroke="#1e40af"
-                        stroke-width="2"
-                        filter="url(#shadow)"
-                    />
-                    <text
-                        x="670"
-                        y="153"
-                        class="node-title"
-                        fill="#fff"
-                        font-size="16"
-                        font-weight="600"
-                    >
-                        🔌 Slack Trigger
-                    </text>
-                    <text
-                        x="670"
-                        y="175"
-                        class="subtext-light"
-                        fill="#e0edff"
-                        font-size="13"
-                    >
-                        Webhook (Prod URL)
-                    </text>
-                    <text
-                        x="670"
-                        y="195"
-                        class="subtext-light"
-                        fill="#b8d4ff"
-                        font-size="10"
-                    >
-                        HTTP POST /webhook/…
-                    </text>
-
-                    <!-- AI Agent node -->
-                    <rect
-                        x="580"
-                        y="260"
-                        width="230"
-                        height="85"
-                        rx="12"
-                        fill="#ea580c"
-                        stroke="#c2410c"
-                        stroke-width="2"
-                        filter="url(#shadow)"
-                    />
-                    <text
-                        x="600"
-                        y="288"
-                        class="node-title"
-                        fill="#fff"
-                        font-size="16"
-                        font-weight="600"
-                    >
-                        🤖 AI Agent (LangChain)
-                    </text>
-                    <text
-                        x="600"
-                        y="310"
-                        class="subtext-light"
-                        fill="#fdf0e0"
-                        font-size="13"
-                    >
-                        Agent Executor
-                    </text>
-                    <text
-                        x="600"
-                        y="330"
-                        class="subtext-light"
-                        fill="#fad4a0"
-                        font-size="10"
-                    >
-                        ReAct / Tool-calling
-                    </text>
-
-                    <!-- OpenAI Chat Model (input) -->
-                    <rect
-                        x="310"
-                        y="400"
-                        width="210"
-                        height="75"
-                        rx="12"
-                        fill="#0f172a"
-                        stroke="#1e293b"
-                        stroke-width="2"
-                        filter="url(#shadow)"
-                    />
-                    <text
-                        x="335"
-                        y="428"
-                        class="node-title"
-                        fill="#fff"
-                        font-size="16"
-                        font-weight="600"
-                    >
-                        🧠 OpenAI Chat Model
-                    </text>
-                    <text
-                        x="335"
-                        y="450"
-                        class="subtext-light"
-                        fill="#cbd5e0"
-                        font-size="13"
-                    >
-                        gpt-4.0-mini
-                    </text>
-
-                    <!-- Simple Memory (input) -->
-                    <rect
-                        x="735"
-                        y="435"
-                        width="250"
-                        height="75"
-                        rx="12"
-                        fill="#059669"
-                        stroke="#047857"
-                        stroke-width="2"
-                        filter="url(#shadow)"
-                    />
-                    <text
-                        x="760"
-                        y="458"
-                        class="node-title"
-                        fill="#fff"
-                        font-size="16"
-                        font-weight="600"
-                    >
-                        🧠 Simple Memory
-                    </text>
-                    <text
-                        x="760"
-                        y="480"
-                        class="subtext-light"
-                        fill="#e6fffa"
-                        font-size="13"
-                    >
-                        Buffer Window
-                    </text>
-                    <text
-                        x="760"
-                        y="498"
-                        class="subtext-light"
-                        fill="#c6f0d0"
-                        font-size="10"
-                    >
-                        (in prod: use a persistent DB)
-                    </text>
-
-                    <!-- Date & Time Tool (input) -->
-                    <rect
-                        x="850"
-                        y="325"
-                        width="210"
-                        height="75"
-                        rx="12"
-                        fill="#7c3aed"
-                        stroke="#6d28d9"
-                        stroke-width="2"
-                        filter="url(#shadow)"
-                    />
-                    <text
-                        x="870"
-                        y="353"
-                        class="node-title"
-                        fill="#fff"
-                        font-size="16"
-                        font-weight="600"
-                    >
-                        🕒 Date & Time Tool
-                    </text>
-                    <text
-                        x="870"
-                        y="375"
-                        class="subtext-light"
-                        fill="#e9d8fd"
-                        font-size="13"
-                    >
-                        Tool (function)
-                    </text>
-                    <text
-                        x="870"
-                        y="393"
-                        class="subtext-light"
-                        fill="#d4b8f0"
-                        font-size="10"
-                    >
-                        Returns current time
-                    </text>
-
-                    <!-- Send a Message node -->
-                    <rect
-                        x="580"
-                        y="530"
-                        width="230"
-                        height="85"
-                        rx="12"
-                        fill="#059669"
-                        stroke="#047857"
-                        stroke-width="2"
-                        filter="url(#shadow)"
-                    />
-                    <text
-                        x="605"
-                        y="558"
-                        class="node-title"
-                        fill="#fff"
-                        font-size="16"
-                        font-weight="600"
-                    >
-                        ✉️ Send a Message
-                    </text>
-                    <text
-                        x="605"
-                        y="580"
-                        class="subtext-light"
-                        fill="#e6fffa"
-                        font-size="13"
-                    >
-                        Slack API (chat.postMessage)
-                    </text>
-                    <text
-                        x="605"
-                        y="600"
-                        class="subtext-light"
-                        fill="#c6f0d0"
-                        font-size="10"
-                    >
-                        HTTP POST to slack.com
-                    </text>
-
-                    <!-- Slack App (send) -->
-                    <rect
-                        x="220"
-                        y="575"
-                        width="230"
-                        height="85"
-                        rx="14"
-                        fill="#4a154b"
-                        stroke="#3a0d3a"
-                        stroke-width="2"
-                        filter="url(#shadow)"
-                    />
-                    <text
-                        x="250"
-                        y="603"
-                        class="node-title"
-                        fill="#fff"
-                        font-size="16"
-                        font-weight="600"
-                    >
-                        Slack App (send)
-                    </text>
-                    <text
-                        x="250"
-                        y="625"
-                        class="subtext-light"
-                        fill="#f0e6f0"
-                        font-size="13"
-                    >
-                        chat.postMessage via Bot Token
-                    </text>
-                    <text
-                        x="250"
-                        y="645"
-                        class="subtext-light"
-                        fill="#c4a0c4"
-                        font-size="10"
-                    >
-                        OAuth 2.0 + scopes
-                    </text>
-
-                    <!-- ============ ARROWS ============ -->
-
-                    <!-- 1. User -> Slack App -->
-                    <line
-                        x1="195"
-                        y1="145"
-                        x2="290"
-                        y2="145"
-                        stroke="#1e293b"
-                        stroke-width="2.5"
-                        marker-end="url(#arrowhead)"
-                    />
-                    <!-- Step number 1 -->
-                    <circle cx="210" cy="125" r="12" fill="#2563eb" />
-                    <text
-                        x="210"
-                        y="130"
-                        fill="#fff"
-                        font-size="12"
-                        font-weight="700"
-                        text-anchor="middle"
-                    >
-                        1
-                    </text>
-                    <text
-                        x="222"
-                        y="120"
-                        class="label"
-                        fill="#334155"
-                        font-size="11"
-                    >
-                        App Mention
-                    </text>
-                    <text
-                        x="222"
-                        y="108"
-                        class="label-small"
-                        fill="#64748b"
-                        font-size="9"
-                    >
-                        (event payload)
-                    </text>
-
-                    <!-- 2. Slack App -> Slack Trigger -->
-                    <line
-                        x1="520"
-                        y1="145"
-                        x2="640"
-                        y2="145"
-                        stroke="#1e293b"
-                        stroke-width="2.5"
-                        marker-end="url(#arrowhead)"
-                    />
-                    <circle cx="535" cy="130" r="12" fill="#2563eb" />
-                    <text
-                        x="535"
-                        y="135"
-                        fill="#fff"
-                        font-size="12"
-                        font-weight="700"
-                        text-anchor="middle"
-                    >
-                        2
-                    </text>
-                    <text
-                        x="545"
-                        y="120"
-                        class="label"
-                        fill="#334155"
-                        font-size="11"
-                    >
-                        HTTP POST
-                    </text>
-                    <text
-                        x="545"
-                        y="108"
-                        class="label-small"
-                        fill="#64748b"
-                        font-size="9"
-                    >
-                        (JSON event)
-                    </text>
-
-                    <!-- 3. Slack Trigger -> AI Agent (vertical) -->
-                    <line
-                        x1="695"
-                        y1="210"
-                        x2="695"
-                        y2="260"
-                        stroke="#1e293b"
-                        stroke-width="2.5"
-                        marker-end="url(#arrowhead)"
-                    />
-                    <circle cx="715" cy="230" r="12" fill="#2563eb" />
-                    <text
-                        x="715"
-                        y="235"
-                        fill="#fff"
-                        font-size="12"
-                        font-weight="700"
-                        text-anchor="middle"
-                    >
-                        3
-                    </text>
-
-                    <!-- 4. OpenAI -> AI Agent (dashed) -->
-                    <line
-                        x1="520"
-                        y1="437"
-                        x2="580"
-                        y2="325"
-                        stroke="#64748b"
-                        stroke-width="2"
-                        stroke-dasharray="6 4"
-                        marker-end="url(#arrowhead-dashed)"
-                    />
-
-                    <!-- 5. Simple Memory -> AI Agent (dashed) -->
-                    <line
-                        x1="840"
-                        y1="435"
-                        x2="730"
-                        y2="345"
-                        stroke="#64748b"
-                        stroke-width="2"
-                        stroke-dasharray="6 4"
-                        marker-end="url(#arrowhead-dashed)"
-                    />
-
-                    <!-- 6. Date & Time -> AI Agent (dashed) -->
-                    <line
-                        x1="850"
-                        y1="360"
-                        x2="810"
-                        y2="330"
-                        stroke="#64748b"
-                        stroke-width="2"
-                        stroke-dasharray="6 4"
-                        marker-end="url(#arrowhead-dashed)"
-                    />
-
-                    <!-- 7. AI Agent -> Send a Message (vertical) -->
-                    <line
-                        x1="695"
-                        y1="345"
-                        x2="695"
-                        y2="530"
-                        stroke="#1e293b"
-                        stroke-width="2.5"
-                        marker-end="url(#arrowhead)"
-                    />
-                    <circle cx="710" cy="440" r="12" fill="#2563eb" />
-                    <text
-                        x="710"
-                        y="445"
-                        fill="#fff"
-                        font-size="12"
-                        font-weight="700"
-                        text-anchor="middle"
-                    >
-                        4
-                    </text>
-
-                    <!-- 8. Send a Message -> Slack App (send) -->
-                    <line
-                        x1="580"
-                        y1="575"
-                        x2="450"
-                        y2="610"
-                        stroke="#1e293b"
-                        stroke-width="2.5"
-                        marker-end="url(#arrowhead)"
-                    />
-                    <circle cx="550" cy="565" r="12" fill="#2563eb" />
-                    <text
-                        x="550"
-                        y="570"
-                        fill="#fff"
-                        font-size="12"
-                        font-weight="700"
-                        text-anchor="middle"
-                    >
-                        5
-                    </text>
-                    <text
-                        x="450"
-                        y="568"
-                        class="label"
-                        fill="#334155"
-                        font-size="11"
-                    >
-                        POST to Slack API
-                    </text>
-
-                    <!-- 9. Slack App (send) -> User (diagonal return) -->
-                    <line
-                        x1="290"
-                        y1="575"
-                        x2="120"
-                        y2="195"
-                        stroke="#1e293b"
-                        stroke-width="2.5"
-                        marker-end="url(#arrowhead)"
-                    />
-                    <circle cx="275" cy="505" r="12" fill="#2563eb" />
-                    <text
-                        x="275"
-                        y="510"
-                        fill="#fff"
-                        font-size="12"
-                        font-weight="700"
-                        text-anchor="middle"
-                    >
-                        6
-                    </text>
-                    <text
-                        x="290"
-                        y="510"
-                        class="label"
-                        fill="#334155"
-                        font-size="11"
-                    >
-                        Response delivered
-                    </text>
-
-                    <!-- ============ LEGEND ============ -->
-                    <line
-                        x1="60"
-                        y1="680"
-                        x2="120"
-                        y2="680"
-                        stroke="#1e293b"
-                        stroke-width="2.5"
-                        marker-end="url(#arrowhead)"
-                    />
-                    <text
-                        x="130"
-                        y="684"
-                        class="label"
-                        fill="#334155"
-                        font-size="12"
-                    >
-                        Data flow (sync HTTP)
-                    </text>
-                    <line
-                        x1="60"
-                        y1="705"
-                        x2="120"
-                        y2="705"
-                        stroke="#64748b"
-                        stroke-width="2"
-                        stroke-dasharray="6 4"
-                        marker-end="url(#arrowhead-dashed)"
-                    />
-                    <text
-                        x="130"
-                        y="709"
-                        class="label"
-                        fill="#334155"
-                        font-size="12"
-                    >
-                        AI Agent inputs (model, memory, tools)
-                    </text>
-
-                    <!-- Patterns summary -->
-                    <rect
-                        x="40"
-                        y="740"
-                        width="1020"
-                        height="70"
-                        rx="10"
-                        fill="#e6edf8"
-                        stroke="#b0c4de"
-                        stroke-width="1.5"
-                    />
-                    <a
-                        href="./slack-n8n.workflow.json"
-                        target="_blank"
-                    >
-                        <text
-                            x="450"
-                            y="768"
-                            font-size="14"
-                            fill="#1e40af"
-                            text-decoration="underline"
-                            font-weight="500"
-                        >
-                            ⬇️ Download n8n workflow JSON
-                        </text>
-                    </a>
-                    <text
-                        x="250"
-                        y="795"
-                        class="label"
-                        fill="#1e293b"
-                        font-size="13"
-                        font-weight="500"
-                    >
-                        ⚡ Patterns: Event-driven · Webhook ·
-                        Orchestration · AI Agent (ReAct) ·
-                        Tool-calling · Memory Buffer
-                    </text>
-                </svg>
             </div>
+        </div>
+    </header>
 
-            <!-- ============ EXPLANATION ============ -->
-            <div
-                class="mt-8 rounded-2xl border border-[#e9edf2] border-l-[6px] border-l-blue-600 bg-white p-5 leading-[1.7] text-slate-800 shadow-[0_10px_20px_-10px_rgba(0,0,0,0.08)] sm:p-[30px] sm:px-[35px] [&_a]:font-medium [&_a]:text-[#1e4f8a] [&_a]:no-underline hover:[&_a]:underline [&_code]:rounded [&_code]:bg-[#eef2f6] [&_code]:px-2 [&_code]:py-[0.15rem] [&_code]:font-mono [&_code]:text-[0.9em] [&_code]:text-[#0b2d4b] [&_h2]:mb-2 [&_h2]:border-b-[3px] [&_h2]:border-slate-200 [&_h2]:pb-[0.6rem] [&_h2]:text-[1.3rem] [&_h2]:font-bold [&_h2]:text-slate-900 sm:[&_h2]:text-[1.6rem] [&_h3]:mt-8 [&_h3]:mb-3 [&_h3]:flex [&_h3]:items-center [&_h3]:gap-2 [&_h3]:text-[1.25rem] [&_h3]:font-semibold [&_h3]:text-blue-800 [&_h4]:mt-6 [&_h4]:mb-1.5 [&_h4]:text-[1.05rem] [&_h4]:font-semibold [&_h4]:text-slate-800 [&_p]:mb-4 [&_p]:text-base [&_ul]:mb-4 [&_ul]:pl-6 [&_ol]:mb-4 [&_ol]:pl-6 [&_li]:mb-1.5 [&_table]:my-3 [&_table]:w-full [&_table]:border-collapse [&_table]:text-[0.85rem] sm:[&_table]:text-[0.95rem] [&_th]:border [&_th]:border-[#d1d9e6] [&_th]:bg-[#eef2f6] [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:align-top [&_th]:font-semibold [&_td]:border [&_td]:border-[#d1d9e6] [&_td]:px-3 [&_td]:py-2 [&_td]:text-left [&_td]:align-top [&_tbody_tr:nth-child(even)]:bg-slate-50"
-            >
-                <!-- === OVERVIEW / HOW IT WORKS === -->
-                <h2>📘 How It Works - Step by Step</h2>
-                <div
-                    class="mb-6 rounded-xl border-l-[5px] border-blue-600 bg-slate-50 p-5 text-slate-700"
-                >
-                    <strong>⚠️ Asynchronous note:</strong> Slack
-                    expects a quick <code>200 OK</code> response to
-                    the webhook. In production, the actual processing
-                    (steps 3–6) often runs <em>asynchronously</em> via
-                    a message queue to avoid timeouts. The diagram
-                    shows the logical flow.
-                </div>
-                <ol style="font-weight: 500; margin-bottom: 1.5rem">
-                    <li>
-                        <strong>User mentions the bot</strong> in a
-                        Slack channel.
-                    </li>
-                    <li>
-                        Slack's <strong>Events API</strong> sends an
-                        HTTP POST (webhook) to the n8n
-                        <strong>Slack Trigger</strong>.
-                    </li>
-                    <li>
-                        n8n invokes the
-                        <strong>AI Agent</strong> (LangChain) with the
-                        user's message.
-                    </li>
-                    <li>
-                        The agent uses the
-                        <strong>OpenAI model</strong>,
-                        <strong>memory</strong> (conversation
-                        context), and <strong>tools</strong> (e.g.,
-                        date/time) to generate a reply.
-                    </li>
-                    <li>
-                        n8n sends the reply back to Slack via the
-                        <strong>Send a Message</strong> node.
-                    </li>
-                    <li>
-                        The user sees the bot's response in the
-                        channel.
-                    </li>
-                </ol>
+    <main class="mx-auto max-w-7xl px-5 py-12 sm:px-8">
+        <!-- ============ SVG DIAGRAM ============ -->
+        <div class="[&_svg]:block [&_svg]:h-auto [&_svg]:w-full">
+            <svg viewBox="0 50 1100 780" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#1e293b" />
+                    </marker>
+                    <marker id="arrowhead-dashed" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+                    </marker>
+                    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+                        <feDropShadow dx="0" dy="3" stdDeviation="5" flood-opacity="0.15" />
+                    </filter>
+                    <linearGradient id="n8nGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#f0f5ff" />
+                        <stop offset="100%" stop-color="#e3edfc" />
+                    </linearGradient>
+                </defs>
 
-                <hr class="my-8 border-0 border-t border-slate-200" />
+                <!-- ============ NODES ============ -->
 
-                <!-- === COMPONENT DEEP-DIVE === -->
-                <h2>🔧 Component Deep-Dive</h2>
+                <!-- 1. User (Slack) -->
+                <rect x="5" y="105" width="190" height="90" rx="14" fill="#a5f3fc" stroke="#38bdf8" stroke-width="2"
+                    filter="url(#shadow)" />
+                <text x="30" y="138" class="node-title" fill="#0f172a" font-size="16" font-weight="600">
+                    👤 Slack User
+                </text>
+                <text x="30" y="162" class="subtext-dark" fill="#334155" font-size="13">
+                    mentions @YourBot
+                </text>
+                <text x="30" y="180" class="label-small" fill="#64748b" font-size="10">
+                    (event source)
+                </text>
 
-                <h3>⚡ Slack App (Events API)</h3>
-                <p>
-                    The Slack app is configured with
-                    <strong>Event Subscriptions</strong> pointing to
-                    the n8n webhook URL. It uses
-                    <strong>OAuth 2.0</strong> with bot scopes
-                    (<code>app_mentions:read</code>,
-                    <code>chat:write</code>, etc.).
-                    <em>Socket Mode is disabled</em> because n8n
-                    expects HTTP webhooks.
-                </p>
+                <!-- 2. Slack App (Events API) -->
+                <rect x="290" y="110" width="230" height="90" rx="14" fill="#4a154b" stroke="#3a0d3a" stroke-width="2"
+                    filter="url(#shadow)" />
+                <text x="315" y="132" class="node-title" fill="#fff" font-size="16" font-weight="600">
+                    Slack App
+                </text>
+                <text x="315" y="154" class="subtext-light" fill="#f0e6f0" font-size="13">
+                    Events API
+                </text>
+                <text x="315" y="174" class="subtext-light" fill="#f0e6f0" font-size="12">
+                    Socket Mode: OFF
+                </text>
+                <text x="315" y="192" class="subtext-light" fill="#c4a0c4" font-size="9">
+                    OAuth 2.0 Bot Token (xoxb-…)
+                </text>
 
-                <h3>⚙️ n8n Workflow (Orchestration)</h3>
-                <p>
-                    n8n acts as the
-                    <strong>central orchestrator</strong> - it
-                    receives the webhook, triggers the AI agent, waits
-                    for the response, and sends it back. This is a
-                    classic <strong>orchestration pattern</strong>
-                    (see details below).
-                </p>
+                <!-- 3. n8n Workflow (box) -->
+                <rect x="540" y="70" width="530" height="660" rx="18" fill="url(#n8nGrad)" stroke="#b0c4de"
+                    stroke-width="2.5" stroke-dasharray="8 4" />
+                <text x="805" y="98" font-size="17" font-weight="700" fill="#1a365d" text-anchor="middle">
+                    ⚙️ n8n Workflow (Orchestration Engine)
+                </text>
 
-                <h3>🤖 AI Agent (LangChain)</h3>
-                <p>
-                    The agent is built with
-                    <strong>LangChain</strong> and uses a
-                    <strong>ReAct</strong> (Reason+Act) loop. It
-                    decides which tools to call and how to format the
-                    final answer. The agent is stateless by default,
-                    so we add a <strong>memory buffer</strong> to
-                    retain conversation history.
-                </p>
+                <!-- Slack Trigger node -->
+                <rect x="640" y="125" width="230" height="85" rx="12" fill="#2563eb" stroke="#1e40af" stroke-width="2"
+                    filter="url(#shadow)" />
+                <text x="670" y="153" class="node-title" fill="#fff" font-size="16" font-weight="600">
+                    🔌 Slack Trigger
+                </text>
+                <text x="670" y="175" class="subtext-light" fill="#e0edff" font-size="13">
+                    Webhook (Prod URL)
+                </text>
+                <text x="670" y="195" class="subtext-light" fill="#b8d4ff" font-size="10">
+                    HTTP POST /webhook/…
+                </text>
 
-                <h3>🧠 OpenAI Chat Model</h3>
-                <p>
-                    The underlying LLM is <code>gpt-4.0-mini</code> -
-                    a fast, cost-effective model that supports
-                    <strong>function calling</strong> (tools). The
-                    agent uses it for reasoning and generation.
-                </p>
+                <!-- AI Agent node -->
+                <rect x="580" y="260" width="230" height="85" rx="12" fill="#ea580c" stroke="#c2410c" stroke-width="2"
+                    filter="url(#shadow)" />
+                <text x="600" y="288" class="node-title" fill="#fff" font-size="16" font-weight="600">
+                    🤖 AI Agent (LangChain)
+                </text>
+                <text x="600" y="310" class="subtext-light" fill="#fdf0e0" font-size="13">
+                    Agent Executor
+                </text>
+                <text x="600" y="330" class="subtext-light" fill="#fad4a0" font-size="10">
+                    ReAct / Tool-calling
+                </text>
 
-                <h3>🛠️ Tools &amp; Memory</h3>
-                <ul>
-                    <li>
-                        <strong>Date &amp; Time Tool</strong> - a
-                        simple function that returns the current
-                        timestamp.
-                    </li>
-                    <li>
-                        <strong>Buffer Window Memory</strong> - keeps
-                        the last N conversation turns, giving the
-                        agent context across multiple interactions.
-                    </li>
-                    <li>
-                        <em>In production</em>, you'd replace the
-                        in-memory buffer with a persistent store
-                        (e.g., Redis, PostgreSQL).
-                    </li>
-                </ul>
+                <!-- OpenAI Chat Model (input) -->
+                <rect x="310" y="400" width="210" height="75" rx="12" fill="#0f172a" stroke="#1e293b" stroke-width="2"
+                    filter="url(#shadow)" />
+                <text x="335" y="428" class="node-title" fill="#fff" font-size="16" font-weight="600">
+                    🧠 OpenAI Chat Model
+                </text>
+                <text x="335" y="450" class="subtext-light" fill="#cbd5e0" font-size="13">
+                    gpt-4.0-mini
+                </text>
 
-                <hr class="my-8 border-0 border-t border-slate-200" />
+                <!-- Simple Memory (input) -->
+                <rect x="735" y="435" width="250" height="75" rx="12" fill="#059669" stroke="#047857" stroke-width="2"
+                    filter="url(#shadow)" />
+                <text x="760" y="458" class="node-title" fill="#fff" font-size="16" font-weight="600">
+                    🧠 Simple Memory
+                </text>
+                <text x="760" y="480" class="subtext-light" fill="#e6fffa" font-size="13">
+                    Buffer Window
+                </text>
+                <text x="760" y="498" class="subtext-light" fill="#c6f0d0" font-size="10">
+                    (in prod: use a persistent DB)
+                </text>
 
-                <!-- === ARCHITECTURAL PATTERNS === -->
-                <h2>🧩 Architectural Patterns</h2>
+                <!-- Date & Time Tool (input) -->
+                <rect x="850" y="325" width="210" height="75" rx="12" fill="#7c3aed" stroke="#6d28d9" stroke-width="2"
+                    filter="url(#shadow)" />
+                <text x="870" y="353" class="node-title" fill="#fff" font-size="16" font-weight="600">
+                    🕒 Date & Time Tool
+                </text>
+                <text x="870" y="375" class="subtext-light" fill="#e9d8fd" font-size="13">
+                    Tool (function)
+                </text>
+                <text x="870" y="393" class="subtext-light" fill="#d4b8f0" font-size="10">
+                    Returns current time
+                </text>
 
-                <p>
+                <!-- Send a Message node -->
+                <rect x="580" y="530" width="230" height="85" rx="12" fill="#059669" stroke="#047857" stroke-width="2"
+                    filter="url(#shadow)" />
+                <text x="605" y="558" class="node-title" fill="#fff" font-size="16" font-weight="600">
+                    ✉️ Send a Message
+                </text>
+                <text x="605" y="580" class="subtext-light" fill="#e6fffa" font-size="13">
+                    Slack API (chat.postMessage)
+                </text>
+                <text x="605" y="600" class="subtext-light" fill="#c6f0d0" font-size="10">
+                    HTTP POST to slack.com
+                </text>
+
+                <!-- Slack App (send) -->
+                <rect x="220" y="575" width="230" height="85" rx="14" fill="#4a154b" stroke="#3a0d3a" stroke-width="2"
+                    filter="url(#shadow)" />
+                <text x="250" y="603" class="node-title" fill="#fff" font-size="16" font-weight="600">
+                    Slack App (send)
+                </text>
+                <text x="250" y="625" class="subtext-light" fill="#f0e6f0" font-size="13">
+                    chat.postMessage via Bot Token
+                </text>
+                <text x="250" y="645" class="subtext-light" fill="#c4a0c4" font-size="10">
+                    OAuth 2.0 + scopes
+                </text>
+
+                <!-- ============ ARROWS ============ -->
+
+                <!-- 1. User -> Slack App -->
+                <line x1="195" y1="145" x2="290" y2="145" stroke="#1e293b" stroke-width="2.5"
+                    marker-end="url(#arrowhead)" />
+                <!-- Step number 1 -->
+                <circle cx="210" cy="125" r="12" fill="#2563eb" />
+                <text x="210" y="130" fill="#fff" font-size="12" font-weight="700" text-anchor="middle">
+                    1
+                </text>
+                <text x="222" y="120" class="label" fill="#334155" font-size="11">
+                    App Mention
+                </text>
+                <text x="222" y="108" class="label-small" fill="#64748b" font-size="9">
+                    (event payload)
+                </text>
+
+                <!-- 2. Slack App -> Slack Trigger -->
+                <line x1="520" y1="145" x2="640" y2="145" stroke="#1e293b" stroke-width="2.5"
+                    marker-end="url(#arrowhead)" />
+                <circle cx="535" cy="130" r="12" fill="#2563eb" />
+                <text x="535" y="135" fill="#fff" font-size="12" font-weight="700" text-anchor="middle">
+                    2
+                </text>
+                <text x="545" y="120" class="label" fill="#334155" font-size="11">
+                    HTTP POST
+                </text>
+                <text x="545" y="108" class="label-small" fill="#64748b" font-size="9">
+                    (JSON event)
+                </text>
+
+                <!-- 3. Slack Trigger -> AI Agent (vertical) -->
+                <line x1="695" y1="210" x2="695" y2="260" stroke="#1e293b" stroke-width="2.5"
+                    marker-end="url(#arrowhead)" />
+                <circle cx="715" cy="230" r="12" fill="#2563eb" />
+                <text x="715" y="235" fill="#fff" font-size="12" font-weight="700" text-anchor="middle">
+                    3
+                </text>
+
+                <!-- 4. OpenAI -> AI Agent (dashed) -->
+                <line x1="520" y1="437" x2="580" y2="325" stroke="#64748b" stroke-width="2" stroke-dasharray="6 4"
+                    marker-end="url(#arrowhead-dashed)" />
+
+                <!-- 5. Simple Memory -> AI Agent (dashed) -->
+                <line x1="840" y1="435" x2="730" y2="345" stroke="#64748b" stroke-width="2" stroke-dasharray="6 4"
+                    marker-end="url(#arrowhead-dashed)" />
+
+                <!-- 6. Date & Time -> AI Agent (dashed) -->
+                <line x1="850" y1="360" x2="810" y2="330" stroke="#64748b" stroke-width="2" stroke-dasharray="6 4"
+                    marker-end="url(#arrowhead-dashed)" />
+
+                <!-- 7. AI Agent -> Send a Message (vertical) -->
+                <line x1="695" y1="345" x2="695" y2="530" stroke="#1e293b" stroke-width="2.5"
+                    marker-end="url(#arrowhead)" />
+                <circle cx="710" cy="440" r="12" fill="#2563eb" />
+                <text x="710" y="445" fill="#fff" font-size="12" font-weight="700" text-anchor="middle">
+                    4
+                </text>
+
+                <!-- 8. Send a Message -> Slack App (send) -->
+                <line x1="580" y1="575" x2="450" y2="610" stroke="#1e293b" stroke-width="2.5"
+                    marker-end="url(#arrowhead)" />
+                <circle cx="550" cy="565" r="12" fill="#2563eb" />
+                <text x="550" y="570" fill="#fff" font-size="12" font-weight="700" text-anchor="middle">
+                    5
+                </text>
+                <text x="450" y="568" class="label" fill="#334155" font-size="11">
+                    POST to Slack API
+                </text>
+
+                <!-- 9. Slack App (send) -> User (diagonal return) -->
+                <line x1="290" y1="575" x2="120" y2="195" stroke="#1e293b" stroke-width="2.5"
+                    marker-end="url(#arrowhead)" />
+                <circle cx="275" cy="505" r="12" fill="#2563eb" />
+                <text x="275" y="510" fill="#fff" font-size="12" font-weight="700" text-anchor="middle">
+                    6
+                </text>
+                <text x="290" y="510" class="label" fill="#334155" font-size="11">
+                    Response delivered
+                </text>
+
+                <!-- ============ LEGEND ============ -->
+                <line x1="60" y1="680" x2="120" y2="680" stroke="#1e293b" stroke-width="2.5"
+                    marker-end="url(#arrowhead)" />
+                <text x="130" y="684" class="label" fill="#334155" font-size="12">
+                    Data flow (sync HTTP)
+                </text>
+                <line x1="60" y1="705" x2="120" y2="705" stroke="#64748b" stroke-width="2" stroke-dasharray="6 4"
+                    marker-end="url(#arrowhead-dashed)" />
+                <text x="130" y="709" class="label" fill="#334155" font-size="12">
+                    AI Agent inputs (model, memory, tools)
+                </text>
+
+                <!-- Patterns summary -->
+                <rect x="40" y="740" width="1020" height="70" rx="10" fill="#e6edf8" stroke="#b0c4de"
+                    stroke-width="1.5" />
+                <a href="./slack-n8n.workflow.json" target="_blank">
+                    <text x="450" y="768" font-size="14" fill="#1e40af" text-decoration="underline" font-weight="500">
+                        ⬇️ Download n8n workflow JSON
+                    </text>
+                </a>
+                <text x="250" y="795" class="label" fill="#1e293b" font-size="13" font-weight="500">
+                    ⚡ Patterns: Event-driven · Webhook ·
+                    Orchestration · AI Agent (ReAct) ·
+                    Tool-calling · Memory Buffer
+                </text>
+            </svg>
+        </div>
+
+        <!-- ============ EXPLANATION ============ -->
+        <div
+            class="mt-8 rounded-2xl border border-slate-800 border-l-[6px] border-l-blue-500 bg-slate-900 p-5 leading-[1.7] text-slate-300 shadow-[0_10px_20px_-10px_rgba(0,0,0,0.08)] sm:p-[30px] sm:px-[35px] [&_a]:font-medium [&_a]:text-cyan-400 [&_a]:no-underline hover:[&_a]:underline [&_code]:rounded [&_code]:bg-slate-800 [&_code]:px-2 [&_code]:py-[0.15rem] [&_code]:font-mono [&_code]:text-[0.9em] [&_code]:text-cyan-300 [&_h2]:mb-2 [&_h2]:border-b-[3px] [&_h2]:border-slate-800 [&_h2]:pb-[0.6rem] [&_h2]:text-[1.3rem] [&_h2]:font-bold [&_h2]:text-white sm:[&_h2]:text-[1.6rem] [&_h3]:mt-8 [&_h3]:mb-3 [&_h3]:flex [&_h3]:items-center [&_h3]:gap-2 [&_h3]:text-[1.25rem] [&_h3]:font-semibold [&_h3]:text-cyan-300 [&_h4]:mt-6 [&_h4]:mb-1.5 [&_h4]:text-[1.05rem] [&_h4]:font-semibold [&_h4]:text-slate-200 [&_p]:mb-4 [&_p]:text-base [&_ul]:mb-4 [&_ul]:pl-6 [&_ol]:mb-4 [&_ol]:pl-6 [&_li]:mb-1.5 [&_table]:my-3 [&_table]:w-full [&_table]:border-collapse [&_table]:text-[0.85rem] sm:[&_table]:text-[0.95rem] [&_th]:border [&_th]:border-slate-700 [&_th]:bg-slate-800 [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:align-top [&_th]:font-semibold [&_td]:border [&_td]:border-slate-700 [&_td]:px-3 [&_td]:py-2 [&_td]:text-left [&_td]:align-top [&_tbody_tr:nth-child(even)]:bg-slate-800/40">
+            <!-- === OVERVIEW / HOW IT WORKS === -->
+            <h2>📘 How It Works - Step by Step</h2>
+            <div class="mb-6 rounded-xl border-l-[5px] border-blue-500 bg-slate-800/50 p-5 text-slate-300">
+                <strong>⚠️ Asynchronous note:</strong> Slack
+                expects a quick <code>200 OK</code> response to
+                the webhook. In production, the actual processing
+                (steps 3–6) often runs <em>asynchronously</em> via
+                a message queue to avoid timeouts. The diagram
+                shows the logical flow.
+            </div>
+            <ol style="font-weight: 500; margin-bottom: 1.5rem">
+                <li>
+                    <strong>User mentions the bot</strong> in a
+                    Slack channel.
+                </li>
+                <li>
+                    Slack's <strong>Events API</strong> sends an
+                    HTTP POST (webhook) to the n8n
+                    <strong>Slack Trigger</strong>.
+                </li>
+                <li>
+                    n8n invokes the
+                    <strong>AI Agent</strong> (LangChain) with the
+                    user's message.
+                </li>
+                <li>
+                    The agent uses the
+                    <strong>OpenAI model</strong>,
+                    <strong>memory</strong> (conversation
+                    context), and <strong>tools</strong> (e.g.,
+                    date/time) to generate a reply.
+                </li>
+                <li>
+                    n8n sends the reply back to Slack via the
+                    <strong>Send a Message</strong> node.
+                </li>
+                <li>
+                    The user sees the bot's response in the
+                    channel.
+                </li>
+            </ol>
+
+            <hr class="my-8 border-0 border-t border-slate-800" />
+
+            <!-- === COMPONENT DEEP-DIVE === -->
+            <h2>🔧 Component Deep-Dive</h2>
+
+            <h3>⚡ Slack App (Events API)</h3>
+            <p>
+                The Slack app is configured with
+                <strong>Event Subscriptions</strong> pointing to
+                the n8n webhook URL. It uses
+                <strong>OAuth 2.0</strong> with bot scopes
+                (<code>app_mentions:read</code>,
+                <code>chat:write</code>, etc.).
+                <em>Socket Mode is disabled</em> because n8n
+                expects HTTP webhooks.
+            </p>
+
+            <h3>⚙️ n8n Workflow (Orchestration)</h3>
+            <p>
+                n8n acts as the
+                <strong>central orchestrator</strong> - it
+                receives the webhook, triggers the AI agent, waits
+                for the response, and sends it back. This is a
+                classic <strong>orchestration pattern</strong>
+                (see details below).
+            </p>
+
+            <h3>🤖 AI Agent (LangChain)</h3>
+            <p>
+                The agent is built with
+                <strong>LangChain</strong> and uses a
+                <strong>ReAct</strong> (Reason+Act) loop. It
+                decides which tools to call and how to format the
+                final answer. The agent is stateless by default,
+                so we add a <strong>memory buffer</strong> to
+                retain conversation history.
+            </p>
+
+            <h3>🧠 OpenAI Chat Model</h3>
+            <p>
+                The underlying LLM is <code>gpt-4.0-mini</code> -
+                a fast, cost-effective model that supports
+                <strong>function calling</strong> (tools). The
+                agent uses it for reasoning and generation.
+            </p>
+
+            <h3>🛠️ Tools &amp; Memory</h3>
+            <ul>
+                <li>
+                    <strong>Date &amp; Time Tool</strong> - a
+                    simple function that returns the current
+                    timestamp.
+                </li>
+                <li>
+                    <strong>Buffer Window Memory</strong> - keeps
+                    the last N conversation turns, giving the
+                    agent context across multiple interactions.
+                </li>
+                <li>
+                    <em>In production</em>, you'd replace the
+                    in-memory buffer with a persistent store
+                    (e.g., Redis, PostgreSQL).
+                </li>
+            </ul>
+
+            <hr class="my-8 border-0 border-t border-slate-800" />
+
+            <!-- === ARCHITECTURAL PATTERNS === -->
+            <h2>🧩 Architectural Patterns</h2>
+
+            <p>
+                <span
+                    class="mr-1.5 inline-block rounded-[20px] bg-[#1e4f8a] px-3 text-[0.8rem] leading-[1.8] font-semibold text-white">E</span>
+                <strong>Event-Driven Architecture</strong> - Slack
+                emits an event (app_mention) that triggers a chain
+                of actions, decoupling the source from processing.
+            </p>
+            <p>
+                <span
+                    class="mr-1.5 inline-block rounded-[20px] bg-[#1e4f8a] px-3 text-[0.8rem] leading-[1.8] font-semibold text-white">W</span>
+                <strong>Webhook / HTTP Callback</strong> - Slack
+                pushes data to a predefined n8n endpoint via HTTP
+                POST (a synchronous push model from Slack's side).
+            </p>
+            <p>
+                <span
+                    class="mr-1.5 inline-block rounded-[20px] bg-[#1e4f8a] px-3 text-[0.8rem] leading-[1.8] font-semibold text-white">A</span>
+                <strong>AI Agent Pattern (ReAct)</strong> - The
+                LangChain agent uses a reasoning loop to decide
+                which tools to call and generate responses, often
+                with memory.
+            </p>
+            <p>
+                <span
+                    class="mr-1.5 inline-block rounded-[20px] bg-[#1e4f8a] px-3 text-[0.8rem] leading-[1.8] font-semibold text-white">T</span>
+                <strong>Tool-Calling / Function Calling</strong> -
+                The agent invokes external functions (tools) to
+                retrieve dynamic data (e.g., current time) or
+                perform actions.
+            </p>
+            <p>
+                <span
+                    class="mr-1.5 inline-block rounded-[20px] bg-[#1e4f8a] px-3 text-[0.8rem] leading-[1.8] font-semibold text-white">M</span>
+                <strong>Memory Buffer</strong> - A sliding window
+                of conversation history provides context across
+                multiple interactions, mitigating the
+                statelessness of LLM.
+            </p>
+
+            <!-- Orchestration toggle (open by default) -->
+            <details class="my-3 [&[open]_.indicator]:rotate-90" open>
+                <summary
+                    class="flex cursor-pointer list-none items-center gap-2 py-1 font-semibold text-slate-200 [&::-webkit-details-marker]:hidden">
                     <span
-                        class="mr-1.5 inline-block rounded-[20px] bg-[#1e4f8a] px-3 text-[0.8rem] leading-[1.8] font-semibold text-white"
-                        >E</span
-                    >
-                    <strong>Event-Driven Architecture</strong> - Slack
-                    emits an event (app_mention) that triggers a chain
-                    of actions, decoupling the source from processing.
-                </p>
-                <p>
+                        class="mr-1.5 inline-block rounded-[20px] bg-[#1e4f8a] px-3 text-[0.8rem] leading-[1.8] font-semibold text-white">O</span>
+                    <strong>Orchestration (Workflow Engine)</strong>
+                    - n8n as the conductor
                     <span
-                        class="mr-1.5 inline-block rounded-[20px] bg-[#1e4f8a] px-3 text-[0.8rem] leading-[1.8] font-semibold text-white"
-                        >W</span
-                    >
-                    <strong>Webhook / HTTP Callback</strong> - Slack
-                    pushes data to a predefined n8n endpoint via HTTP
-                    POST (a synchronous push model from Slack's side).
-                </p>
-                <p>
-                    <span
-                        class="mr-1.5 inline-block rounded-[20px] bg-[#1e4f8a] px-3 text-[0.8rem] leading-[1.8] font-semibold text-white"
-                        >A</span
-                    >
-                    <strong>AI Agent Pattern (ReAct)</strong> - The
-                    LangChain agent uses a reasoning loop to decide
-                    which tools to call and generate responses, often
-                    with memory.
-                </p>
-                <p>
-                    <span
-                        class="mr-1.5 inline-block rounded-[20px] bg-[#1e4f8a] px-3 text-[0.8rem] leading-[1.8] font-semibold text-white"
-                        >T</span
-                    >
-                    <strong>Tool-Calling / Function Calling</strong> -
-                    The agent invokes external functions (tools) to
-                    retrieve dynamic data (e.g., current time) or
-                    perform actions.
-                </p>
-                <p>
-                    <span
-                        class="mr-1.5 inline-block rounded-[20px] bg-[#1e4f8a] px-3 text-[0.8rem] leading-[1.8] font-semibold text-white"
-                        >M</span
-                    >
-                    <strong>Memory Buffer</strong> - A sliding window
-                    of conversation history provides context across
-                    multiple interactions, mitigating the
-                    statelessness of LLM.
-                </p>
+                        class="indicator inline-block cursor-pointer text-[1.2rem] leading-none transition-transform before:content-['›']"></span>
+                </summary>
+                <div class="my-2 mb-3 rounded-[10px] border-2 border-dashed border-slate-700 bg-slate-900/60 px-5 py-4">
+                    <p>
+                        <strong>Orchestration vs. Choreography - a
+                            quick comparison:</strong>
+                    </p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Orchestration</th>
+                                <th>Choreography</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><b>Analogy</b></td>
+                                <td>
+                                    Conductor leading an orchestra
+                                </td>
+                                <td>
+                                    Dancers reacting to each other
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>Control</b></td>
+                                <td>
+                                    Centralised - one service
+                                    tells others what to do
+                                </td>
+                                <td>
+                                    Decentralised - services react
+                                    independently
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>Communication</b></td>
+                                <td>Can be sync or async</td>
+                                <td>Can be sync or async</td>
+                            </tr>
+                            <tr>
+                                <td><b>Observability</b></td>
+                                <td>Can use OpenTelemetry</td>
+                                <td>Can use OpenTelemetry</td>
+                            </tr>
+                            <tr>
+                                <td><b>Coupling</b></td>
+                                <td>Tighter</td>
+                                <td>Loose</td>
+                            </tr>
+                            <tr>
+                                <td><b>Scalability</b></td>
+                                <td>Limited by orchestrator</td>
+                                <td>
+                                    Higher (independent scaling)
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                <!-- Orchestration toggle (open by default) -->
-                <details
-                    class="my-3 [&[open]_.indicator]:rotate-90"
-                    open
-                >
-                    <summary
-                        class="flex cursor-pointer list-none items-center gap-2 py-1 font-semibold text-slate-800 [&::-webkit-details-marker]:hidden"
-                    >
-                        <span
-                            class="mr-1.5 inline-block rounded-[20px] bg-[#1e4f8a] px-3 text-[0.8rem] leading-[1.8] font-semibold text-white"
-                            >O</span
-                        >
-                        <strong
-                            >Orchestration (Workflow Engine)</strong
-                        >
-                        - n8n as the conductor
-                        <span
-                            class="indicator inline-block cursor-pointer text-[1.2rem] leading-none transition-transform before:content-['›']"
-                        ></span>
-                    </summary>
-                    <div
-                        class="my-2 mb-3 rounded-[10px] border-2 border-dashed border-slate-300 bg-[#fafcff] px-5 py-4"
-                    >
-                        <p>
-                            <strong
-                                >Orchestration vs. Choreography - a
-                                quick comparison:</strong
-                            >
-                        </p>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>Orchestration</th>
-                                    <th>Choreography</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><b>Analogy</b></td>
-                                    <td>
-                                        Conductor leading an orchestra
-                                    </td>
-                                    <td>
-                                        Dancers reacting to each other
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><b>Control</b></td>
-                                    <td>
-                                        Centralised - one service
-                                        tells others what to do
-                                    </td>
-                                    <td>
-                                        Decentralised - services react
-                                        independently
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><b>Communication</b></td>
-                                    <td>Can be sync or async</td>
-                                    <td>Can be sync or async</td>
-                                </tr>
-                                <tr>
-                                    <td><b>Observability</b></td>
-                                    <td>Can use OpenTelemetry</td>
-                                    <td>Can use OpenTelemetry</td>
-                                </tr>
-                                <tr>
-                                    <td><b>Coupling</b></td>
-                                    <td>Tighter</td>
-                                    <td>Loose</td>
-                                </tr>
-                                <tr>
-                                    <td><b>Scalability</b></td>
-                                    <td>Limited by orchestrator</td>
-                                    <td>
-                                        Higher (independent scaling)
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <details
-                            class="my-3 [&[open]_.indicator]:rotate-90"
-                        >
-                            <summary
-                                class="flex cursor-pointer list-none items-center gap-2 py-1 font-semibold text-slate-800 [&::-webkit-details-marker]:hidden"
-                            >
-                                <strong>
-                                    ❓ Common FAQs about orchestration
-                                    vs. choreography
-                                </strong>
-                                <span
-                                    class="indicator inline-block cursor-pointer text-[1.2rem] leading-none transition-transform before:content-['›']"
-                                ></span>
-                            </summary>
-                            <div
-                                class="my-2 mb-3 rounded-[10px] border-2 border-dashed border-slate-300 bg-[#fafcff] px-5 py-4"
-                            >
-                                <ul>
-                                    <li>
-                                        <strong
-                                            >Is the API gateway always
-                                            the conductor?</strong
-                                        >
-                                        No, the gateway can
-                                        orchestrate (especially for UI
-                                        aggregation), but it can also
-                                        just route requests.
-                                    </li>
-                                    <li>
-                                        <strong
-                                            >Is choreography just
-                                            “orchestration with fewer
-                                            fields”?</strong
-                                        >
-                                        No - the difference is
-                                        <em>who</em> controls the
-                                        flow, not how much data moves.
-                                    </li>
-                                    <li>
-                                        <strong
-                                            >Is choreography only
-                                            about pub/sub and
-                                            queues?</strong
-                                        >
-                                        No - the protocol doesn't
-                                        define the pattern; control
-                                        does. REST can be
-                                        choreographed too.
-                                    </li>
-                                    <li>
-                                        <strong
-                                            >Can choreography handle
-                                            aggregation?</strong
-                                        >
-                                        Yes, but it's messy.
-                                        Orchestration is cleaner for
-                                        aggregating data from multiple
-                                        services.
-                                    </li>
-                                    <li>
-                                        <strong
-                                            >Is orchestration
-                                            “evil”?</strong
-                                        >
-                                        No - it becomes a problem only
-                                        when you stuff business logic
-                                        into the orchestrator. Used
-                                        wisely, it's a valid tool.
-                                    </li>
-                                </ul>
-                                <p>
-                                    <strong
-                                        >When to use which?</strong
-                                    >
-                                </p>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Scenario</th>
-                                            <th>Recommendation</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                Complex UI
-                                                aggregation, strict
-                                                workflows, need for
-                                                auditability
-                                            </td>
-                                            <td>Orchestration</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                Loose coupling, high
-                                                scalability,
-                                                event-driven systems
-                                            </td>
-                                            <td>Choreography</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                Most real-world
-                                                systems
-                                            </td>
-                                            <td>
-                                                <strong>Both</strong>
-                                                - orchestration at the
-                                                edge, choreography in
-                                                the core
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <p>
-                                    <strong
-                                        >Where does business logic
-                                        belong?</strong
-                                    >
-                                </p>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>
-                                                Flow Logic
-                                                (Coordination)
-                                            </th>
-                                            <th>
-                                                Business Logic (Domain
-                                                Rules)
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>What it is</td>
-                                            <td>
-                                                The <em>order</em> of
-                                                operations
-                                            </td>
-                                            <td>
-                                                The
-                                                <em>rules</em> that
-                                                decide outcomes
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Example</td>
-                                            <td>
-                                                “First check
-                                                inventory, then
-                                                process payment, then
-                                                create order.”
-                                            </td>
-                                            <td>
-                                                “Does this customer
-                                                have enough credit?”
-                                                “Is the discount
-                                                valid?”
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Where it lives</td>
-                                            <td>
-                                                In the orchestrator
-                                            </td>
-                                            <td>
-                                                Inside the
-                                                microservices
-                                                themselves
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div
-                                    class="my-3 rounded-lg border-l-4 border-l-[#2da44e] bg-[#e6f6e6] px-5 py-3"
-                                >
-                                    <div
-                                        class="mb-1 flex items-center gap-1.5 text-[0.95rem] font-bold text-[#1a7f37]"
-                                    >
-                                        ✅ OK
-                                    </div>
-                                    <div class="text-[0.95rem]">
-                                        “If Payment says ‘success',
-                                        then call Order Service.”
-                                    </div>
+                    <details class="my-3 [&[open]_.indicator]:rotate-90">
+                        <summary
+                            class="flex cursor-pointer list-none items-center gap-2 py-1 font-semibold text-slate-200 [&::-webkit-details-marker]:hidden">
+                            <strong>
+                                ❓ Common FAQs about orchestration
+                                vs. choreography
+                            </strong>
+                            <span
+                                class="indicator inline-block cursor-pointer text-[1.2rem] leading-none transition-transform before:content-['›']"></span>
+                        </summary>
+                        <div
+                            class="my-2 mb-3 rounded-[10px] border-2 border-dashed border-slate-700 bg-slate-900/60 px-5 py-4">
+                            <ul>
+                                <li>
+                                    <strong>Is the API gateway always
+                                        the conductor?</strong>
+                                    No, the gateway can
+                                    orchestrate (especially for UI
+                                    aggregation), but it can also
+                                    just route requests.
+                                </li>
+                                <li>
+                                    <strong>Is choreography just
+                                        “orchestration with fewer
+                                        fields”?</strong>
+                                    No - the difference is
+                                    <em>who</em> controls the
+                                    flow, not how much data moves.
+                                </li>
+                                <li>
+                                    <strong>Is choreography only
+                                        about pub/sub and
+                                        queues?</strong>
+                                    No - the protocol doesn't
+                                    define the pattern; control
+                                    does. REST can be
+                                    choreographed too.
+                                </li>
+                                <li>
+                                    <strong>Can choreography handle
+                                        aggregation?</strong>
+                                    Yes, but it's messy.
+                                    Orchestration is cleaner for
+                                    aggregating data from multiple
+                                    services.
+                                </li>
+                                <li>
+                                    <strong>Is orchestration
+                                        “evil”?</strong>
+                                    No - it becomes a problem only
+                                    when you stuff business logic
+                                    into the orchestrator. Used
+                                    wisely, it's a valid tool.
+                                </li>
+                            </ul>
+                            <p>
+                                <strong>When to use which?</strong>
+                            </p>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Scenario</th>
+                                        <th>Recommendation</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            Complex UI
+                                            aggregation, strict
+                                            workflows, need for
+                                            auditability
+                                        </td>
+                                        <td>Orchestration</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Loose coupling, high
+                                            scalability,
+                                            event-driven systems
+                                        </td>
+                                        <td>Choreography</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Most real-world
+                                            systems
+                                        </td>
+                                        <td>
+                                            <strong>Both</strong>
+                                            - orchestration at the
+                                            edge, choreography in
+                                            the core
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p>
+                                <strong>Where does business logic
+                                    belong?</strong>
+                            </p>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>
+                                            Flow Logic
+                                            (Coordination)
+                                        </th>
+                                        <th>
+                                            Business Logic (Domain
+                                            Rules)
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>What it is</td>
+                                        <td>
+                                            The <em>order</em> of
+                                            operations
+                                        </td>
+                                        <td>
+                                            The
+                                            <em>rules</em> that
+                                            decide outcomes
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Example</td>
+                                        <td>
+                                            “First check
+                                            inventory, then
+                                            process payment, then
+                                            create order.”
+                                        </td>
+                                        <td>
+                                            “Does this customer
+                                            have enough credit?”
+                                            “Is the discount
+                                            valid?”
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Where it lives</td>
+                                        <td>
+                                            In the orchestrator
+                                        </td>
+                                        <td>
+                                            Inside the
+                                            microservices
+                                            themselves
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="my-3 rounded-lg border-l-4 border-l-emerald-500 bg-emerald-950/30 px-5 py-3">
+                                <div class="mb-1 flex items-center gap-1.5 text-[0.95rem] font-bold text-emerald-300">
+                                    ✅ OK
                                 </div>
-                                <div
-                                    class="my-3 rounded-lg border-l-4 border-l-[#cf222e] bg-[#ffebe9] px-5 py-3"
-                                >
-                                    <div
-                                        class="mb-1 flex items-center gap-1.5 text-[0.95rem] font-bold text-[#a0111a]"
-                                    >
-                                        ❌ NOT OK
-                                    </div>
-                                    <div class="text-[0.95rem]">
-                                        “If total order value &gt;
-                                        $1000, apply a 10% discount,
-                                        recalculate tax, and then call
-                                        Payment Service.”
-                                    </div>
+                                <div class="text-[0.95rem]">
+                                    “If Payment says ‘success',
+                                    then call Order Service.”
                                 </div>
                             </div>
-                        </details>
-                        <p>
-                            Ref:
-                            <a
-                                href="https://youtu.be/cYENNwDK2dA?si=CxsxbYbuiuGSR7RB"
-                                target="_blank"
-                                >Mark Richards' “Software Architecture
-                                Monday”</a
-                            >
-                        </p>
-                    </div>
-                </details>
+                            <div class="my-3 rounded-lg border-l-4 border-l-rose-500 bg-rose-950/30 px-5 py-3">
+                                <div class="mb-1 flex items-center gap-1.5 text-[0.95rem] font-bold text-rose-300">
+                                    ❌ NOT OK
+                                </div>
+                                <div class="text-[0.95rem]">
+                                    “If total order value &gt;
+                                    $1000, apply a 10% discount,
+                                    recalculate tax, and then call
+                                    Payment Service.”
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+                    <p>
+                        Ref:
+                        <a href="https://youtu.be/cYENNwDK2dA?si=CxsxbYbuiuGSR7RB" target="_blank">Mark Richards'
+                            “Software Architecture
+                            Monday”</a>
+                    </p>
+                </div>
+            </details>
 
-                <hr class="my-8 border-0 border-t border-slate-200" />
+            <hr class="my-8 border-0 border-t border-slate-800" />
 
-                <!-- === IMPLEMENTATION IN TRADITIONAL BACKEND === -->
-                <h2>💻 Implementation in Traditional Backend Code</h2>
-                <p>
-                    If you were to build this without n8n (e.g., in
-                    Node.js or Python), you would:
-                </p>
-                <ul>
-                    <li>
-                        <strong>Expose an HTTP endpoint</strong>
-                        (Express.js route or Flask view) that Slack's
-                        Events API calls.
-                    </li>
-                    <li>
-                        <strong>Validate the request</strong> using
-                        Slack's signing secret to ensure it's
-                        legitimate.
-                    </li>
-                    <li>
-                        <details
-                            class="my-3 [&[open]_.indicator]:rotate-90"
-                        >
-                            <summary
-                                class="flex cursor-pointer list-none items-center gap-2 py-1 font-semibold text-slate-800 [&::-webkit-details-marker]:hidden"
-                            >
-                                <strong
-                                    >Handle the URL verification
-                                    handshake</strong
-                                >
-                                (required during setup)
-                                <span
-                                    class="indicator inline-block cursor-pointer text-[1.2rem] leading-none transition-transform before:content-['›']"
-                                ></span>
-                            </summary>
-                            <div
-                                class="my-2 mb-3 rounded-[10px] border-2 border-dashed border-slate-300 bg-[#fafcff] px-5 py-4"
-                            >
-                                <p>
-                                    Slack sends a
-                                    <code>url_verification</code>
-                                    request with a
-                                    <code>challenge</code> field. Your
-                                    app must reply with the exact
-                                    challenge value as plain text.
-                                </p>
-                                <pre
-                                    class="overflow-x-auto rounded-lg bg-slate-900 p-4 text-sm text-slate-100"
-                                ><code>// Example Node.js (Express)
+            <!-- === IMPLEMENTATION IN TRADITIONAL BACKEND === -->
+            <h2>💻 Implementation in Traditional Backend Code</h2>
+            <p>
+                If you were to build this without n8n (e.g., in
+                Node.js or Python), you would:
+            </p>
+            <ul>
+                <li>
+                    <strong>Expose an HTTP endpoint</strong>
+                    (Express.js route or Flask view) that Slack's
+                    Events API calls.
+                </li>
+                <li>
+                    <strong>Validate the request</strong> using
+                    Slack's signing secret to ensure it's
+                    legitimate.
+                </li>
+                <li>
+                    <details class="my-3 [&[open]_.indicator]:rotate-90">
+                        <summary
+                            class="flex cursor-pointer list-none items-center gap-2 py-1 font-semibold text-slate-200 [&::-webkit-details-marker]:hidden">
+                            <strong>Handle the URL verification
+                                handshake</strong>
+                            (required during setup)
+                            <span
+                                class="indicator inline-block cursor-pointer text-[1.2rem] leading-none transition-transform before:content-['›']"></span>
+                        </summary>
+                        <div
+                            class="my-2 mb-3 rounded-[10px] border-2 border-dashed border-slate-700 bg-slate-900/60 px-5 py-4">
+                            <p>
+                                Slack sends a
+                                <code>url_verification</code>
+                                request with a
+                                <code>challenge</code> field. Your
+                                app must reply with the exact
+                                challenge value as plain text.
+                            </p>
+                            <pre class="overflow-x-auto rounded-lg bg-slate-900 p-4 text-sm text-slate-100"><code>// Example Node.js (Express)
 app.post('/slack/events', (req, res) => {
   if (req.body.type === 'url_verification') {
     return res.send(req.body.challenge);  // plain text, not JSON
   }
   // ... handle actual events
 });</code></pre>
-                            </div>
-                        </details>
-                    </li>
-                    <li>
-                        <strong>Enqueue the event</strong> to a
-                        message queue (e.g., RabbitMQ, AWS SQS) to
-                        avoid blocking the HTTP response (Slack
-                        expects a quick 200 OK).
-                    </li>
-                    <li>
-                        <strong>Process asynchronously</strong> - a
-                        worker picks up the event, initializes the
-                        LangChain agent with the OpenAI model, and
-                        tools.
-                    </li>
-                    <li>
-                        <strong>Call the agent</strong> with the
-                        user's message, wait for the response (may
-                        involve multiple LLM calls and tool
-                        invocations).
-                    </li>
-                    <li>
-                        <strong>Post the response</strong> back to
-                        Slack using <code>chat.postMessage</code> with
-                        the bot token.
-                    </li>
-                </ul>
+                        </div>
+                    </details>
+                </li>
+                <li>
+                    <strong>Enqueue the event</strong> to a
+                    message queue (e.g., RabbitMQ, AWS SQS) to
+                    avoid blocking the HTTP response (Slack
+                    expects a quick 200 OK).
+                </li>
+                <li>
+                    <strong>Process asynchronously</strong> - a
+                    worker picks up the event, initializes the
+                    LangChain agent with the OpenAI model, and
+                    tools.
+                </li>
+                <li>
+                    <strong>Call the agent</strong> with the
+                    user's message, wait for the response (may
+                    involve multiple LLM calls and tool
+                    invocations).
+                </li>
+                <li>
+                    <strong>Post the response</strong> back to
+                    Slack using <code>chat.postMessage</code> with
+                    the bot token.
+                </li>
+            </ul>
 
-                <hr class="my-8 border-0 border-t border-slate-200" />
+            <hr class="my-8 border-0 border-t border-slate-800" />
 
-                <!-- === KEY TECHNICAL DETAILS & LINKS === -->
-                <h2>🔗 Key Technical Details &amp; Resources</h2>
-                <ul>
-                    <li>
-                        <a
-                            href="https://docs.slack.dev/apis/events-api"
-                            target="_blank"
-                            >Slack Events API</a
-                        >
-                        - requires a public HTTPS endpoint.
-                    </li>
-                    <li>
-                        <strong>OAuth 2.0 Scopes:</strong>
-                        <code>app_mentions:read</code>,
-                        <code>chat:write</code>,
-                        <code>channels:read</code> (or
-                        <code>groups:read</code> for private
-                        channels).
-                    </li>
-                    <li>
-                        <a
-                            href="https://docs.langchain.com/oss/python/langchain/agents"
-                            target="_blank"
-                            >LangChain Agents</a
-                        >
-                        - supports <code>openai-functions</code> and
-                        <code>zero-shot-react-description</code> agent
-                        types.
-                    </li>
-                    <li>
-                        <a
-                            href="https://js.langchain.com/docs/modules/memory/"
-                            target="_blank"
-                            >LangChain Memory</a
-                        >
-                        - <code>BufferWindowMemory</code> retains
-                        recent conversation turns.
-                    </li>
-                    <li>
-                        <a
-                            href="https://platform.openai.com/docs/api-reference"
-                            target="_blank"
-                            >OpenAI API</a
-                        >
-                        - for the chat model and function calling.
-                    </li>
-                </ul>
-            </div>
-            <!-- end .explanation -->
+            <!-- === KEY TECHNICAL DETAILS & LINKS === -->
+            <h2>🔗 Key Technical Details &amp; Resources</h2>
+            <ul>
+                <li>
+                    <a href="https://docs.slack.dev/apis/events-api" target="_blank">Slack Events API</a>
+                    - requires a public HTTPS endpoint.
+                </li>
+                <li>
+                    <strong>OAuth 2.0 Scopes:</strong>
+                    <code>app_mentions:read</code>,
+                    <code>chat:write</code>,
+                    <code>channels:read</code> (or
+                    <code>groups:read</code> for private
+                    channels).
+                </li>
+                <li>
+                    <a href="https://docs.langchain.com/oss/python/langchain/agents" target="_blank">LangChain
+                        Agents</a>
+                    - supports <code>openai-functions</code> and
+                    <code>zero-shot-react-description</code> agent
+                    types.
+                </li>
+                <li>
+                    <a href="https://js.langchain.com/docs/modules/memory/" target="_blank">LangChain Memory</a>
+                    - <code>BufferWindowMemory</code> retains
+                    recent conversation turns.
+                </li>
+                <li>
+                    <a href="https://platform.openai.com/docs/api-reference" target="_blank">OpenAI API</a>
+                    - for the chat model and function calling.
+                </li>
+            </ul>
         </div>
-        <!-- end .post-container -->
-    </body>
+        <!-- end .explanation -->
+    </main>
+
+    <footer class="border-t border-slate-800">
+        <div
+            class="mx-auto flex md:justify-end max-w-7xl flex-col gap-3 px-5 py-8 text-sm text-slate-500 sm:px-8 sm:flex-row sm:items-center sm:justify-between">
+            <a href="#top" class="text-slate-300 hover:text-white">Back to top ↑</a>
+        </div>
+    </footer>
+</body>
+
 </html>
