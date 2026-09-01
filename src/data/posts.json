@@ -124,5 +124,18 @@
             "Availability",
             "Reliability"
         ]
+    },
+    {
+        "id": "37389df1-0fb6-45ed-948f-a80433f3a013",
+        "title": "Kubernetes Deployment Strategies",
+        "description": "Talks about deployment strategies we have: Blue-green, Canary, Recreate, and Rolling update. I also tried to talk about what you would need in each case. E.g. for blue-green and canary you needs extra tools for traffic management and monitoring.",
+        "href": "./kubernetes-deployment-strategies.html",
+        "imageSrc": "./black.jpg",
+        "tags": [
+            "Kubernetes",
+            "CI/CD",
+            "DevOps",
+            "SoftwareEngineering"
+        ]
     }
 ]
