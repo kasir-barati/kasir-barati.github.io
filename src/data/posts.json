@@ -5,12 +5,7 @@
         "description": "I wrote a post about a tiny lovely react state management tool in React because I really felt lack of any kind of tut about nanostores and how we should use it or write test for it. BTW I really appreciate you if you also write something about it after a while that you used it.",
         "href": "https://www.linkedin.com/pulse/write-test-nanostores-kasir-barati/",
         "imageSrc": "./white.jpg",
-        "tags": [
-            "ReactJS",
-            "State Management",
-            "TDD",
-            "nanostores"
-        ]
+        "tags": ["ReactJS", "State Management", "TDD", "nanostores"]
     },
     {
         "id": "6388e57e-6b2d-483b-adb4-f88107585537",
@@ -135,7 +130,22 @@
             "Kubernetes",
             "CI/CD",
             "DevOps",
-            "SoftwareEngineering"
+            "Software Engineering"
+        ]
+    },
+    {
+        "id": "141aff994e599985-a4d4-4def-bc05-7ae71c778d3f",
+        "title": "DDD, CQRS, and Modular Architecture in NestJS",
+        "description": "A practical guide to building maintainable, scalable NestJS applications by separating business logic from technical concerns through domain-driven design, clean architecture, and CQRS. Learn how to model aggregates and value objects, implement ports and adapters, handle errors across layers. I also wrote about how to decide when CQRS actually earns its keep. This is especially invaluable when using LLMs and coding agents since if you do not know what you should use then LLM will do that for you and I would say that is a very bad place to be.",
+        "href": "./ddd-clean-architecture-cqrs.html",
+        "imageSrc": "./white.jpg",
+        "tags": [
+            "System Design",
+            "DDD",
+            "CQRS",
+            "Scalability",
+            "Maintainability",
+            "NestJS"
         ]
     }
 ]

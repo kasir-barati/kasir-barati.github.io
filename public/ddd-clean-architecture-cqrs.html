@@ -1,0 +1,2190 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <meta name="color-scheme" content="dark" />
+        <title>DDD, CQRS, and Modular Architecture in NestJS</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script type="module">
+            import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'dark',
+                themeVariables: {
+                    background: '#020617',
+                    primaryColor: '#0f172a',
+                    primaryTextColor: '#e2e8f0',
+                    primaryBorderColor: '#22d3ee',
+                    lineColor: '#64748b',
+                    secondaryColor: '#1e293b',
+                    tertiaryColor: '#0b1220',
+                    fontFamily:
+                        'ui-sans-serif, system-ui, sans-serif',
+                },
+                flowchart: { useMaxWidth: true, htmlLabels: true },
+                sequence: { useMaxWidth: true },
+            });
+        </script>
+    </head>
+
+    <body
+        class="min-h-screen bg-slate-950 text-slate-200 antialiased selection:bg-cyan-400/30"
+    >
+        <header
+            id="top"
+            class="border-b border-slate-800 bg-slate-950/90"
+        >
+            <div class="mx-auto max-w-7xl px-5 py-5 sm:px-8">
+                <div class="flex items-center justify-between gap-4">
+                    <h1
+                        class="text-4xl font-black tracking-tight text-white sm:text-6xl"
+                    >
+                        DDD, clean architecture and CQRS
+                    </h1>
+                    <a
+                        href="/#/posts"
+                        class="z-10 inline-flex shrink-0 items-center gap-2 self-center rounded-full bg-slate-800 px-2.5 py-1.5 text-[0.8rem] font-semibold text-slate-100 no-underline shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition hover:-translate-y-0.5 hover:bg-slate-900 hover:shadow-[0_6px_20px_rgba(0,0,0,0.25)] active:translate-y-0 sm:px-[18px] sm:py-2.5 sm:text-[0.95rem]"
+                        title="Go to Posts"
+                    >
+                        <svg
+                            viewBox="0 0 24 24"
+                            width="20"
+                            height="20"
+                            fill="currentColor"
+                        >
+                            <path
+                                d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5L13 3.5zM8 13h8v2H8zm0 4h5v2H8z"
+                            />
+                        </svg>
+                        <span class="hidden sm:inline">Posts</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <main class="mx-auto max-w-7xl px-5 pb-14 pt-8 lg:pb-20">
+            <p
+                class="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-cyan-400"
+            >
+                NestJS &middot; Architecture
+            </p>
+
+            <p
+                class="mt-6 text-lg leading-8 text-slate-400 sm:text-xl"
+            >
+                Every NestJS tutorial ends at the same place: a
+                controller calls a service, the service calls an ORM.
+                It works. Then the app grows, the rules multiply, and
+                nobody can change anything without breaking something
+                else. This post walks through the three ideas that
+                helps you to build a maintainable, testable, and
+                reliable solution following domain-driven design, CQRS
+                and modular architecture.
+            </p>
+
+            <nav
+                class="mt-10 rounded-2xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6"
+                aria-label="Table of contents"
+            >
+                <p class="mb-3 text-sm font-semibold text-slate-300">
+                    On this page
+                </p>
+                <ol
+                    class="grid gap-2 text-sm text-slate-400 sm:grid-cols-2 lg:grid-cols-3"
+                >
+                    <li>
+                        <a class="hover:text-cyan-300" href="#problem"
+                            >1. Where the default MVC breaks</a
+                        >
+                    </li>
+                    <li>
+                        <a class="hover:text-cyan-300" href="#layers"
+                            >2. Three layers and one rule</a
+                        >
+                    </li>
+                    <li>
+                        <a class="hover:text-cyan-300" href="#ddd"
+                            >3. Modelling the domain</a
+                        >
+                    </li>
+                    <li>
+                        <a class="hover:text-cyan-300" href="#ports"
+                            >4. Ports and adapters</a
+                        >
+                    </li>
+                    <li>
+                        <a class="hover:text-cyan-300" href="#cqrs"
+                            >5. CQRS, and what it actually is</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            class="hover:text-cyan-300"
+                            href="#read-write"
+                            >6. Separate read and write models</a
+                        >
+                    </li>
+                    <li>
+                        <a class="hover:text-cyan-300" href="#errors"
+                            >7. Errors across the boundary</a
+                        >
+                    </li>
+                    <li>
+                        <a class="hover:text-cyan-300" href="#events"
+                            >8. Events and side effects</a
+                        >
+                    </li>
+                    <li>
+                        <a class="hover:text-cyan-300" href="#costs"
+                            >9. What this costs</a
+                        >
+                    </li>
+                    <li>
+                        <a class="hover:text-cyan-300" href="#decide"
+                            >10. Deciding, per module</a
+                        >
+                    </li>
+                    <li>
+                        <a class="hover:text-cyan-300" href="#reading"
+                            >Good reads</a
+                        >
+                    </li>
+                </ol>
+            </nav>
+
+            <!-- 1 -->
+            <section id="problem" class="mt-16 scroll-mt-8">
+                <h2 class="text-2xl font-bold text-white sm:text-3xl">
+                    1. Where the Default MVC Breaks
+                </h2>
+
+                <p class="mt-5 leading-7 text-slate-300">
+                    The standard flow is familiar: controllers handle
+                    HTTP and delegate to services, services hold most
+                    of the business logic, services use repositories
+                    to persist entities, and entities are containers
+                    of values with getters and setters. The NestJS
+                    docs describe exactly this shape and note it is
+                    usually fine for small and medium applications.
+                </p>
+
+                <p class="mt-5 leading-7 text-slate-300">
+                    The trouble starts when the rules get real. Say
+                    the shop needs to answer: what makes an order
+                    successful, how is a total calculated, when does a
+                    discount apply, can this order still be cancelled?
+                    Those answers have to live somewhere, and in the
+                    default shape they end up spread across services.
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >OrderService</code
+                    >
+                    asks
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >UserService</code
+                    >
+                    whether a customer is active,
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >UserService</code
+                    >
+                    asks
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >PaymentService</code
+                    >
+                    for a refund, and
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >PaymentService</code
+                    >
+                    reaches back into
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >OrderService</code
+                    >
+                    to update a status. Three symptoms follow.
+                </p>
+
+                <div class="mt-8 grid gap-4 lg:grid-cols-3">
+                    <div
+                        class="rounded-2xl border border-slate-800 bg-slate-900/40 p-5"
+                    >
+                        <h3 class="font-semibold text-cyan-300">
+                            Data and behaviour drift apart
+                        </h3>
+                        <p
+                            class="mt-3 text-sm leading-6 text-slate-400"
+                        >
+                            The entity holds the fields; some service
+                            somewhere holds the rule about those
+                            fields. Nothing stops a second service
+                            from writing its own version of the same
+                            rule, so there are two sources of truth
+                            and no way to tell which one ran.
+                        </p>
+                    </div>
+                    <div
+                        class="rounded-2xl border border-slate-800 bg-slate-900/40 p-5"
+                    >
+                        <h3 class="font-semibold text-cyan-300">
+                            Every service touches the database
+                        </h3>
+                        <p
+                            class="mt-3 text-sm leading-6 text-slate-400"
+                        >
+                            Once services call each other and all of
+                            them call the ORM, you get circular
+                            dependencies and no isolated place to
+                            reason about a rule. Testing one rule
+                            means standing up a database.
+                        </p>
+                    </div>
+                    <div
+                        class="rounded-2xl border border-slate-800 bg-slate-900/40 p-5"
+                    >
+                        <h3 class="font-semibold text-cyan-300">
+                            The framework becomes the foundation
+                        </h3>
+                        <p
+                            class="mt-3 text-sm leading-6 text-slate-400"
+                        >
+                            Rules end up inside controllers, ORM
+                            models and decorators. Swapping a
+                            database, a payment SDK or a transport
+                            means touching business logic that had
+                            nothing to do with the change.
+                        </p>
+                    </div>
+                </div>
+
+                <p class="mt-8 leading-7 text-slate-300">
+                    Notice that all three are the same problem wearing
+                    different clothes: the parts of the system that
+                    change most often are frameworks, databases, SDKs,
+                    transports. They are entangled with the parts that
+                    should change least, the business rules.
+                    Everything below is about separating those two by
+                    volatility.
+                </p>
+            </section>
+
+            <!-- 2 -->
+            <section id="layers" class="mt-16 scroll-mt-8">
+                <h2 class="text-2xl font-bold text-white sm:text-3xl">
+                    2. Three Layers and One Rule
+                </h2>
+
+                <p class="mt-5 leading-7 text-slate-300">
+                    A clan and modular architecture arranges the
+                    application as concentric layers, with the
+                    business at the centre and the technology at the
+                    edge.
+                </p>
+
+                <div
+                    class="mt-8 overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6"
+                >
+                    <pre class="mermaid">
+flowchart TB
+    subgraph INF["Infrastructure -- most volatile"]
+        direction TB
+        I1["HTTP/gRPC controllers"]
+        I2["Database Engine"]
+        I3["Payment gateways such as Stripe"]
+        subgraph APP["Application -- use cases"]
+            direction TB
+            A1["Command & query handlers"]
+            A2["Repositories, notifications,<br/>etc."]
+            subgraph DOM["Domain -- least volatile"]
+                direction TB
+                D1["Entities & aggregate roots"]
+                D2["Value objects"]
+                D3["Domain events & exceptions"]
+            end
+        end
+    end
+    style DOM fill:#0e2f38,stroke:#22d3ee
+    style APP fill:#0b1a2a,stroke:#38bdf8
+                </pre>
+                </div>
+
+                <div class="mt-8 grid gap-5 lg:grid-cols-3">
+                    <div
+                        class="rounded-xl border border-slate-800 bg-slate-900/40 p-5"
+                    >
+                        <h3 class="font-semibold text-white">
+                            Domain
+                        </h3>
+                        <p
+                            class="mt-2 text-sm leading-6 text-slate-400"
+                        >
+                            The rules of the business, modelled as
+                            plain TypeScript. "What an order total
+                            means? When a SKU is valid? Whether stock
+                            can go negative?", a product person could
+                            describe these without knowing what a
+                            database is.
+                        </p>
+                        <p
+                            class="mt-3 text-sm leading-6 text-slate-400"
+                        >
+                            What is <em>not</em> here matters just as
+                            much: no HTTP, no SQL, no ORM models, no
+                            NestJS decorators, no SDKs. The domain
+                            doesn't know where data comes from or when
+                            it gets saved.
+                        </p>
+                    </div>
+                    <div
+                        class="rounded-xl border border-slate-800 bg-slate-900/40 p-5"
+                    >
+                        <h3 class="font-semibold text-white">
+                            Application
+                        </h3>
+                        <p
+                            class="mt-2 text-sm leading-6 text-slate-400"
+                        >
+                            Use cases are about what the user is
+                            trying to accomplish. "Create a product,
+                            place an order, pay for it.", this layer
+                            orchestrates: it loads or creates domain
+                            objects, calls methods on them, enforces
+                            authorization, manages transactions.
+                        </p>
+                        <p
+                            class="mt-3 text-sm leading-6 text-slate-400"
+                        >
+                            It still doesn't know which database is
+                            running or whether the transport is REST
+                            or GraphQL. It talks to interfaces only.
+                        </p>
+                    </div>
+                    <div
+                        class="rounded-xl border border-slate-800 bg-slate-900/40 p-5"
+                    >
+                        <h3 class="font-semibold text-white">
+                            Infrastructure
+                        </h3>
+                        <p
+                            class="mt-2 text-sm leading-6 text-slate-400"
+                        >
+                            Everything that touches the outside world:
+                            controllers, repositories, external APIs,
+                            email providers, ORM choices, exception
+                            filters.
+                        </p>
+                        <p
+                            class="mt-3 text-sm leading-6 text-slate-400"
+                        >
+                            This is the most volatile layer, which is
+                            exactly why it sits on the outside where
+                            change is cheap.
+                        </p>
+                    </div>
+                </div>
+
+                <div
+                    class="mt-8 rounded-2xl border-l-4 border-cyan-500 bg-slate-900/60 p-5 sm:p-6"
+                >
+                    <h3 class="font-semibold text-cyan-300">
+                        The Dependency Rule
+                    </h3>
+                    <p class="mt-3 leading-7 text-slate-300">
+                        Dependencies always point inward.
+                        Infrastructure may depend on application;
+                        application may depend on domain; the domain
+                        depends on nothing. Swap the database and only
+                        the infrastructure layer is affected, because
+                        nothing inward of it holds a reference to it.
+                        Move from REST to GraphQL, or from a monolith
+                        to microservices, and the domain and
+                        application layers compile unchanged.
+                    </p>
+                    <p class="mt-3 leading-7 text-slate-300">
+                        This is the mindset shift: frameworks become
+                        implementation details rather than the
+                        foundation. Software evolves around the
+                        business instead of around the tools you
+                        happen to be using this year.
+                    </p>
+                </div>
+            </section>
+
+            <!-- 3 -->
+            <section id="ddd" class="mt-16 scroll-mt-8">
+                <h2 class="text-2xl font-bold text-white sm:text-3xl">
+                    3. Modelling the Domain
+                </h2>
+
+                <p class="mt-5 leading-7 text-slate-300">
+                    Domain-driven design supplies the vocabulary for
+                    that innermost layer. Three building blocks carry
+                    most of the weight.
+                </p>
+
+                <h3 class="mt-10 text-xl font-semibold text-white">
+                    Entities Keep Data and Behaviour Together
+                </h3>
+                <p class="mt-4 leading-7 text-slate-300">
+                    An entity has an identity that persists through
+                    change. In practice it is a plain class holding
+                    both the domain data
+                    <small>(order id, product name, SKU)</small>
+                    and the methods that act on that data. That
+                    co-location is the whole point. When the rule
+                    lives next to the field it governs, there is
+                    exactly one place to change it, and no service can
+                    quietly implement a rival version.
+                </p>
+
+                <div
+                    class="mt-6 overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
+                >
+                    <div
+                        class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
+                    >
+                        src/shared/domain/entity.ts
+                    </div>
+                    <pre
+                        class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
+                    ><code>import { UniqueId } from './value-objects/unique-id.vo';
+
+export abstract class Entity&lt;T extends UniqueId = UniqueId&gt; {
+  constructor(protected readonly id: T) {}
+
+  getId(): T {
+    return this.id;
+  }
+
+  equals(other: Entity&lt;T&gt;): boolean {
+    if (other === null || other === undefined) return false;
+    if (this === other) return true;
+    return this.id.equals(other.id);   // entities compare by identity
+  }
+}</code></pre>
+                </div>
+
+                <h3 class="mt-10 text-xl font-semibold text-white">
+                    Value Objects are Immutable and Self-validating
+                </h3>
+                <p class="mt-4 leading-7 text-slate-300">
+                    A value object has no identity; it <em>is</em> its
+                    value. Two SKUs with the same string are the same
+                    SKU. They earn their place for three reasons: they
+                    keep the entity from bloating with loosely related
+                    fields and helpers, they validate themselves so an
+                    invalid instance cannot exist, and being immutable
+                    they remove a whole category of runtime bug where
+                    some far-off line reassigns
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >money.amount</code
+                    >
+                    to something nobody expected. AKA you would be
+                    having an object value for money to make sure you
+                    won't be running into logical runtime bugs.
+                </p>
+                <p class="mt-4 leading-7 text-slate-300">
+                    The question of when to extract one has no clean
+                    answer. The useful heuristic: peel off groups of
+                    related properties and the functions over them,
+                    especially properties that should never change
+                    once set.
+                </p>
+
+                <div class="mt-6 grid gap-5 lg:grid-cols-2">
+                    <div
+                        class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
+                    >
+                        <div
+                            class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
+                        >
+                            src/shared/domain/value-objects/unique-id.vo.ts
+                        </div>
+                        <pre
+                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
+                        ><code>import { randomUUID } from 'crypto';
+
+export class UniqueId {
+  private readonly value: string;   // private: data stays hidden
+
+  constructor(id?: string) {
+    this.value = id ?? randomUUID();
+  }
+
+  getValue(): string {
+    return this.value;
+  }
+
+  equals(other: UniqueId): boolean {
+    return this.value === other.value;
+  }
+
+  toString(): string {
+    return this.value;
+  }
+}</code></pre>
+                    </div>
+                    <div
+                        class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
+                    >
+                        <div
+                            class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
+                        >
+                            src/product/domain/value-objects/sku.vo.ts
+                        </div>
+                        <pre
+                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
+                        ><code>export class Sku {
+  private static readonly SKU_PATTERN = /^[A-Za-z0-9-]+$/;
+  private static readonly MIN_LENGTH = 3;
+  private static readonly MAX_LENGTH = 50;
+
+  private readonly value: string;
+
+  private constructor(value: string) {   // only create() can build one
+    this.value = value;
+  }
+
+  static create(value: string): Sku {
+    const trimmed = value.trim();
+
+    if (trimmed.length &lt; Sku.MIN_LENGTH ||
+        trimmed.length &gt; Sku.MAX_LENGTH) {
+      throw new DomainException(
+        `SKU must be between ${Sku.MIN_LENGTH} and ${Sku.MAX_LENGTH} characters`,
+      );
+    }
+    if (!Sku.SKU_PATTERN.test(trimmed)) {
+      throw new DomainException(
+        `SKU must contain only alphanumeric characters and dashes`,
+      );
+    }
+    return new Sku(trimmed.toUpperCase());
+  }
+
+  equals(other: Sku): boolean {   // value objects compare by value
+    return this.value === other.value;
+  }
+
+  getValue(): string {
+    return this.value;
+  }
+}</code></pre>
+                    </div>
+                </div>
+
+                <p class="mt-6 leading-7 text-slate-300">
+                    A private constructor plus a static factory means
+                    there is no path to an invalid
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >Sku</code
+                    >
+                    anywhere in the system. The messy validation is
+                    hidden behind one call, and every consumer gets it
+                    for free.
+                </p>
+
+                <h3 class="mt-10 text-xl font-semibold text-white">
+                    Aggregate Roots are the Consistency Boundary
+                </h3>
+                <p class="mt-4 leading-7 text-slate-300">
+                    An aggregate is a cluster of related domain
+                    objects treated as one unit, and the aggregate
+                    root is its single entry point. Outside code never
+                    reaches inside to fiddle with a part; it calls a
+                    method on the root, and the root enforces the
+                    invariants for everything it contains. This is
+                    what guarantees that a rule cannot be bypassed. No
+                    second door.
+                </p>
+                <p class="mt-4 leading-7 text-slate-300">
+                    In NestJS the
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >AggregateRoot</code
+                    >
+                    class from
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >@nestjs/cqrs</code
+                    >
+                    also gives the model event-publishing ability,
+                    which
+                    <a class="hover:text-cyan-300" href="#events">
+                        section 8
+                    </a>
+                    uses. Wrapping it in your own abstraction keeps
+                    the coupling in one file:
+                </p>
+
+                <div
+                    class="mt-6 overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
+                >
+                    <div
+                        class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
+                    >
+                        src/shared/domain/aggregate-root.ts
+                    </div>
+                    <pre
+                        class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
+                    ><code>import { AggregateRoot as CqrsAggregateRoot } from '@nestjs/cqrs';
+
+export abstract class AggregateRoot extends CqrsAggregateRoot {}</code></pre>
+                </div>
+
+                <p class="mt-6 leading-7 text-slate-300">
+                    Worth being honest about the trade: this is a thin
+                    alias, but the NestJS import is still in the
+                    domain layer. If you want the domain genuinely
+                    framework-free,
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >@nestjs/cqrs</code
+                    >
+                    exposes an
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >IAggregateRoot</code
+                    >
+                    interface you can implement yourself,
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >EventPublisher</code
+                    >
+                    accepts anything that satisfies it. There is also
+                    a
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >WithAggregateRoot()</code
+                    >
+                    mixin for when you already have a base
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >Entity</code
+                    >
+                    class and can't spend your one inheritance slot on
+                    the framework.
+                </p>
+
+                <p class="mt-6 leading-7 text-slate-300">
+                    Put together, an entity looks like this: private
+                    fields, getters, a static factory that validates,
+                    and a separate
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >reconstitute</code
+                    >
+                    used by repositories to rebuild an instance from
+                    storage without re-running creation rules:
+                </p>
+
+                <div
+                    class="mt-6 overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
+                >
+                    <div
+                        class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
+                    >
+                        src/product/domain/entities/product.entity.ts
+                        -- abridged
+                    </div>
+                    <pre
+                        class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
+                    ><code>export class Product extends AggregateRoot {
+  private _sku: Sku;
+  private _price: Money;
+  private _stock: number;
+  // ...
+
+  private constructor(props: ProductProps) { /* ... */ }
+
+  static create(
+    name: string, description: string, sku: string,
+    price: number, currency: string, stock: number,
+  ) {
+    Product.validateName(name);
+    Product.validateStock(stock);
+
+    return new Product({
+      id: new ProductId(),
+      name,
+      description,
+      sku: Sku.create(sku),
+      price: Money.create(price, currency),
+      stock,
+      isActive: true,
+      lowStockThreshold: 5,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+  }
+
+  static reconstitute(props: ProductProps): Product {
+    return new Product(props);   // rebuild from persistence
+  }
+
+  private static validateStock(stock: number): void {
+    if (stock &lt; 0) {
+      throw new DomainException('Stock cannot be negative');
+    }
+  }
+}</code></pre>
+                </div>
+
+                <p class="mt-6 leading-7 text-slate-300">
+                    No Mongoose, no Prisma, no decorators. That is
+                    what makes the persistence layer swappable rather
+                    than load-bearing.
+                </p>
+            </section>
+
+            <!-- 4 -->
+            <section id="ports" class="mt-16 scroll-mt-8">
+                <h2 class="text-2xl font-bold text-white sm:text-3xl">
+                    4. Ports and Adapters
+                </h2>
+
+                <p class="mt-5 leading-7 text-slate-300">
+                    A fair objection to the dependency rule: the
+                    application layer has to save things and charge
+                    cards. It genuinely needs infrastructure. How can
+                    it use the outer layer without depending on it?
+                </p>
+                <p class="mt-5 leading-7 text-slate-300">
+                    Ports and adapters. A port is an interface, owned
+                    by the application layer. An adapter is an
+                    implementation of it, living in infrastructure.
+                    The application programs against the interface and
+                    never learns which implementation showed up
+                    <small
+                        >(Stripe or PayPal, Mongo or Postgres)</small
+                    >. The arrow of dependency points from the adapter
+                    to the port, which is inward, so the rule holds.
+                </p>
+
+                <div
+                    class="mt-8 overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6"
+                >
+                    <pre class="mermaid">
+flowchart LR
+    H["Command handler<br/>application layer"] -->|"depends on"| P["ProductRepository<br/>port -- an interface"]
+    M["MongoProductRepository"] -.->|"implements"| P
+    D["DrizzleProductRepository"] -.->|"implements"| P
+    M --> MDB[("MongoDB")]
+    D --> PDB[("PostgreSQL")]
+    style P fill:#0e2f38,stroke:#22d3ee
+                </pre>
+                </div>
+
+                <div class="mt-8 grid gap-5 lg:grid-cols-2">
+                    <div
+                        class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
+                    >
+                        <div
+                            class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
+                        >
+                            src/product/application/ports/product.repository.port.ts
+                        </div>
+                        <pre
+                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
+                        ><code>export const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
+
+export interface ProductRepository {
+  save(product: Product): Promise&lt;void&gt;;
+  findById(id: ProductId): Promise&lt;Product | null&gt;;
+  findBySku(sku: Sku): Promise&lt;Product | null&gt;;
+  findByName(name: string): Promise&lt;Product | null&gt;;
+  findAll(filters: ProductFilters): Promise&lt;Product[]&gt;;
+  delete(id: ProductId): Promise&lt;void&gt;;
+}</code></pre>
+                    </div>
+                    <div
+                        class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
+                    >
+                        <div
+                            class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
+                        >
+                            src/product/infrastructure/repositories/mongo-product.repository.ts
+                            -- abridged
+                        </div>
+                        <pre
+                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
+                        ><code>export class MongoProductRepository implements ProductRepository {
+  private readonly collection: Collection&lt;ProductDocument&gt;;
+
+  constructor(@Inject(MONGO_DB) private readonly db: Db) {
+    this.collection = this.db.collection&lt;ProductDocument&gt;('products');
+  }
+
+  async save(product: Product): Promise&lt;void&gt; {
+    const doc = MongoProductRepository.toPersistence(product);
+    await this.collection.updateOne(
+      { _id: doc._id }, { $set: doc }, { upsert: true },
+    );
+  }
+
+  // the two mappers are where the coupling is contained
+  private static toDomain(doc: ProductDocument): Product {
+    return Product.reconstitute({
+      id: new ProductId(doc._id),
+      sku: Sku.create(doc.sku),
+      price: Money.create(doc.priceAmount / 100, doc.priceCurrency),
+      // ...
+    });
+  }
+
+  private static toPersistence(product: Product): ProductDocument {
+    return {
+      _id: product.id.getValue(),
+      sku: product.sku.getValue(),
+      priceAmount: product.price.toCents(),
+      priceCurrency: product.price.getCurrency(),
+      // ...
+    };
+  }
+}</code></pre>
+                    </div>
+                </div>
+
+                <p class="mt-6 leading-7 text-slate-300">
+                    Notice the two static mappers. All the translation
+                    between domain shapes and storage shapes is
+                    confined there, money as cents, value objects as
+                    strings & so the domain never learns that Mongo
+                    prefers a flat document with a
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >_id</code
+                    >.
+                </p>
+                <p class="mt-5 leading-7 text-slate-300">
+                    NestJS providers are what make the swap trivial:
+                    bind the
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >PRODUCT_REPOSITORY</code
+                    >
+                    token to whichever adapter you want, choose it
+                    from an environment variable at bootstrap, and the
+                    entire application and domain layers stay
+                    untouched. That is the payoff for all the ceremony
+                    above & one variable changes the database and
+                    nothing else moves.
+                </p>
+            </section>
+
+            <!-- 5 -->
+            <section id="cqrs" class="mt-16 scroll-mt-8">
+                <h2 class="text-2xl font-bold text-white sm:text-3xl">
+                    5. CQRS, and What it Actually is
+                </h2>
+
+                <p class="mt-5 leading-7 text-slate-300">
+                    One question is still open. The controller has to
+                    reach a use case somehow. Injecting a service puts
+                    a compile-time reference to a concrete class in
+                    the presentation layer. The most volatile part of
+                    the system now knows the name of something inward
+                    of it. CQRS is the usual answer, but the term
+                    covers three different ideas at three different
+                    levels, and most confusion comes from mixing them
+                    up.
+                </p>
+
+                <div class="mt-8 grid gap-4 lg:grid-cols-3">
+                    <div
+                        class="rounded-2xl border border-slate-800 bg-slate-900/40 p-5"
+                    >
+                        <h3 class="font-semibold text-cyan-300">
+                            CQS -- the Principle
+                        </h3>
+                        <p
+                            class="mt-3 text-sm leading-6 text-slate-400"
+                        >
+                            Bertrand Meyer's rule that a method either
+                            changes state or returns state, never
+                            both. Asking a question shouldn't change
+                            the answer. It applies inside a single
+                            object and costs nothing.
+                        </p>
+                    </div>
+                    <div
+                        class="rounded-2xl border border-slate-800 bg-slate-900/40 p-5"
+                    >
+                        <h3 class="font-semibold text-cyan-300">
+                            CQRS & the Pattern
+                        </h3>
+                        <p
+                            class="mt-3 text-sm leading-6 text-slate-400"
+                        >
+                            Greg Young's extension of that from
+                            methods to <em>models</em>: use one model
+                            to change information and a different one
+                            to read it. Everything expensive about
+                            CQRS follows from maintaining two models.
+                        </p>
+                    </div>
+                    <div
+                        class="rounded-2xl border border-slate-800 bg-slate-900/40 p-5"
+                    >
+                        <h3 class="font-semibold text-cyan-300">
+                            <code>@nestjs/cqrs</code> -- the library
+                        </h3>
+                        <p
+                            class="mt-3 text-sm leading-6 text-slate-400"
+                        >
+                            An in-process message bus:
+                            <code>CommandBus</code>,
+                            <code>QueryBus</code>,
+                            <code>EventBus</code>, handler decorators,
+                            aggregate roots and sagas. It
+                            <em>enables</em>
+                            the pattern; it does not impose it.
+                        </p>
+                    </div>
+                </div>
+
+                <div
+                    class="mt-8 rounded-2xl border-l-4 border-amber-500 bg-slate-900/60 p-5 sm:p-6"
+                >
+                    <p class="leading-7 text-slate-300">
+                        <span class="font-semibold text-amber-300">
+                            Warning
+                        </span>
+                        <br />
+                        If a controller dispatches
+                        <code
+                            class="rounded bg-slate-950 px-1.5 py-0.5 text-cyan-300"
+                            >CreateProductCommand</code
+                        >, a handler catches it and calls
+                        <code
+                            class="rounded bg-slate-950 px-1.5 py-0.5 text-cyan-300"
+                            >productService.create()</code
+                        >, you have installed the library and gained
+                        an expensive router. You get the
+                        <em>pattern</em> only when the read side stops
+                        going through the domain model. Until then the
+                        honest comparison is "bus versus injected
+                        service", and the bus wins by a
+                        <strong>much smaller</strong>
+                        margin than what you think unless you really
+                        need it.
+                    </p>
+                </div>
+
+                <h3 class="mt-10 text-xl font-semibold text-white">
+                    Commands Carry Intent
+                </h3>
+                <p class="mt-4 leading-7 text-slate-300">
+                    The first real payoff. Commands should be
+                    task-based rather than data-centric. The NestJS
+                    pattern catalogue put it that way. Compare what a
+                    single CRUD endpoint has to do against what three
+                    commands do:
+                </p>
+
+                <div class="mt-6 grid gap-5 lg:grid-cols-2">
+                    <div
+                        class="overflow-x-auto rounded-2xl border border-rose-900/50 bg-slate-900/60"
+                    >
+                        <div
+                            class="border-b border-rose-900/50 px-4 py-2 text-xs text-rose-300/80"
+                        >
+                            Intent has to be GUESSED from the payload
+                        </div>
+                        <pre
+                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
+                        ><code>// PATCH /products/:id
+class UpdateProductDto {
+  price?: number;
+  stock?: number;
+  isActive?: boolean;
+  skipAudit?: boolean;      // flags start appearing
+  notifyCustomers?: boolean;
+}
+
+// and inside the service:
+//   is this a reprice? a restock? a deactivation?
+//   should stock changes emit a low-stock warning?
+//   three business processes, one method body</code></pre>
+                    </div>
+                    <div
+                        class="overflow-x-auto rounded-2xl border border-cyan-900/50 bg-slate-900/60"
+                    >
+                        <div
+                            class="border-b border-cyan-900/50 px-4 py-2 text-xs text-cyan-300/80"
+                        >
+                            Intent ARRIVES with the message
+                        </div>
+                        <pre
+                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
+                        ><code>class RepriceProductCommand { /* id, price, currency */ }
+class RestockProductCommand { /* id, quantity */ }
+class DeactivateProductCommand { /* id, reason */ }
+
+// each handler is one use case with one reason to exist,
+// and each rule has exactly one home on the aggregate:
+//   product.reprice(...)
+//   product.restock(...)
+//   product.deactivate(...)</code></pre>
+                    </div>
+                </div>
+
+                <p class="mt-6 leading-7 text-slate-300">
+                    Audit trails come along free: a stream of
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >ProductRepriced</code
+                    >
+                    tells you what the business did, while a stream of
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >UPDATE products SET ...</code
+                    >
+                    tells you what the database did. Worth noting
+                    though: naming intent is a modelling discipline,
+                    not a bus feature. You could write
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >reprice()</code
+                    >
+                    and
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >restock()</code
+                    >
+                    as separate service methods today. What CQRS adds
+                    is that the discipline becomes structural: one
+                    command, one handler, one file.
+                    <br />
+                    <br />
+                    It survives the deadline where a service method
+                    would have grown a boolean parameter.
+                </p>
+
+                <h3 class="mt-10 text-xl font-semibold text-white">
+                    What it Looks Like in Code
+                </h3>
+                <p class="mt-4 leading-7 text-slate-300">
+                    The controller translates HTTP into a message and
+                    nothing else. It holds no reference to any
+                    handler:
+                </p>
+
+                <div
+                    class="mt-6 overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
+                >
+                    <div
+                        class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
+                    >
+                        src/product/presentation/product.controller.ts
+                        -- abridged
+                    </div>
+                    <pre
+                        class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
+                    ><code>@Controller('products')
+export class ProductsController {
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
+
+  @Post()
+  async create(@Body() dto: CreateProductDto): Promise&lt;void&gt; {
+    await this.commandBus.execute&lt;CreateProductCommand, void&gt;(
+      new CreateProductCommand(
+        dto.name, dto.description, dto.sku,
+        dto.price, dto.currency || 'USD', dto.stock,
+      ),
+    );
+  }
+
+  @Get(':id')
+  async findOne(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise&lt;ProductResponseDto&gt; {
+    const product = await this.queryBus.execute&lt;GetProductQuery, Product&gt;(
+      new GetProductQuery(id),
+    );
+    return ProductResponseDto.fromDomain(product);
+  }
+}</code></pre>
+                </div>
+
+                <p class="mt-6 leading-7 text-slate-300">
+                    The command itself is a plain data class with no
+                    framework in it, which is why any transport
+                    <small>
+                        (a queue consumer, a CLI script, a cron job)
+                    </small>
+                    can dispatch the same one:
+                </p>
+
+                <div class="mt-6 grid gap-5 lg:grid-cols-2">
+                    <div
+                        class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
+                    >
+                        <div
+                            class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
+                        >
+                            application/use-cases/create-product/create-product.command.ts
+                        </div>
+                        <pre
+                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
+                        ><code>export class CreateProductCommand {
+  constructor(
+    public readonly name: string,
+    public readonly description: string,
+    public readonly sku: string,
+    public readonly price: number,
+    public readonly currency: string,
+    public readonly stock: number,
+  ) {}
+}</code></pre>
+                    </div>
+                    <div
+                        class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
+                    >
+                        <div
+                            class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
+                        >
+                            application/use-cases/create-product/create-product.handler.ts
+                        </div>
+                        <pre
+                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
+                        ><code>@CommandHandler(CreateProductCommand)
+export class CreateProductHandler
+  implements ICommandHandler&lt;CreateProductCommand, void&gt; {
+  constructor(
+    @Inject(PRODUCT_REPOSITORY)          // a port, not an adapter
+    private readonly productRepository: ProductRepository,
+  ) {}
+
+  async execute(command: CreateProductCommand): Promise&lt;void&gt; {
+    const existing = await this.productRepository.findBySku(
+      Sku.create(command.sku),
+    );
+    if (existing) {
+      throw new ApplicationException(    // no HTTP status here
+        `Product with SKU ${command.sku} already exists`,
+        ApplicationExceptionCode.CONFLICT,
+      );
+    }
+
+    const product = Product.create(/* ... */);
+    await this.productRepository.save(product);
+  }
+}</code></pre>
+                    </div>
+                </div>
+
+                <p class="mt-6 leading-7 text-slate-300">
+                    Two details there carry the architectural weight.
+                    The repository arrives through an injection token
+                    bound to an interface, so the database is a
+                    provider swap. And the error is an
+                    application-level code rather than
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >ConflictException</code
+                    >, which is what stops the application layer from
+                    importing the presentation layer.
+                    <a class="hover:text-cyan-300" href="#errors">
+                        Section 7
+                    </a>
+                    finishes that thought.
+                </p>
+
+                <p class="mt-5 leading-7 text-slate-300">
+                    Queries mirror all of this; a
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >GetProductQuery</code
+                    >
+                    data class and a
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >@QueryHandler</code
+                    >
+                    implementing
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >IQueryHandler</code
+                    >. Handlers must be registered as providers in
+                    their module, or the bus has nothing to route to.
+                </p>
+
+                <p class="mt-5 leading-7 text-slate-300">
+                    Three smaller things worth knowing about the
+                    library. The optional
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >Command</code
+                    >
+                    and
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >Query</code
+                    >
+                    base classes exist only to declare a return type,
+                    so
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >execute()</code
+                    >
+                    infers it. All three buses are RxJS observables,
+                    so you can subscribe to the whole stream for
+                    logging, tracing or persisting events. And the
+                    default publishers are in-memory, out of the box
+                    this is an in-process mediator, not a distributed
+                    broker, so commands are not durable and a crash
+                    mid-handler loses what was in flight.
+                </p>
+            </section>
+
+            <!-- 6 -->
+            <section id="read-write" class="mt-16 scroll-mt-8">
+                <h2 class="text-2xl font-bold text-white sm:text-3xl">
+                    6. Separate Read and Write Models
+                </h2>
+
+                <p class="mt-5 leading-7 text-slate-300">
+                    Here is the part that makes CQRS more than
+                    routing. In the default shape one
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >ProductEntity</code
+                    >
+                    serves three masters: persistence wants normalized
+                    tables, validation wants a DTO, the frontend wants
+                    a shaped response. It does none of them especially
+                    well. A dashboard ends up joining six tables
+                    through the domain model, and that cost lands on
+                    the same code path that enforces your invariants.
+                </p>
+                <p class="mt-5 leading-7 text-slate-300">
+                    Split it. The write side keeps rich aggregates
+                    with strict invariants. The read side keeps flat
+                    models shaped like the screens that consume them.
+                    No aggregate loading, no value object
+                    reconstruction, sometimes just raw SQL into a DTO.
+                </p>
+
+                <div
+                    class="mt-8 overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6"
+                >
+                    <pre class="mermaid">
+flowchart LR
+    C["Controller<br/>presentation layer"] -->|"command"| CB["CommandBus"]
+    C -->|"query"| QB["QueryBus"]
+
+    CB --> CH["Command handler<br/>one use case"]
+    CH --> AG["Aggregate<br/>Invariants live here"]
+    AG --> |"Stores"| WS[("Normalized data")]
+
+    AG -.->|"emits event"| EB["EventBus"]
+    EB --> PR["Projection handler"]
+    PR --> |"Stores"| RS[("Denormalized data")]
+
+    QB --> QH["Query handler"]
+    QH --> |"Reads"| RS
+
+    style AG fill:#0e2f38,stroke:#22d3ee
+    style RS fill:#0e2f38,stroke:#22d3ee
+                </pre>
+                </div>
+
+                <p class="mt-6 leading-7 text-slate-300">
+                    The asymmetry is the point: the query handler
+                    never touches the aggregate. Microsoft's catalogue
+                    frames the benefits as cleaner separation of
+                    responsibilities, simpler queries once you store a
+                    materialized view, and the freedom to scale or
+                    even store the two sides independently. You can
+                    have a document store for reads, a relational one
+                    for writes.
+                </p>
+                <p class="mt-5 leading-7 text-slate-300">
+                    In CQRS when it comes to how deep you can go we
+                    have 3 levels: from just using a fancy router, all
+                    the way to splitting your database in two. Think
+                    of it as a sliding scale of investment: the
+                    further down you go, the more performance and
+                    structural benefits you get, <b>but</b> the more
+                    complexity and operational headaches you take on.
+                </p>
+
+                <div class="mt-6 overflow-x-auto">
+                    <table
+                        class="w-full min-w-[36rem] border-collapse text-left text-sm"
+                    >
+                        <thead>
+                            <tr
+                                class="border-b border-slate-700 text-slate-300"
+                            >
+                                <th class="py-3 pr-4 font-semibold">
+                                    Level
+                                </th>
+                                <th class="py-3 pr-4 font-semibold">
+                                    What Changes
+                                </th>
+                                <th class="py-3 font-semibold">
+                                    What it costs
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-slate-400">
+                            <tr class="border-b border-slate-800/70">
+                                <td
+                                    class="py-3 pr-4 align-top text-cyan-300"
+                                >
+                                    Buses only
+                                </td>
+                                <td class="py-3 pr-4 align-top">
+                                    You download the CQRS library and
+                                    split your code into
+                                    <code
+                                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                                        >Commands</code
+                                    >
+                                    (write) and
+                                    <code
+                                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                                        >Queries</code
+                                    >
+                                    (read). However, underneath the
+                                    hood, both paths still load the
+                                    exact same Product class from the
+                                    exact same SQL table. The only
+                                    thing separating them is the code
+                                    path (the route the code takes).
+                                </td>
+                                <td class="py-3 align-top">
+                                    Boilerplate, and nothing else.
+                                </td>
+                            </tr>
+                            <tr class="border-b border-slate-800/70">
+                                <td
+                                    class="py-3 pr-4 align-top text-cyan-300"
+                                >
+                                    Two models, one store
+                                </td>
+                                <td class="py-3 pr-4 align-top">
+                                    You keep your main, normalized
+                                    database for writes (saving data).
+                                    But for reading data (like
+                                    displaying a list of products),
+                                    you completely bypass your complex
+                                    domain model. Instead, you write
+                                    fast, raw SQL queries that grab
+                                    exactly the columns you need for
+                                    that specific screen and map them
+                                    straight into a plain, flat DTO.
+                                </td>
+                                <td class="py-3 align-top">
+                                    Two separate translators: one to
+                                    turn database rows into your
+                                    complex Domain objects (for
+                                    writes), and another to turn
+                                    database rows into your simple
+                                    DTOs (for reads).
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    class="py-3 pr-4 align-top text-cyan-300"
+                                >
+                                    Two models, two stores
+                                </td>
+                                <td class="py-3 pr-4 align-top">
+                                    Create a completely separate
+                                    read-only database (like a
+                                    separate table structure, or even
+                                    a totally different technology
+                                    like Elasticsearch or Redis).
+                                    Whenever data is saved on the
+                                    "write" side, it fires an event. A
+                                    background process (the Projection
+                                    handler) listens to this event and
+                                    updates this new read-database in
+                                    the background.
+                                </td>
+                                <td class="py-3 align-top">
+                                    &middot; Eventual consistency.<br />
+                                    &middot; If this read-database
+                                    gets corrupted or has a bug, you
+                                    need complex tools to replay all
+                                    past events to rebuild it from
+                                    scratch.
+                                    <br />
+                                    &middot; Clients should be able to
+                                    tolerates lags.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="mt-8 leading-7 text-slate-300">
+                    Level two is where most teams should stop. It buys
+                    the read performance and the clean write model
+                    without asking your product manager to explain to
+                    users why the order they just placed isn't on the
+                    list yet. Level three is a genuine architecture
+                    change, not a refactor.
+                </p>
+            </section>
+
+            <!-- 7 -->
+            <section id="errors" class="mt-16 scroll-mt-8">
+                <h2 class="text-2xl font-bold text-white sm:text-3xl">
+                    7. Errors Across the Boundary
+                </h2>
+
+                <p class="mt-5 leading-7 text-slate-300">
+                    Error handling is where a clean, modular
+                    architecture quietly leaks in most codebases.
+                    Throwing
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >ConflictException</code
+                    >
+                    from a handler drags an HTTP concept into the
+                    application layer, and now the least volatile code
+                    knows about the most volatile transport. Instead
+                    we should have two exception types and two
+                    filters:
+                </p>
+
+                <div class="mt-8 grid gap-5 lg:grid-cols-2">
+                    <div
+                        class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
+                    >
+                        <div
+                            class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
+                        >
+                            src/shared/domain/exceptions/application.exception.ts
+                        </div>
+                        <pre
+                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
+                        ><code>export enum ApplicationExceptionCode {
+  VALIDATION_ERROR = 'VALIDATION_ERROR',
+  NOT_FOUND = 'NOT_FOUND',
+  CONFLICT = 'CONFLICT',
+}
+
+export class ApplicationException extends Error {
+  constructor(
+    message: string,
+    public readonly code: ApplicationExceptionCode =
+      ApplicationExceptionCode.VALIDATION_ERROR,
+  ) {
+    super(message);
+    this.name = 'ApplicationException';
+  }
+}</code></pre>
+                    </div>
+                    <div
+                        class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
+                    >
+                        <div
+                            class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
+                        >
+                            src/shared/infrastructure/filters/application-exception.filter.ts
+                        </div>
+                        <pre
+                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
+                        ><code>const CODE_TO_HTTP: Record&lt;ApplicationExceptionCode, HttpStatus&gt; = {
+  [ApplicationExceptionCode.VALIDATION_ERROR]: HttpStatus.BAD_REQUEST,
+  [ApplicationExceptionCode.NOT_FOUND]: HttpStatus.NOT_FOUND,
+  [ApplicationExceptionCode.CONFLICT]: HttpStatus.CONFLICT,
+};
+
+@Catch(ApplicationException)
+export class ApplicationExceptionFilter implements ExceptionFilter {
+  catch(exception: ApplicationException, host: ArgumentsHost) {
+    const response = host.switchToHttp().getResponse&lt;Response&gt;();
+    const status =
+      CODE_TO_HTTP[exception.code] ?? HttpStatus.INTERNAL_SERVER_ERROR;
+
+    response.status(status).json({
+      statusCode: status,
+      message: exception.message,
+    });
+  }
+}</code></pre>
+                    </div>
+                </div>
+
+                <p class="mt-6 leading-7 text-slate-300">
+                    The enum is a transport-agnostic vocabulary; the
+                    filter is the one place that knows HTTP exists.
+                    Move to gRPC or a queue consumer and you write a
+                    different filter, not a different handler.
+                </p>
+                <p class="mt-5 leading-7 text-slate-300">
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >DomainException</code
+                    >
+                    is the simpler sibling, no code, no status, just a
+                    message. Because the only errors a domain model
+                    should raise are about its own data being invalid.
+                    It carries no status code precisely because the
+                    domain layer must not know the presentation layer
+                    is HTTP. Duplicate-checking, authorization and
+                    other orchestration concerns belong to the
+                    application layer, which is why
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >CreateProductHandler</code
+                    >
+                    does the SKU-uniqueness check while
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >Sku.create()</code
+                    >
+                    only enforces what a valid SKU looks like.
+                </p>
+            </section>
+
+            <!-- 8 -->
+            <section id="events" class="mt-16 scroll-mt-8">
+                <h2 class="text-2xl font-bold text-white sm:text-3xl">
+                    8. Events and Side Effects
+                </h2>
+
+                <p class="mt-5 leading-7 text-slate-300">
+                    This is what most directly attacks the tangle from
+                    <a class="hover:text-cyan-300" href="#problem"
+                        >section 1</a
+                    >. Without events, registering a customer means
+                    the handler calling a notification service, an
+                    analytics service and a CRM sync. Exactly the web
+                    of direct calls that produced circular
+                    dependencies. With events, the domain model
+                    announces what happened and whoever cares
+                    subscribes.
+                </p>
+
+                <div
+                    class="mt-8 overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6"
+                >
+                    <pre class="mermaid">
+sequenceDiagram
+    autonumber
+    participant C as Controller
+    participant B as CommandBus
+    participant H as Command handler
+    participant A as Aggregate
+    participant R as Repository port
+    participant E as EventBus
+    participant N as Notification handler
+
+    C->>B: execute(RegisterCustomerCommand)
+    B->>H: execute(command)
+    H->>A: Customer.register(...)
+    A-->>A: apply(CustomerRegisteredEvent)
+    H->>R: save(customer)
+    H->>A: commit()
+    A->>E: publish event
+    E-->>N: handle(event)
+    N-->>N: send welcome message
+    H-->>C: done
+                </pre
+                    >
+                </div>
+
+                <p class="mt-6 leading-7 text-slate-300">
+                    Mechanically: the aggregate records an event with
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >apply()</code
+                    >, but nothing is dispatched until the model is
+                    linked to the publisher. The command handler does
+                    that with
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >EventPublisher.mergeObjectContext()</code
+                    >
+                    and then calls
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >commit()</code
+                    >, or the model sets
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >autoCommit = true</code
+                    >
+                    and skips the explicit call. That deliberate gap
+                    between recorded and dispatched is what lets you
+                    save first and publish after, so a failed write
+                    never emits an event claiming otherwise.
+                </p>
+
+                <p class="mt-5 leading-7 text-slate-300">
+                    The subscriber side is another port and adapter.
+                    The handler depends on a notification interface;
+                    then in production you can swap the console
+                    implementation for email or another means of
+                    sending notification without the handler noticing:
+                </p>
+
+                <div class="mt-6 grid gap-5 lg:grid-cols-2">
+                    <div
+                        class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
+                    >
+                        <div
+                            class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
+                        >
+                            src/customers/application/ports/notification.port.ts
+                        </div>
+                        <pre
+                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
+                        ><code>export const NOTIFICATION_SERVICE = Symbol('NOTIFICATION_SERVICE');
+
+export interface Notification {
+  recipientId: string;
+  subject: string;
+  message: string;
+}
+
+export interface NotificationPort {
+  sendNotification(notification: Notification): Promise&lt;void&gt;;
+}</code></pre>
+                    </div>
+                    <div
+                        class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
+                    >
+                        <div
+                            class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
+                        >
+                            src/customers/application/events/customer-registered.handler.ts
+                        </div>
+                        <pre
+                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
+                        ><code>@EventsHandler(CustomerRegisteredEvent)
+export class CustomerRegisteredHandler
+  implements IEventHandler&lt;CustomerRegisteredEvent&gt; {
+  constructor(
+    @Inject(NOTIFICATION_SERVICE)
+    private readonly notificationService: NotificationPort,
+  ) {}
+
+  async handle(event: CustomerRegisteredEvent) {
+    await this.notificationService.sendNotification({
+      recipientId: event.customerId,
+      subject: 'Welcome',
+      message: `Welcome to Clean Shop, ${event.firstName}!`,
+    });
+  }
+}</code></pre>
+                    </div>
+                </div>
+
+                <p class="mt-6 leading-7 text-slate-300">
+                    A console adapter implementing that port may
+                    itself depend on the customer repository port to
+                    look up an email address. That direction is fine:
+                    a low-level implementation detail depending on a
+                    higher-level abstraction is exactly what the
+                    dependency rule asks for. The reverse is what you
+                    avoid.
+                </p>
+
+                <div
+                    class="mt-8 rounded-2xl border-l-4 border-rose-500 bg-slate-900/60 p-5 sm:p-6"
+                >
+                    <h3 class="font-semibold text-rose-300">
+                        Two sharp edges, straight from the docs
+                    </h3>
+                    <ul class="mt-3 space-y-3 text-slate-300">
+                        <li class="leading-7">
+                            <span class="font-semibold text-white"
+                                >Exception filters do not cover event
+                                handlers.</span
+                            >
+                            Errors thrown in a command handler still
+                            reach your filters. Errors in an event
+                            handler do not &mdash; you catch them
+                            yourself, or they land on the
+                            <code
+                                class="rounded bg-slate-950 px-1.5 py-0.5 text-cyan-300"
+                                >UnhandledExceptionBus</code
+                            >
+                            stream, which nothing consumes until you
+                            subscribe to it. This is the most common
+                            way an event-driven NestJS app ends up
+                            silently inconsistent.
+                        </li>
+                        <li class="leading-7">
+                            <span class="font-semibold text-white"
+                                >You cannot respond to the client from
+                                an event handler.</span
+                            >
+                            The HTTP context is gone by then. If the
+                            client must learn the outcome, that means
+                            WebSockets, server-sent events, or
+                            polling.
+                        </li>
+                    </ul>
+                </div>
+
+                <p class="mt-8 leading-7 text-slate-300">
+                    For workflows spanning several aggregates
+                    <small>
+                        (order placed, then payment authorized, then
+                        stock reserved)
+                    </small>
+                    sagas listen to the event stream with RxJS
+                    operators and emit new commands, which the
+                    <code
+                        class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                        >CommandBus</code
+                    >
+                    dispatches asynchronously. That is where an
+                    orchestration service would otherwise grow into
+                    the god class everyone was trying to avoid.
+                </p>
+                <p class="mt-5 leading-7 text-slate-300">
+                    Event sourcing, storing the events themselves as
+                    the source of truth rather than current state is
+                    the natural next step and is well supported here,
+                    since the buses are observable streams. It is a
+                    separate decision with its own weight, and CQRS
+                    does not require it.
+                </p>
+            </section>
+
+            <!-- 9 -->
+            <section id="costs" class="mt-16 scroll-mt-8">
+                <h2 class="text-2xl font-bold text-white sm:text-3xl">
+                    9. What this Costs
+                </h2>
+
+                <p class="mt-5 leading-7 text-slate-300">
+                    Fowler, whose write-up popularized the term, is
+                    blunt: for most systems,
+                    <span class="text-slate-100"
+                        >&ldquo;CQRS adds risky
+                        complexity&rdquo;</span
+                    >, and he urges real caution before adopting it.
+                    That is worth taking seriously rather than
+                    treating as an obligatory hedge at the end of this
+                    post 😉.
+                </p>
+
+                <div class="mt-8 grid gap-4 sm:grid-cols-2">
+                    <div
+                        class="rounded-xl border border-slate-800 bg-slate-900/40 p-5"
+                    >
+                        <h3 class="font-semibold text-white">
+                            Indirection tax
+                        </h3>
+                        <p
+                            class="mt-2 text-sm leading-6 text-slate-400"
+                        >
+                            Four files and a bus hop to answer "where
+                            does this run?". Stack traces get longer,
+                            jump-to-definition stops working across
+                            the dispatch, and a trivial feature pays
+                            the same overhead as a complex one.
+                        </p>
+                    </div>
+                    <div
+                        class="rounded-xl border border-slate-800 bg-slate-900/40 p-5"
+                    >
+                        <h3 class="font-semibold text-white">
+                            Eventual consistency
+                        </h3>
+                        <p
+                            class="mt-2 text-sm leading-6 text-slate-400"
+                        >
+                            Once projections are asynchronous, a user
+                            can create something and not see it on the
+                            next screen. That is a product and UI
+                            decision, not only a backend one.
+                        </p>
+                    </div>
+                    <div
+                        class="rounded-xl border border-slate-800 bg-slate-900/40 p-5"
+                    >
+                        <h3 class="font-semibold text-white">
+                            Two models to keep honest
+                        </h3>
+                        <p
+                            class="mt-2 text-sm leading-6 text-slate-400"
+                        >
+                            Every write-side field that reaches a
+                            screen needs a projection path.
+                            Projections drift, need rebuild tooling,
+                            and are their own category of bug.
+                        </p>
+                    </div>
+                    <div
+                        class="rounded-xl border border-slate-800 bg-slate-900/40 p-5"
+                    >
+                        <h3 class="font-semibold text-white">
+                            Weaker transactional guarantees
+                        </h3>
+                        <p
+                            class="mt-2 text-sm leading-6 text-slate-400"
+                        >
+                            Handlers dispatched from other handlers
+                            don't share a transaction by default.
+                            Multi-aggregate consistency becomes a saga
+                            with compensating actions rather than a
+                            <code
+                                class="rounded bg-slate-900 px-1.5 py-0.5 text-cyan-300"
+                                >BEGIN ... COMMIT</code
+                            >.
+                        </p>
+                    </div>
+                </div>
+
+                <div
+                    class="mt-8 rounded-2xl border-l-4 border-amber-500 bg-slate-900/60 p-5 sm:p-6"
+                >
+                    <p class="leading-7 text-slate-300">
+                        <span class="font-semibold text-amber-300">
+                            Warning!
+                        </span>
+                        <br />
+                        CQRS is not what stops business logic from
+                        smearing across forty services.
+                        <em>Aggregates</em> do that &mdash; putting
+                        the rule inside
+                        <code
+                            class="rounded bg-slate-950 px-1.5 py-0.5 text-cyan-300"
+                            >order.cancel()</code
+                        >
+                        so there is one place to change it, and one
+                        door to reach it through. You can have that
+                        with plain services and no bus at all. CQRS
+                        makes the aggregate boundary harder to route
+                        around; it does not create it. So when we talk
+                        about CQRS and untangling a service layer, the
+                        working ingredient is the DDD.
+                    </p>
+                </div>
+            </section>
+
+            <!-- 10 -->
+            <section id="decide" class="mt-16 scroll-mt-8">
+                <h2 class="text-2xl font-bold text-white sm:text-3xl">
+                    10. Deciding, per Module
+                </h2>
+
+                <p class="mt-5 leading-7 text-slate-300">
+                    None of this is an all-or-nothing choice for a
+                    codebase. Bounded contexts differ, and it is
+                    normal for pricing and ordering to be full CQRS
+                    while the admin panel that manages product
+                    categories stays plain CRUD in the same
+                    repository.
+                </p>
+
+                <div
+                    class="mt-8 overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6"
+                >
+                    <pre class="mermaid">
+flowchart TD
+    S["A module or bounded context"] --> Q1{"Real invariants?<br/>rules that can reject a write"}
+    Q1 -->|"no"| CRUD["Plain service and repository.<br/>Ship it."]
+    Q1 -->|"yes"| Q2{"Is the write model<br/>a bad shape for reads?"}
+    Q2 -->|"no"| L1["Aggregates plus buses.<br/>Shared model. Good default."]
+    Q2 -->|"yes"| Q3{"Can the UI tolerate<br/>a stale read?"}
+    Q3 -->|"no"| L2["Separate read model,<br/>same store. Sweet spot."]
+    Q3 -->|"yes"| L3["Projections into a<br/>separate read store."]
+
+    style CRUD fill:#1e293b,stroke:#64748b
+    style L2 fill:#0e2f38,stroke:#22d3ee
+                </pre>
+                </div>
+
+                <p class="mt-6 leading-7 text-slate-300">
+                    A useful test before adding a command: can a
+                    domain expert who has never seen your code explain
+                    the rule that would reject it? If yes, that rule
+                    belongs on an aggregate and a command is the
+                    honest way to express the request. If the only
+                    rule is "this field is a non-empty string", you
+                    have a form rather than a domain, and a controller
+                    with a service is the right amount of machinery.
+                </p>
+
+                <div
+                    class="mt-10 rounded-2xl border border-slate-800 bg-slate-900/40 p-6 sm:p-8"
+                >
+                    <h3 class="text-xl font-bold text-white">
+                        The short version
+                    </h3>
+                    <p class="mt-4 leading-7 text-slate-300">
+                        Keep the business rules in the middle, in
+                        plain TypeScript, expressed as entities and
+                        value objects that validate themselves and
+                        guard their own invariants. Point every
+                        dependency inward and reach outward only
+                        through interfaces, so databases and SDKs stay
+                        swappable. Then use CQRS where it earns its
+                        keep: requests that name a business intent,
+                        one handler per use case, side effects
+                        delivered as events instead of direct calls,
+                        and a read model that skips the domain
+                        entirely when reads and writes genuinely want
+                        different shapes.
+                        <br />
+                        <br />
+                        Keep the CRUD modules boring, and you will
+                        have spent the complexity where it returns
+                        something.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Reading -->
+            <section id="reading" class="mt-16 scroll-mt-8">
+                <h2 class="text-2xl font-bold text-white sm:text-3xl">
+                    Good reads
+                </h2>
+                <p class="mt-5 max-w-3xl leading-7 text-slate-300">
+                    Sources behind this post, roughly in the order
+                    worth reading them.
+                </p>
+
+                <div class="mt-8 grid gap-4 md:grid-cols-2">
+                    <a
+                        href="https://martinfowler.com/bliki/CQRS.html"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="block rounded-xl border border-slate-800 bg-slate-900/40 p-5 no-underline transition hover:border-cyan-500/60 hover:bg-slate-900"
+                    >
+                        <p class="font-semibold text-cyan-300">
+                            CQRS &mdash; Martin Fowler
+                        </p>
+                        <p
+                            class="mt-2 text-sm leading-6 text-slate-400"
+                        >
+                            The definition everyone cites, plus the
+                            caution about complexity. Read it before
+                            the tutorials.
+                        </p>
+                    </a>
+                    <a
+                        href="https://docs.nestjs.com/recipes/cqrs"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="block rounded-xl border border-slate-800 bg-slate-900/40 p-5 no-underline transition hover:border-cyan-500/60 hover:bg-slate-900"
+                    >
+                        <p class="font-semibold text-cyan-300">
+                            CQRS recipe &mdash; NestJS docs
+                        </p>
+                        <p
+                            class="mt-2 text-sm leading-6 text-slate-400"
+                        >
+                            Authoritative on the library: buses,
+                            aggregate root options, sagas, unhandled
+                            exceptions, request scoping.
+                        </p>
+                    </a>
+                    <a
+                        href="https://martinfowler.com/bliki/AnemicDomainModel.html"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="block rounded-xl border border-slate-800 bg-slate-900/40 p-5 no-underline transition hover:border-cyan-500/60 hover:bg-slate-900"
+                    >
+                        <p class="font-semibold text-cyan-300">
+                            Anemic Domain Model &mdash; Martin Fowler
+                        </p>
+                        <p
+                            class="mt-2 text-sm leading-6 text-slate-400"
+                        >
+                            Names the failure mode in section 1:
+                            entities as data bags, behaviour exiled to
+                            services.
+                        </p>
+                    </a>
+                    <a
+                        href="https://martinfowler.com/bliki/DDD_Aggregate.html"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="block rounded-xl border border-slate-800 bg-slate-900/40 p-5 no-underline transition hover:border-cyan-500/60 hover:bg-slate-900"
+                    >
+                        <p class="font-semibold text-cyan-300">
+                            DDD Aggregate &mdash; Martin Fowler
+                        </p>
+                        <p
+                            class="mt-2 text-sm leading-6 text-slate-400"
+                        >
+                            The consistency boundary that does most of
+                            the work people tend to credit to CQRS.
+                        </p>
+                    </a>
+                    <a
+                        href="https://learn.microsoft.com/en-us/azure/architecture/patterns/cqrs"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="block rounded-xl border border-slate-800 bg-slate-900/40 p-5 no-underline transition hover:border-cyan-500/60 hover:bg-slate-900"
+                    >
+                        <p class="font-semibold text-cyan-300">
+                            CQRS pattern &mdash; Azure Architecture
+                            Center
+                        </p>
+                        <p
+                            class="mt-2 text-sm leading-6 text-slate-400"
+                        >
+                            The clearest treatment of the levels:
+                            shared store versus separate stores,
+                            benefits, and when it stops paying off.
+                        </p>
+                    </a>
+                    <a
+                        href="https://udidahan.com/2009/12/09/clarified-cqrs/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="block rounded-xl border border-slate-800 bg-slate-900/40 p-5 no-underline transition hover:border-cyan-500/60 hover:bg-slate-900"
+                    >
+                        <p class="font-semibold text-cyan-300">
+                            Clarified CQRS &mdash; Udi Dahan
+                        </p>
+                        <p
+                            class="mt-2 text-sm leading-6 text-slate-400"
+                        >
+                            Argues the pattern earns its keep in
+                            collaborative domains where many actors
+                            touch the same data.
+                        </p>
+                    </a>
+                    <a
+                        href="https://cqrs.wordpress.com/wp-content/uploads/2010/11/cqrs_documents.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="block rounded-xl border border-slate-800 bg-slate-900/40 p-5 no-underline transition hover:border-cyan-500/60 hover:bg-slate-900"
+                    >
+                        <p class="font-semibold text-cyan-300">
+                            CQRS Documents &mdash; Greg Young (PDF)
+                        </p>
+                        <p
+                            class="mt-2 text-sm leading-6 text-slate-400"
+                        >
+                            The origin text, 56 pages, from task-based
+                            UIs through event storage. Still the best
+                            case for why the ideas fit together.
+                        </p>
+                    </a>
+                    <a
+                        href="https://martinfowler.com/bliki/CommandQuerySeparation.html"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="block rounded-xl border border-slate-800 bg-slate-900/40 p-5 no-underline transition hover:border-cyan-500/60 hover:bg-slate-900"
+                    >
+                        <p class="font-semibold text-cyan-300">
+                            Command Query Separation &mdash; Martin
+                            Fowler
+                        </p>
+                        <p
+                            class="mt-2 text-sm leading-6 text-slate-400"
+                        >
+                            Meyer's original principle, the free
+                            version. Two paragraphs, and it will
+                            change how you name methods.
+                        </p>
+                    </a>
+                    <a
+                        href="https://en.wikipedia.org/wiki/Command%E2%80%93query_separation"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="block rounded-xl border border-slate-800 bg-slate-900/40 p-5 no-underline transition hover:border-cyan-500/60 hover:bg-slate-900"
+                    >
+                        <p class="font-semibold text-cyan-300">
+                            Command&ndash;query separation &mdash;
+                            Wikipedia
+                        </p>
+                        <p
+                            class="mt-2 text-sm leading-6 text-slate-400"
+                        >
+                            Where the idea started, in Meyer's
+                            <em
+                                >Object-Oriented Software
+                                Construction</em
+                            >, and how CQRS grew out of it.
+                        </p>
+                    </a>
+                    <a
+                        href="https://martinfowler.com/eaaDev/EventSourcing.html"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="block rounded-xl border border-slate-800 bg-slate-900/40 p-5 no-underline transition hover:border-cyan-500/60 hover:bg-slate-900"
+                    >
+                        <p class="font-semibold text-cyan-300">
+                            Event Sourcing &mdash; Martin Fowler
+                        </p>
+                        <p
+                            class="mt-2 text-sm leading-6 text-slate-400"
+                        >
+                            The optional companion pattern. Adopt it
+                            separately and deliberately.
+                        </p>
+                    </a>
+                    <a
+                        href="https://refactoring.guru/design-patterns/command"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="block rounded-xl border border-slate-800 bg-slate-900/40 p-5 no-underline transition hover:border-cyan-500/60 hover:bg-slate-900"
+                    >
+                        <p class="font-semibold text-cyan-300">
+                            Command pattern &mdash; Refactoring Guru
+                        </p>
+                        <p
+                            class="mt-2 text-sm leading-6 text-slate-400"
+                        >
+                            The GoF pattern that shares the name.
+                            Related in spirit, different in scope, and
+                            useful for seeing what "a request as an
+                            object" buys you.
+                        </p>
+                    </a>
+                    <a
+                        href="https://github.com/kasir-barati/clean-shop"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="block rounded-xl border border-slate-800 bg-slate-900/40 p-5 no-underline transition hover:border-cyan-500/60 hover:bg-slate-900"
+                    >
+                        <p class="font-semibold text-cyan-300">
+                            clean-shop &mdash; the reference
+                            implementation
+                        </p>
+                        <p
+                            class="mt-2 text-sm leading-6 text-slate-400"
+                        >
+                            Every snippet above in context: value
+                            objects, ports, swappable Mongo and
+                            Drizzle repositories, handlers and
+                            filters.
+                        </p>
+                    </a>
+                </div>
+            </section>
+        </main>
+
+        <footer class="border-t border-slate-800">
+            <div
+                class="mx-auto flex md:justify-end max-w-7xl flex-col gap-3 px-5 py-8 text-sm text-slate-500 sm:px-8 sm:flex-row sm:items-center sm:justify-between"
+            >
+                <a
+                    href="#top"
+                    class="text-slate-300 hover:text-white"
+                >
+                    Back to top &uarr;
+                </a>
+            </div>
+        </footer>
+    </body>
+</html>
