@@ -1,29 +1,24 @@
 import {
     Brightness4 as Brightness4Icon,
     Brightness7 as Brightness7Icon,
-    Search as SearchIcon,
 } from '@mui/icons-material';
 import {
     AppBar,
     Box,
-    Divider,
     IconButton,
-    InputBase,
-    Paper,
     Toolbar,
     Tooltip,
     Typography,
     useTheme,
 } from '@mui/material';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks/redux.hook';
 import { toggleTheme } from '../redux/theme.slice';
 import { Link } from './Link.component';
 import { navBarItems } from './Navbar.component';
+import { SearchBox } from './SearchBox.component';
 
 export function DesktopNavbar() {
-    const [searchText, setSearchText] = useState<string>();
     const dispatch = useAppDispatch();
     const { darkMode } = useAppSelector(
         (state) => state.themeReducer,
@@ -39,22 +34,6 @@ export function DesktopNavbar() {
         throw new Error('blogNavBarItem not found');
     }
 
-    const searchUrl =
-        'www.google.com/search?q=site:kasir-barati.github.io';
-    const handleSearchKeyUp = (
-        event: React.KeyboardEvent<
-            HTMLTextAreaElement | HTMLInputElement
-        >,
-    ) => {
-        if (event.key === 'Enter') {
-            navigate(`//${searchUrl}+${searchText}`);
-        }
-
-        setSearchText(event.currentTarget.value);
-    };
-    const handleSearchClick = () => {
-        navigate(`//${searchUrl}+${searchText}`);
-    };
     const handleThemeToggle = () => {
         dispatch(toggleTheme());
     };
@@ -82,38 +61,14 @@ export function DesktopNavbar() {
                         {blogNavBarItem.text}
                     </Typography>
                 </Link>
-                <Paper
+                <SearchBox
                     sx={{
-                        padding: 1,
                         display: {
                             md: 'flex',
                             xs: 'none',
                         },
-                        border: 1,
-                        borderColor: 'primary.main',
-                        alignItems: 'center',
-                        marginY: 1,
                     }}
-                >
-                    <InputBase
-                        placeholder="Search"
-                        onKeyUp={handleSearchKeyUp}
-                    />
-                    <Divider
-                        flexItem
-                        orientation="vertical"
-                        sx={{
-                            borderColor: 'secondary.main',
-                            marginX: 1,
-                        }}
-                    />
-                    <IconButton
-                        type="button"
-                        onClick={handleSearchClick}
-                    >
-                        <SearchIcon />
-                    </IconButton>
-                </Paper>
+                />
                 <Box sx={{ flexGrow: 1 }} />
                 <Box
                     sx={{

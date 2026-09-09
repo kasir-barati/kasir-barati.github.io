@@ -24,6 +24,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/redux.hook';
 import { toggleTheme } from '../redux/theme.slice';
 import { Link } from './Link.component';
 import { navBarItems } from './Navbar.component';
+import { SearchBox } from './SearchBox.component';
 
 export function MobileNavbar() {
     const [isMobileNavBarOpen, setIsMobileNavBarOpen] =
@@ -75,6 +76,13 @@ export function MobileNavbar() {
                             height: 57,
                         }}
                     />
+                    <Box paddingX={1}>
+                        <SearchBox
+                            onSearch={() =>
+                                setIsMobileNavBarOpen(false)
+                            }
+                        />
+                    </Box>
                     <Divider />
                     <List>
                         {navBarItems.map((navBarItem, index) => {
