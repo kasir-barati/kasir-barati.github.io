@@ -1,17 +1,17 @@
+import { Masonry } from '@mui/lab';
 import {
     Box,
     Button,
     Card,
     CardActions,
     CardContent,
-    CardMedia,
-    Grid,
-    Typography
+    Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import posts from '../data/posts.json';
 import { searchPosts } from '../utils/postsSearch';
+import { getRandomColor } from '../utils/genRandomColor';
 
 export function PostList() {
     const [searchParams] = useSearchParams();
@@ -55,60 +55,59 @@ export function PostList() {
 
     return (
         <Box padding={2}>
-            <Grid container justifyItems="center" spacing={2}>
+            <Masonry columns={{ xs: 2, sm: 3, md: 4 }} spacing={2}>
                 {filteredPosts.map((post) => (
-                    <Grid key={post.id} item xs={12} md={4}>
-                        <Card>
-                            <CardMedia
-                                component="img"
-                                height={130}
-                                image={post.imageSrc}
-                                alt={''}
-                            />
-                            <CardContent>
-                                <Typography variant="h5" gutterBottom>
-                                    {post.title}
-                                </Typography>
-                                <Typography
-                                    variant="body2"
-                                    color="textSecondary"
-                                >
-                                    {post.description}
-                                </Typography>
-                                <Typography
-                                    variant="body2"
-                                    align="center"
-                                    color="white"
-                                >
-                                    {post.tags.map((tag, index) => (
-                                        <>
-                                            {tag}{' '}
-                                            {index !==
-                                                post.tags.length -
-                                                    1 && ' . '}
-                                        </>
-                                    ))}
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Button
-                                    variant="contained"
-                                    color="success"
-                                    href={post.href}
-                                >
-                                    Read more
-                                </Button>
-                                {/* <CopyToClipboardButton
+                    <Card key={post.id}>
+                        <CardContent>
+                            <Typography
+                                color={getRandomColor()}
+                                variant="h5"
+                                gutterBottom
+                            >
+                                {post.title}
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                color="textSecondary"
+                                textAlign="justify"
+                                mt={1}
+                                mb={2}
+                            >
+                                {post.description}
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                align="center"
+                                color="white"
+                            >
+                                {post.tags.map((tag, index) => (
+                                    <>
+                                        {tag}{' '}
+                                        {index !==
+                                            post.tags.length - 1 &&
+                                            ' . '}
+                                    </>
+                                ))}
+                            </Typography>
+                        </CardContent>
+                        <CardActions>
+                            <Button
+                                variant="contained"
+                                color="success"
+                                href={post.href}
+                            >
+                                Read more
+                            </Button>
+                            {/* <CopyToClipboardButton
                                     variant="contained"
                                     color="primary"
                                 >
                                     Share
                                 </CopyToClipboardButton> */}
-                            </CardActions>
-                        </Card>
-                    </Grid>
+                        </CardActions>
+                    </Card>
                 ))}
-            </Grid>
+            </Masonry>
         </Box>
     );
 }

@@ -141,13 +141,6 @@ function ProjectCard({ project }: { project: Project }) {
                     flexDirection: 'column',
                 }}
             >
-                <CardMedia
-                    component="img"
-                    alt={project.alt}
-                    height="140"
-                    image={project.imageSrc}
-                    sx={{ objectFit: 'cover' }}
-                />
                 <CardContent sx={{ flexGrow: 1 }}>
                     <Typography
                         variant="h6"
