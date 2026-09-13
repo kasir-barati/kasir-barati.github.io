@@ -3,7 +3,6 @@ interface Post {
     title: string;
     description: string;
     href: string;
-    imageSrc: string;
     tags: string[];
 }
 
@@ -29,7 +28,10 @@ function matchesMetadata(post: Post, query: string): boolean {
     );
 }
 
-async function matchesBody(post: Post, query: string): Promise<boolean> {
+async function matchesBody(
+    post: Post,
+    query: string,
+): Promise<boolean> {
     if (!isLocalPost(post)) {
         return false;
     }

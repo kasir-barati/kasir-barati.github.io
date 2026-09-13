@@ -5,10 +5,13 @@ import { showNotification } from '../redux/notification.slice';
 
 export function CopyToClipboardButton({
     children,
+    url,
     ...props
-}: PropsWithChildren<Omit<ButtonProps, 'onClick'>>) {
+}: PropsWithChildren<Omit<ButtonProps, 'onClick'> & { url: string }>) {
     const handleClick = () => {
-        navigator.clipboard.writeText(window.location.href);
+        navigator.clipboard.writeText(
+            new URL(url, window.location.href).toString(),
+        );
         dispatch(
             showNotification({
                 color: 'success',

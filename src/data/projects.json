@@ -1,7 +1,6 @@
 [
     {
         "name": "you-say",
-        "imageSrc": "./black.jpg",
         "alt": "You Say app",
         "description": "A social application",
         "links": [
@@ -13,7 +12,6 @@
     },
     {
         "name": " simple-gui-for-docker-swarm",
-        "imageSrc": "./white.jpg",
         "alt": "Simple GUI for Docker swarm app",
         "description": "A GUI for Docker swarm written in NodeJS",
         "links": [
@@ -26,7 +24,6 @@
     {
         "name": "smart-novel",
         "org": "Ponos-OS",
-        "imageSrc": "./black.jpg",
         "alt": "Smart-Novel",
         "description": "A novel reading application",
         "links": [
@@ -39,7 +36,6 @@
     {
         "name": "Beatrice",
         "org": "Ponos-OS",
-        "imageSrc": "./white.jpg",
         "alt": "Beatrice, LLM-powered AI assistant for smart-novel",
         "description": "An AI assistant for the smart-novel application",
         "links": [
@@ -52,7 +48,6 @@
     {
         "name": "piper-tts-rest-api",
         "org": "Ponos-OS",
-        "imageSrc": "./black.jpg",
         "alt": "Piper TTS REST API",
         "description": "A thin wrapper around Piper TTS that turns text into an mp3 file",
         "links": [
@@ -65,7 +60,6 @@
     {
         "name": "Fithara",
         "org": "Ponos-OS",
-        "imageSrc": "./white.jpg",
         "alt": "Fithara, LLM-powered license drafting service",
         "description": "An LLM-powered service for drafting licenses for creative content, used by smart-novel",
         "links": [

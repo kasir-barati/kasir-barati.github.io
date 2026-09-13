@@ -12,6 +12,7 @@ import { useSearchParams } from 'react-router-dom';
 import posts from '../data/posts.json';
 import { searchPosts } from '../utils/postsSearch';
 import { getRandomColor } from '../utils/genRandomColor';
+import { CopyToClipboardButton } from '../components/CopyToClipboardButton.component';
 
 export function PostList() {
     const [searchParams] = useSearchParams();
@@ -55,7 +56,7 @@ export function PostList() {
 
     return (
         <Box padding={2}>
-            <Masonry columns={{ xs: 2, sm: 3, md: 4 }} spacing={2}>
+            <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={2}>
                 {filteredPosts.map((post) => (
                     <Card key={post.id}>
                         <CardContent>
@@ -67,7 +68,7 @@ export function PostList() {
                                 {post.title}
                             </Typography>
                             <Typography
-                                variant="body2"
+                                variant="body1"
                                 color="textSecondary"
                                 textAlign="justify"
                                 mt={1}
@@ -98,12 +99,13 @@ export function PostList() {
                             >
                                 Read more
                             </Button>
-                            {/* <CopyToClipboardButton
-                                    variant="contained"
-                                    color="primary"
-                                >
-                                    Share
-                                </CopyToClipboardButton> */}
+                            <CopyToClipboardButton
+                                variant="contained"
+                                color="primary"
+                                url={post.href}
+                            >
+                                Share
+                            </CopyToClipboardButton>
                         </CardActions>
                     </Card>
                 ))}
