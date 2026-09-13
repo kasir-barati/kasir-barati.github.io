@@ -13,13 +13,14 @@ function App() {
                 <Box
                     display="flex"
                     flexDirection="column"
-                    height={{ xs: 'auto', sm: '100dvh' }}
+                    height="100dvh"
                 >
                     <Navbar />
                     <Box
                         component="main"
-                        flex={{ xs: '0 0 auto', sm: '1 1 auto' }}
+                        flex="1 1 auto"
                         minHeight={0}
+                        sx={{ overflowY: 'auto' }}
                     >
                         <Routes>
                             {navBarItems.map((navBarItem, index) => (
