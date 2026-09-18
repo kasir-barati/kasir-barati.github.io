@@ -1,14 +1,12 @@
 import {
     Apps as AppsIcon,
     AssignmentInd as AssignmentIndIcon,
-    ContactMail as ContactMailIcon,
     FormatBold as FormatBoldIcon,
     Home as HomeIcon,
     MenuBook as MenuBookIcon,
 } from '@mui/icons-material';
 import { useMediaQuery } from '@mui/material';
 import { Book } from '../pages/Book.page';
-import { Contact } from '../pages/Contact.page';
 import { Home } from '../pages/Home.page';
 import { Portfolio } from '../pages/Portfolio.page';
 import { PostList } from '../pages/PostList.page';
@@ -34,12 +32,6 @@ export const navBarItems = [
         text: 'Portfolio',
         href: '/portfolio',
         component: <Portfolio />,
-    },
-    {
-        icon: <ContactMailIcon />,
-        text: 'Contact',
-        href: '/contact',
-        component: <Contact />,
     },
     {
         icon: <MenuBookIcon />,
