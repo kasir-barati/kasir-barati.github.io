@@ -11,7 +11,6 @@
         "title": "MongoDB Schema Design",
         "description": "I love MongoDB and I cannot help but to share what I've learned about how we design a MongoDB database schema. So here we go. Please do not forget to share it with your friends!",
         "href": "https://www.linkedin.com/pulse/mongodb-schema-design-kasir-barati/",
-        "imageSrc": "./black.jpg",
         "tags": [
             "NoSQL",
             "MongoDB",
@@ -24,7 +23,6 @@
         "title": "Teamwork skill as a developer",
         "description": "I felt always that even though I am a software engineer and I have to translate business logic to 0 and 1 but I need to communicate and connect to humans more than computers. So basically I organized my though and wrote something on LinkedIn. But of course it ain't finished, it won't be ;)",
         "href": "https://www.linkedin.com/pulse/teamwork-skill-developer-kasir-barati/",
-        "imageSrc": "./white.jpg",
         "tags": [
             "Teamwork",
             "Communication",
@@ -37,7 +35,6 @@
         "title": "NestJS + PassportJS in depth not shallow",
         "description": "I truly admire the beauty of Node.js ecosystem but sometimes I get a heart attack when I realize that OK there is not enough resource about a topic and then after recovery I wrote something about it. Here we go, another post from me to delve into NestJS and Passport and how they work.",
         "href": "https://www.linkedin.com/pulse/nestjs-passportjs-depth-shallow-kasir-barati/",
-        "imageSrc": "./black.jpg",
         "tags": [
             "Node.js",
             "NestJS",
@@ -53,7 +50,6 @@
         "title": "Slack + n8n + AI - Event-Driven Integration",
         "description": "End-to-end integration combining Slack's Events API, n8n orchestration, and LangChain-powered AI agents. This architecture demonstrates how to build intelligent chat assistants for Slack using OpenAI models. You can also learn more about the underlying patterns and architecture in this post.",
         "href": "./slack-n8n.html",
-        "imageSrc": "./white.jpg",
         "tags": [
             "n8n",
             "Slack",
@@ -69,7 +65,6 @@
         "title": "Webhooks Architecture in n8n",
         "description": "Webhooks are an essential part of modern integration strategies. In this post, we'll explore how to design and implement webhooks and how they are implemented in n8n.",
         "href": "./webhooks-n8n.html",
-        "imageSrc": "./black.jpg",
         "tags": [
             "n8n",
             "webhook",
@@ -82,7 +77,6 @@
         "title": "OpenTelemetry Observability Stack",
         "description": "A visual diagram of an OpenTelemetry Observability Stack illustrating the flow of telemetry data from a backend application through an OpenTelemetry Collector, which processes and forwards logs to Loki and traces to Tempo.",
         "href": "./observability-tempo-loki-grafana-otel.html",
-        "imageSrc": "./white.jpg",
         "tags": [
             "Architecture",
             "Observability",
@@ -98,7 +92,6 @@
         "title": "Event Loop",
         "description": "An interactive guide to the NodeJS Event Loop, visualizing how it executes codes in order.",
         "href": "./event-loop.html",
-        "imageSrc": "./black.jpg",
         "tags": [
             "Node.js",
             "Event Loop",
@@ -111,7 +104,6 @@
         "title": "Harness Engineering",
         "description": "In this post I am trying to share how I tend to do harness engineering while utilizing my new tool in my arsenal of tools",
         "href": "./harness-engineering.html",
-        "imageSrc": "./white.jpg",
         "tags": [
             "System Design",
             "Database Design",
@@ -124,7 +116,6 @@
         "title": "Kubernetes Deployment Strategies",
         "description": "Talks about deployment strategies we have: Blue-green, Canary, Recreate, and Rolling update. I also tried to talk about what you would need in each case. E.g. for blue-green and canary you needs extra tools for traffic management and monitoring.",
         "href": "./kubernetes-deployment-strategies.html",
-        "imageSrc": "./black.jpg",
         "tags": [
             "Kubernetes",
             "CI/CD",
@@ -144,6 +135,18 @@
             "Scalability",
             "Maintainability",
             "NestJS"
+        ]
+    },
+    {
+        "id": "95b32afc-cfe5-40e4-8091-3a345187827d",
+        "title": "ACID vs. BASE",
+        "description": "A concise overview of ACID vs BASE database models, explaining their trade-offs in consistency, availability, scalability, and reliability, with CAP theorem, real-world examples, and practical guidance on when each approach fits best.",
+        "href": "./acid-vs-base.html",
+        "tags": [
+            "System Design",
+            "Database Design",
+            "Availability",
+            "Reliability"
         ]
     }
 ]
