@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <meta name="color-scheme" content="dark" />
+        <title>ACID vs BASE -- Database Consistency Models</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script type="module">
+            import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'dark',
+                themeVariables: { fontSize: '14px' },
+            });
+        </script>
+        <style>
+            pre.sql {
+                tab-size: 2;
+            }
+        </style>
+    </head>
+
+    <body
+        class="min-h-screen bg-slate-950 text-slate-200 antialiased selection:bg-cyan-400/30"
+    >
+        <header
+            id="top"
+            class="border-b border-slate-800 bg-slate-950/90"
+        >
+            <div class="mx-auto max-w-7xl px-5 py-5 sm:px-8">
+                <div class="flex items-center justify-between gap-4">
+                    <h1
+                        class="text-4xl font-black tracking-tight text-white sm:text-6xl"
+                    >
+                        ACID vs BASE
+                    </h1>
+                    <a
+                        href="/#/posts"
+                        class="z-10 inline-flex shrink-0 items-center gap-2 self-center rounded-full bg-slate-800 px-2.5 py-1.5 text-[0.8rem] font-semibold text-slate-100 no-underline shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition hover:-translate-y-0.5 hover:bg-slate-900 hover:shadow-[0_6px_20px_rgba(0,0,0,0.25)] active:translate-y-0 sm:px-[18px] sm:py-2.5 sm:text-[0.95rem]"
+                        title="Go to Posts"
+                    >
+                        <svg
+                            viewBox="0 0 24 24"
+                            width="20"
+                            height="20"
+                            fill="currentColor"
+                        >
+                            <path
+                                d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5L13 3.5zM8 13h8v2H8zm0 4h5v2H8z"
+                            />
+                        </svg>
+                        <span class="hidden sm:inline">Posts</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <section
+                class="mx-auto max-w-7xl px-5 pb-14 pt-8 lg:pb-20"
+            >
+                <div class="">
+                    <p
+                        class="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-cyan-400"
+                    >
+                        Distributed data systems
+                    </p>
+                    <p
+                        class="mt-6 text-lg leading-8 text-slate-400 sm:text-xl"
+                    >
+                        Every database has to answer one question:
+                        when things go wrong -- a crash, a network
+                        hiccup, two people editing the same row at
+                        once -- what does the data look like
+                        afterward?
+                        <strong class="text-slate-200">ACID</strong>
+                        and
+                        <strong class="text-slate-200">BASE</strong>
+                        are two different sets of answers. ACID
+                        promises the data is always correct, even if
+                        that means saying "no" sometimes. BASE
+                        promises the system keeps responding, even if
+                        that means the data is briefly wrong.
+                    </p>
+                    <p class="mt-4 leading-7 text-slate-400">
+                        One concrete thing to anchor on before the
+                        acronyms:
+                        <strong class="text-slate-200"
+                            >PostgreSQL is an ACID database by
+                            default.</strong
+                        >
+                        Every plain transaction you write in Postgres
+                        already gets ACID guarantees for free. BASE
+                        isn't a competing database feature you turn on
+                        instead -- it's a set of trade-offs you
+                        deliberately introduce on top (async
+                        replication, caches, precomputed counters)
+                        when you decide strict correctness isn't worth
+                        the cost for a particular piece of data.
+                    </p>
+                    <div class="mt-8 flex flex-wrap gap-3">
+                        <a
+                            href="#acid-detail"
+                            class="rounded-xl bg-emerald-400 px-5 py-3 font-semibold text-slate-950 hover:bg-emerald-300"
+                            >See ACID in Postgres</a
+                        >
+                        <a
+                            href="#base-detail"
+                            class="rounded-xl bg-violet-400 px-5 py-3 font-semibold text-slate-950 hover:bg-violet-300"
+                            >See BASE in Postgres</a
+                        >
+                        <a
+                            href="#cap"
+                            class="rounded-xl border border-slate-700 px-5 py-3 font-semibold text-slate-200 hover:border-slate-500"
+                            >Why this trade-off exists (CAP)</a
+                        >
+                    </div>
+                </div>
+
+                <div class="mt-14 grid gap-5 lg:grid-cols-2">
+                    <article
+                        class="rounded-2xl border border-emerald-400/20 bg-emerald-400/5 p-6 sm:p-8"
+                    >
+                        <div
+                            class="flex items-start justify-between gap-4"
+                        >
+                            <div>
+                                <span
+                                    class="inline-flex rounded-full bg-emerald-400/10 px-3 py-1 text-s font-bold uppercase tracking-wider text-emerald-300"
+                                    >Correctness first</span
+                                >
+                                <h2
+                                    class="mt-4 text-3xl font-bold text-white"
+                                >
+                                    ACID
+                                </h2>
+                            </div>
+                            <div
+                                class="rounded-xl bg-emerald-400/10 p-3 text-emerald-300"
+                                aria-hidden="true"
+                            >
+                                <svg
+                                    class="h-7 w-7"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                >
+                                    <path
+                                        d="M12 3 4.5 6v5.5c0 4.6 3.1 7.8 7.5 9.5 4.4-1.7 7.5-4.9 7.5-9.5V6L12 3Z"
+                                    />
+                                    <path d="m8.5 12 2.2 2.2 4.8-5" />
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="mt-4 leading-7 text-slate-400">
+                            A transaction model designed to preserve
+                            correctness and predictable behavior,
+                            especially when multiple operations must
+                            succeed or fail together.
+                        </p>
+                        <dl class="mt-7 grid gap-4 sm:grid-cols-2">
+                            <div>
+                                <dt
+                                    class="font-bold text-emerald-300"
+                                >
+                                    Atomicity
+                                </dt>
+                                <dd
+                                    class="mt-1 text-sm text-slate-400"
+                                >
+                                    All operations commit, or none do.
+                                </dd>
+                            </div>
+                            <div>
+                                <dt
+                                    class="font-bold text-emerald-300"
+                                >
+                                    Consistency
+                                </dt>
+                                <dd
+                                    class="mt-1 text-sm text-slate-400"
+                                >
+                                    A committed transaction preserves
+                                    defined database invariants.
+                                </dd>
+                            </div>
+                            <div>
+                                <dt
+                                    class="font-bold text-emerald-300"
+                                >
+                                    Isolation
+                                </dt>
+                                <dd
+                                    class="mt-1 text-sm text-slate-400"
+                                >
+                                    Concurrent transactions behave
+                                    according to the chosen isolation
+                                    level.
+                                </dd>
+                            </div>
+                            <div>
+                                <dt
+                                    class="font-bold text-emerald-300"
+                                >
+                                    Durability
+                                </dt>
+                                <dd
+                                    class="mt-1 text-sm text-slate-400"
+                                >
+                                    Committed data survives failures,
+                                    subject to the database's
+                                    guarantees.
+                                </dd>
+                            </div>
+                        </dl>
+                        <div
+                            class="mt-7 border-t border-emerald-400/10 pt-5"
+                        >
+                            <p
+                                class="text-sm font-semibold text-slate-300"
+                            >
+                                Typical fit
+                            </p>
+                            <p
+                                class="mt-2 text-sm leading-6 text-slate-400"
+                            >
+                                Bank transfers, orders, inventory,
+                                accounting, reservations, and other
+                                workflows where incorrect state is
+                                costly.
+                            </p>
+                        </div>
+                    </article>
+
+                    <article
+                        class="rounded-2xl border border-violet-400/20 bg-violet-400/5 p-6 sm:p-8"
+                    >
+                        <div
+                            class="flex items-start justify-between gap-4"
+                        >
+                            <div>
+                                <span
+                                    class="inline-flex rounded-full bg-violet-400/10 px-3 py-1 text-s font-bold uppercase tracking-wider text-violet-300"
+                                    >Availability & scale</span
+                                >
+                                <h2
+                                    class="mt-4 text-3xl font-bold text-white"
+                                >
+                                    BASE
+                                </h2>
+                            </div>
+                            <div
+                                class="rounded-xl bg-violet-400/10 p-3 text-violet-300"
+                                aria-hidden="true"
+                            >
+                                <svg
+                                    class="h-7 w-7"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                >
+                                    <path
+                                        d="M4 12a8 8 0 1 0 16 0 8 8 0 1 0-16 0Z"
+                                    />
+                                    <path d="M8 12h8M12 8v8" />
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="mt-4 leading-7 text-slate-400">
+                            A family of approaches that favors
+                            remaining responsive and scalable in
+                            distributed environments, often allowing
+                            replicas to converge over time.
+                        </p>
+                        <dl class="mt-7 grid gap-4 sm:grid-cols-2">
+                            <div>
+                                <dt class="font-bold text-violet-300">
+                                    Basically Available
+                                </dt>
+                                <dd
+                                    class="mt-1 text-sm text-slate-400"
+                                >
+                                    The system aims to keep responding
+                                    even during some failures.
+                                </dd>
+                            </div>
+                            <div>
+                                <dt class="font-bold text-violet-300">
+                                    Soft state
+                                </dt>
+                                <dd
+                                    class="mt-1 text-sm text-slate-400"
+                                >
+                                    State may change over time as
+                                    replicas synchronize.
+                                </dd>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <dt class="font-bold text-violet-300">
+                                    Eventually consistent
+                                </dt>
+                                <dd
+                                    class="mt-1 text-sm text-slate-400"
+                                >
+                                    If updates stop and the system can
+                                    communicate, replicas are expected
+                                    to converge eventually.
+                                </dd>
+                            </div>
+                        </dl>
+                        <div
+                            class="mt-7 border-t border-violet-400/10 pt-5"
+                        >
+                            <p
+                                class="text-sm font-semibold text-slate-300"
+                            >
+                                Typical fit
+                            </p>
+                            <p
+                                class="mt-2 text-sm leading-6 text-slate-400"
+                            >
+                                Feeds, likes, counters, product
+                                catalogs, caches, globally distributed
+                                content, and workloads that can
+                                tolerate short-lived stale reads.
+                            </p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section
+                id="acid-detail"
+                class="border-y border-slate-800 bg-slate-900/40"
+            >
+                <div
+                    class="mx-auto max-w-7xl px-5 py-14 sm:px-8 lg:py-20"
+                >
+                    <p
+                        class="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-400"
+                    >
+                        Letter by letter
+                    </p>
+                    <h2
+                        class="mt-3 text-3xl font-bold text-white sm:text-4xl"
+                    >
+                        ACID in PostgreSQL
+                    </h2>
+                    <p class="mt-4 leading-7 text-slate-400">
+                        Every one of these is something Postgres gives
+                        you automatically once you wrap statements in
+                        a transaction. Here is what each letter
+                        actually does, with the SQL that demonstrates
+                        it.
+                    </p>
+
+                    <div
+                        class="mt-10 rounded-2xl border border-emerald-400/20 bg-slate-950 p-6 sm:p-8"
+                    >
+                        <h3 class="text-xl font-bold text-white">
+                            A -- Atomicity
+                        </h3>
+                        <p class="mt-2 leading-7 text-slate-400">
+                            A transaction is one unit: either every
+                            statement in it takes effect, or none of
+                            them do. Money can never leave one account
+                            without arriving in the other, even if the
+                            server crashes mid-transaction.
+                        </p>
+                        <pre
+                            class="sql mt-4 overflow-x-auto rounded-xl border border-slate-800 bg-slate-900 p-4 text-sm text-slate-300"
+                        ><code>BEGIN;
+
+UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+UPDATE accounts SET balance = balance + 100 WHERE id = 2;
+
+COMMIT;
+-- If either UPDATE fails, or you run ROLLBACK instead of COMMIT,
+-- neither balance changes. There is no "half transfer" state.</code></pre>
+                        <pre class="mermaid mt-6">
+flowchart LR
+    A["BEGIN"] --> B["UPDATE accounts: balance -= 100 WHERE id=1"]
+    B --> C["UPDATE accounts: balance += 100 WHERE id=2"]
+    C --> D{"Both succeeded?"}
+    D -->|Yes| E["COMMIT: both balances updated"]
+    D -->|No| F["ROLLBACK: neither balance changed"]
+                        </pre>
+                    </div>
+
+                    <div
+                        class="mt-6 rounded-2xl border border-emerald-400/20 bg-slate-950 p-6 sm:p-8"
+                    >
+                        <h3 class="text-xl font-bold text-white">
+                            C -- Consistency
+                        </h3>
+                        <p class="mt-2 leading-7 text-slate-400">
+                            A committed transaction can never leave
+                            the database violating its own rules --
+                            constraints, foreign keys, and checks you
+                            defined. Postgres enforces this for you;
+                            it simply refuses to commit a transaction
+                            that would break an invariant.
+                        </p>
+                        <pre
+                            class="sql mt-4 overflow-x-auto rounded-xl border border-slate-800 bg-slate-900 p-4 text-sm text-slate-300"
+                        ><code>CREATE TABLE accounts (
+  id      serial PRIMARY KEY,
+  balance numeric NOT NULL CHECK (balance >= 0)
+);
+
+INSERT INTO accounts (id, balance) VALUES (1, -50);
+-- ERROR: new row for relation "accounts" violates
+--        check constraint "accounts_balance_check"
+-- The invariant "balance can never go negative" always holds.</code></pre>
+                    </div>
+
+                    <div
+                        class="mt-6 rounded-2xl border border-emerald-400/20 bg-slate-950 p-6 sm:p-8"
+                    >
+                        <h3 class="text-xl font-bold text-white">
+                            I -- Isolation
+                        </h3>
+                        <p class="mt-2 leading-7 text-slate-400">
+                            Concurrent transactions shouldn't see each
+                            other's half-finished work. Postgres
+                            defaults to
+                            <code
+                                class="rounded bg-slate-800 px-1.5 py-0.5 text-xs"
+                                >READ COMMITTED</code
+                            >, but you can ask for stronger guarantees
+                            like
+                            <code
+                                class="rounded bg-slate-800 px-1.5 py-0.5 text-xs"
+                                >SERIALIZABLE</code
+                            >
+                            when two transactions must not be allowed
+                            to conflict silently.
+                        </p>
+                        <pre
+                            class="sql mt-4 overflow-x-auto rounded-xl border border-slate-800 bg-slate-900 p-4 text-sm text-slate-300"
+                        ><code>-- Transaction A
+BEGIN;
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+SELECT balance FROM accounts WHERE id = 1; -- reads 100
+UPDATE accounts SET balance = balance - 50 WHERE id = 1;
+COMMIT;
+
+-- Transaction B, running concurrently, also reads balance = 100
+-- and tries to subtract 30. Postgres detects the conflict:
+-- ERROR: could not serialize access due to concurrent update
+-- Transaction B must retry instead of silently overwriting A's work.</code></pre>
+                        <pre class="mermaid mt-6">
+sequenceDiagram
+    participant A as Transaction A
+    participant DB as PostgreSQL
+    participant B as Transaction B
+    A->>DB: BEGIN (SERIALIZABLE)
+    B->>DB: BEGIN (SERIALIZABLE)
+    A->>DB: SELECT balance WHERE id=1 -> 100
+    B->>DB: SELECT balance WHERE id=1 -> 100
+    A->>DB: UPDATE balance = 100 - 50
+    A->>DB: COMMIT (succeeds)
+    B->>DB: UPDATE balance = 100 - 30
+    B->>DB: COMMIT
+    DB-->>B: ERROR: could not serialize access
+    Note over B,DB: B must retry with the now-current balance
+                        </pre>
+                    </div>
+
+                    <div
+                        class="mt-6 rounded-2xl border border-emerald-400/20 bg-slate-950 p-6 sm:p-8"
+                    >
+                        <h3 class="text-xl font-bold text-white">
+                            D -- Durability
+                        </h3>
+                        <p class="mt-2 leading-7 text-slate-400">
+                            Once Postgres tells the client "COMMIT"
+                            succeeded, that data survives a crash or
+                            power loss. It does this by writing every
+                            change to the Write-Ahead Log (WAL) on
+                            disk <em>before</em> acknowledging the
+                            commit.
+                        </p>
+                        <pre
+                            class="sql mt-4 overflow-x-auto rounded-xl border border-slate-800 bg-slate-900 p-4 text-sm text-slate-300"
+                        ><code>SHOW fsync;               -- on: changes are flushed to disk, not just OS cache
+SHOW synchronous_commit;  -- on: COMMIT waits until the WAL write is flushed
+
+-- If the server crashes right after COMMIT returns, on restart Postgres
+-- replays the WAL and the committed row is still there.</code></pre>
+                        <pre class="mermaid mt-6">
+flowchart LR
+    A["Client: COMMIT"] --> B["Write change to WAL on disk"]
+    B --> C["Acknowledge commit to client"]
+    C --> D["Crash / power loss"]
+    D --> E["Restart: recovery replays WAL"]
+    E --> F["Committed data is intact"]
+                        </pre>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="cap"
+                class="border-y border-slate-800 bg-slate-900/40"
+            >
+                <div
+                    class="mx-auto max-w-7xl px-5 py-14 sm:px-8 lg:py-20"
+                >
+                    <div class="">
+                        <h2
+                            class="mt-3 text-3xl font-bold text-white sm:text-4xl"
+                        >
+                            CAP theorem: the constraint behind the
+                            trade-off
+                        </h2>
+                        <p class="mt-5 leading-7 text-slate-400">
+                            CAP says that a distributed system cannot
+                            simultaneously guarantee all three of
+                            these properties
+                            <em>when a network partition occurs</em>.
+                            You must choose how the system behaves
+                            during that partition.
+                        </p>
+                    </div>
+
+                    <div class="mt-10 grid gap-4 md:grid-cols-3">
+                        <div
+                            class="rounded-2xl border border-slate-800 bg-slate-950 p-6"
+                        >
+                            <div
+                                class="text-2xl font-black text-white"
+                            >
+                                C
+                            </div>
+                            <h3 class="mt-2 font-bold text-white">
+                                Consistency
+                            </h3>
+                            <p
+                                class="mt-2 text-sm leading-6 text-slate-400"
+                            >
+                                Every read sees the latest successful
+                                write (linearizable behavior).
+                            </p>
+                        </div>
+                        <div
+                            class="rounded-2xl border border-slate-800 bg-slate-950 p-6"
+                        >
+                            <div
+                                class="text-2xl font-black text-white"
+                            >
+                                A
+                            </div>
+                            <h3 class="mt-2 font-bold text-white">
+                                Availability
+                            </h3>
+                            <p
+                                class="mt-2 text-sm leading-6 text-slate-400"
+                            >
+                                Every request receives a non-error
+                                response, though it may not contain
+                                the newest data.
+                            </p>
+                        </div>
+                        <div
+                            class="rounded-2xl border border-slate-800 bg-slate-950 p-6"
+                        >
+                            <div
+                                class="text-2xl font-black text-white"
+                            >
+                                P
+                            </div>
+                            <h3 class="mt-2 font-bold text-white">
+                                Partition tolerance
+                            </h3>
+                            <p
+                                class="mt-2 text-sm leading-6 text-slate-400"
+                            >
+                                The system continues operating despite
+                                messages being delayed or lost between
+                                nodes.
+                            </p>
+                        </div>
+                    </div>
+
+                    <pre class="mermaid mt-8">
+flowchart TD
+    P["Network partition occurs (a replica can't reach the primary)"] --> C{"What does the system do?"}
+    C -->|"Favor Consistency"| Reject["Reject/block requests on the cut-off side until it heals"]
+    C -->|"Favor Availability"| Serve["Keep serving reads and writes, some of it may be stale"]
+                    </pre>
+
+                    <div
+                        class="mt-8 rounded-2xl border border-amber-400/20 bg-amber-400/5 p-6"
+                    >
+                        <p class="font-semibold text-amber-200">
+                            Important correction
+                        </p>
+                        <p
+                            class="mt-2 text-sm leading-6 text-slate-400"
+                        >
+                            CAP is not simply "ACID vs BASE," and it
+                            does not say a database must choose two
+                            letters all the time. Partition tolerance
+                            is generally required in a distributed
+                            system; the key CAP decision is what the
+                            system sacrifices during a partition:
+                            <strong class="text-slate-200"
+                                >consistency or availability</strong
+                            >. A system can also offer ACID
+                            transactions while being distributed, and
+                            BASE is not a single standardized
+                            protocol.
+                        </p>
+                    </div>
+
+                    <div
+                        class="mt-8 rounded-2xl border border-slate-800 bg-slate-950 p-6"
+                    >
+                        <div
+                            class="flex flex-col gap-5 md:flex-row md:items-center md:justify-between"
+                        >
+                            <div>
+                                <p class="font-semibold text-white">
+                                    Want the formal theory?
+                                </p>
+                                <p
+                                    class="mt-1 text-sm text-slate-400"
+                                >
+                                    Read the original CAP theorem
+                                    paper and a concise overview
+                                    before treating CAP as a database
+                                    product checklist.
+                                </p>
+                            </div>
+                            <div class="flex flex-wrap gap-3">
+                                <a
+                                    href="https://www.infoq.com/articles/cap-twelve-years-later-how-the-rules-have-changed/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="rounded-lg border border-slate-700 px-4 py-2 text-sm font-medium hover:border-slate-500"
+                                    >CAP overview ↗</a
+                                >
+                                <a
+                                    href="https://dl.acm.org/doi/10.1145/564585.564601"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="rounded-lg border border-slate-700 px-4 py-2 text-sm font-medium hover:border-slate-500"
+                                    >Original paper ↗</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="base-detail"
+                class="mx-auto max-w-7xl px-5 py-14 sm:px-8 lg:py-20"
+            >
+                <p
+                    class="text-sm font-semibold uppercase tracking-[0.2em] text-violet-400"
+                >
+                    Getting BASE behavior
+                </p>
+                <h2
+                    class="mt-3 text-3xl font-bold text-white sm:text-4xl"
+                >
+                    BASE isn't a Postgres mode -- it's architecture on
+                    top
+                </h2>
+                <p class="mt-4 leading-7 text-slate-400">
+                    A single Postgres primary is ACID. You get
+                    BASE-style trade-offs when you deliberately add
+                    pieces that relax strict consistency in exchange
+                    for availability or scale: asynchronous replicas,
+                    precomputed counters, materialized views refreshed
+                    on a schedule. Below are the two most common ways
+                    teams do this with Postgres.
+                </p>
+
+                <div
+                    class="mt-8 rounded-2xl border border-violet-400/20 bg-slate-950 p-6 sm:p-8"
+                >
+                    <h3 class="text-xl font-bold text-white">
+                        1. Asynchronous replication ("basically
+                        available")
+                    </h3>
+                    <p class="mt-2 leading-7 text-slate-400">
+                        A primary accepts writes and immediately
+                        acknowledges them without waiting for a
+                        replica to catch up. Reads sent to the replica
+                        (common for scaling out read traffic) can
+                        briefly return stale data. This is the "soft
+                        state" / "eventually consistent" part of BASE
+                        in practice.
+                    </p>
+                    <pre
+                        class="sql mt-4 overflow-x-auto rounded-xl border border-slate-800 bg-slate-900 p-4 text-sm text-slate-300"
+                    ><code>-- On the primary: don't wait for the replica to confirm before
+-- acknowledging the write to the client
+ALTER SYSTEM SET synchronous_commit = 'local';
+
+-- postgresql.conf on the replica:
+-- primary_conninfo = 'host=primary-db port=5432 user=replicator ...'
+-- hot_standby = on
+
+-- The app writes to the primary...
+INSERT INTO post_likes (post_id, user_id) VALUES (42, 7);
+-- ...and COMMIT returns right away. The replica applies this
+-- WAL record a moment later, asynchronously.</code></pre>
+                    <pre class="mermaid mt-6">
+sequenceDiagram
+    participant App as Application
+    participant Primary as Primary (writes)
+    participant Replica as Read replica (async)
+    App->>Primary: INSERT INTO post_likes ...
+    Primary-->>App: COMMIT acknowledged (durable on primary)
+    Primary--)Replica: WAL streamed asynchronously
+    App->>Replica: SELECT count(*) FROM post_likes WHERE post_id=42
+    Replica-->>App: Returns count from a moment ago (stale)
+    Note over Replica: A few ms/sec later, replica catches up
+                    </pre>
+                    <p class="mt-4 text-sm leading-6 text-slate-400">
+                        This is exactly why "read your own write" bugs
+                        happen: a user likes a post, the app reads it
+                        back from a lagging replica, and the like
+                        briefly appears missing. Whether that's
+                        acceptable is a product decision, not a
+                        database one.
+                    </p>
+                </div>
+
+                <div
+                    class="mt-6 rounded-2xl border border-violet-400/20 bg-slate-950 p-6 sm:p-8"
+                >
+                    <h3 class="text-xl font-bold text-white">
+                        2. Precomputed / periodically refreshed views
+                        ("eventually consistent")
+                    </h3>
+                    <p class="mt-2 leading-7 text-slate-400">
+                        Instead of computing an expensive aggregate
+                        (like counts, feeds, dashboards) on every
+                        read, compute it once and refresh it on a
+                        schedule. Readers get a fast answer that is
+                        correct as of the last refresh, not as of
+                        right now.
+                    </p>
+                    <pre
+                        class="sql mt-4 overflow-x-auto rounded-xl border border-slate-800 bg-slate-900 p-4 text-sm text-slate-300"
+                    ><code>CREATE MATERIALIZED VIEW like_counts AS
+SELECT post_id, count(*) AS likes
+FROM post_likes
+GROUP BY post_id;
+
+CREATE UNIQUE INDEX ON like_counts (post_id);
+
+-- Run every 30s via pg_cron, a worker, or a scheduled job --
+-- not on every single like:
+REFRESH MATERIALIZED VIEW CONCURRENTLY like_counts;
+
+-- Reads are cheap and fast, but "likes" can lag reality by up to 30s.
+SELECT likes FROM like_counts WHERE post_id = 42;</code></pre>
+                </div>
+            </section>
+
+            <section
+                id="comparison"
+                class="border-y border-slate-800 bg-slate-900/40"
+            >
+                <div
+                    class="mx-auto max-w-7xl px-5 py-14 sm:px-8 lg:py-20"
+                >
+                    <div class="max-w-3xl">
+                        <p
+                            class="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-400"
+                        >
+                            Side by side
+                        </p>
+                        <h2
+                            class="mt-3 text-3xl font-bold text-white sm:text-4xl"
+                        >
+                            What actually changes?
+                        </h2>
+                    </div>
+
+                    <div
+                        class="mt-8 overflow-hidden rounded-2xl border border-slate-800"
+                    >
+                        <div class="overflow-x-auto">
+                            <table
+                                class="w-full min-w-[720px] text-left text-sm"
+                            >
+                                <thead
+                                    class="bg-slate-900 text-slate-300"
+                                >
+                                    <tr>
+                                        <th
+                                            class="px-5 py-4 font-semibold"
+                                        >
+                                            Dimension
+                                        </th>
+                                        <th
+                                            class="px-5 py-4 font-semibold text-emerald-300"
+                                        >
+                                            ACID-oriented
+                                        </th>
+                                        <th
+                                            class="px-5 py-4 font-semibold text-violet-300"
+                                        >
+                                            BASE-oriented
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody
+                                    class="divide-y divide-slate-800 bg-slate-950"
+                                >
+                                    <tr>
+                                        <td
+                                            class="px-5 py-4 font-medium text-slate-200"
+                                        >
+                                            Primary goal
+                                        </td>
+                                        <td
+                                            class="px-5 py-4 text-slate-400"
+                                        >
+                                            Correctness and
+                                            transaction guarantees
+                                        </td>
+                                        <td
+                                            class="px-5 py-4 text-slate-400"
+                                        >
+                                            Availability, scale, and
+                                            resilience
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td
+                                            class="px-5 py-4 font-medium text-slate-200"
+                                        >
+                                            Consistency
+                                        </td>
+                                        <td
+                                            class="px-5 py-4 text-slate-400"
+                                        >
+                                            Strong transactional
+                                            guarantees are common
+                                        </td>
+                                        <td
+                                            class="px-5 py-4 text-slate-400"
+                                        >
+                                            Stale reads may be
+                                            acceptable
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td
+                                            class="px-5 py-4 font-medium text-slate-200"
+                                        >
+                                            Transactions
+                                        </td>
+                                        <td
+                                            class="px-5 py-4 text-slate-400"
+                                        >
+                                            Multi-step atomic
+                                            transactions are central
+                                        </td>
+                                        <td
+                                            class="px-5 py-4 text-slate-400"
+                                        >
+                                            Often favors simpler
+                                            operations and
+                                            application-level conflict
+                                            handling
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td
+                                            class="px-5 py-4 font-medium text-slate-200"
+                                        >
+                                            Replication
+                                        </td>
+                                        <td
+                                            class="px-5 py-4 text-slate-400"
+                                        >
+                                            Can be synchronous or
+                                            otherwise strongly
+                                            coordinated
+                                        </td>
+                                        <td
+                                            class="px-5 py-4 text-slate-400"
+                                        >
+                                            Asynchronous replication
+                                            and convergence are common
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td
+                                            class="px-5 py-4 font-medium text-slate-200"
+                                        >
+                                            Failure behavior
+                                        </td>
+                                        <td
+                                            class="px-5 py-4 text-slate-400"
+                                        >
+                                            May reject/block
+                                            operations to preserve
+                                            guarantees
+                                        </td>
+                                        <td
+                                            class="px-5 py-4 text-slate-400"
+                                        >
+                                            May continue serving with
+                                            partial or stale state
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td
+                                            class="px-5 py-4 font-medium text-slate-200"
+                                        >
+                                            In Postgres terms
+                                        </td>
+                                        <td
+                                            class="px-5 py-4 text-slate-400"
+                                        >
+                                            A plain transaction on the
+                                            primary:
+                                            <code
+                                                class="rounded bg-slate-800 px-1.5 py-0.5 text-xs"
+                                                >BEGIN ...
+                                                COMMIT</code
+                                            >
+                                        </td>
+                                        <td
+                                            class="px-5 py-4 text-slate-400"
+                                        >
+                                            Async replica reads,
+                                            materialized views,
+                                            <code
+                                                class="rounded bg-slate-800 px-1.5 py-0.5 text-xs"
+                                                >synchronous_commit =
+                                                local</code
+                                            >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td
+                                            class="px-5 py-4 font-medium text-slate-200"
+                                        >
+                                            Common fit
+                                        </td>
+                                        <td
+                                            class="px-5 py-4 text-slate-400"
+                                        >
+                                            Money, stock, orders,
+                                            ledgers
+                                        </td>
+                                        <td
+                                            class="px-5 py-4 text-slate-400"
+                                        >
+                                            Feeds, catalogs,
+                                            telemetry, global content
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="mx-auto max-w-7xl px-5 py-14 sm:px-8 lg:py-20"
+            >
+                <div class="grid gap-10 lg:grid-cols-2">
+                    <div>
+                        <p
+                            class="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-400"
+                        >
+                            Concrete examples
+                        </p>
+                        <h2
+                            class="mt-3 text-3xl font-bold text-white"
+                        >
+                            Same company, different data can use
+                            different guarantees
+                        </h2>
+                        <div class="mt-7 space-y-4">
+                            <div
+                                class="rounded-xl border border-slate-800 bg-slate-950 p-5"
+                            >
+                                <p class="font-semibold text-white">
+                                    E-commerce checkout -- use ACID
+                                </p>
+                                <p
+                                    class="mt-2 text-sm leading-6 text-slate-400"
+                                >
+                                    Payment, order creation, and
+                                    inventory reservation need strong
+                                    transactional guarantees.
+                                    Overselling a scarce item is worse
+                                    than briefly rejecting checkout.
+                                </p>
+                                <pre
+                                    class="sql mt-3 overflow-x-auto rounded-lg border border-slate-800 bg-slate-900 p-3 text-xs text-slate-300"
+                                ><code>BEGIN;
+UPDATE inventory SET stock = stock - 1
+  WHERE product_id = 9 AND stock > 0;
+-- 0 rows updated means "out of stock": abort instead of overselling
+INSERT INTO orders (product_id, user_id) VALUES (9, 7);
+COMMIT;</code></pre>
+                            </div>
+                            <div
+                                class="rounded-xl border border-slate-800 bg-slate-950 p-5"
+                            >
+                                <p class="font-semibold text-white">
+                                    Social-media likes -- use BASE
+                                </p>
+                                <p
+                                    class="mt-2 text-sm leading-6 text-slate-400"
+                                >
+                                    A user can usually tolerate seeing
+                                    "1,239 likes" for a moment while
+                                    another replica says "1,240."
+                                    Availability and global scale
+                                    matter more than an immediately
+                                    identical count.
+                                </p>
+                                <pre
+                                    class="sql mt-3 overflow-x-auto rounded-lg border border-slate-800 bg-slate-900 p-3 text-xs text-slate-300"
+                                ><code>-- Write hits the primary and returns immediately
+INSERT INTO post_likes (post_id, user_id) VALUES (42, 7);
+-- Read hits a replica/materialized view, may lag a bit
+SELECT likes FROM like_counts WHERE post_id = 42;</code></pre>
+                            </div>
+                            <div
+                                class="rounded-xl border border-slate-800 bg-slate-950 p-5"
+                            >
+                                <p class="font-semibold text-white">
+                                    Product catalog -- mix both
+                                </p>
+                                <p
+                                    class="mt-2 text-sm leading-6 text-slate-400"
+                                >
+                                    A price or compliance field needs
+                                    stronger guarantees (ACID, on the
+                                    primary) than a "customers also
+                                    viewed" counter (BASE,
+                                    precomputed). Real systems
+                                    frequently mix consistency
+                                    strategies per field.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="decision">
+                        <p
+                            class="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-400"
+                        >
+                            Decision guide
+                        </p>
+                        <h2
+                            class="mt-3 text-3xl font-bold text-white"
+                        >
+                            Ask these questions first
+                        </h2>
+                        <ol class="mt-7 space-y-5">
+                            <li class="flex gap-4">
+                                <span
+                                    class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-400 font-bold text-slate-950"
+                                    >1</span
+                                >
+                                <div>
+                                    <p
+                                        class="font-semibold text-white"
+                                    >
+                                        Can stale data cause harm?
+                                    </p>
+                                    <p
+                                        class="mt-1 text-sm leading-6 text-slate-400"
+                                    >
+                                        If yes, prefer stronger
+                                        consistency for that
+                                        operation.
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="flex gap-4">
+                                <span
+                                    class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-400 font-bold text-slate-950"
+                                    >2</span
+                                >
+                                <div>
+                                    <p
+                                        class="font-semibold text-white"
+                                    >
+                                        Must the service keep
+                                        answering during partitions?
+                                    </p>
+                                    <p
+                                        class="mt-1 text-sm leading-6 text-slate-400"
+                                    >
+                                        If yes, you may need to accept
+                                        stale or conflicting state and
+                                        reconcile later.
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="flex gap-4">
+                                <span
+                                    class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-400 font-bold text-slate-950"
+                                    >3</span
+                                >
+                                <div>
+                                    <p
+                                        class="font-semibold text-white"
+                                    >
+                                        What does "consistent"
+                                        actually mean?
+                                    </p>
+                                    <p
+                                        class="mt-1 text-sm leading-6 text-slate-400"
+                                    >
+                                        Distinguish transaction
+                                        consistency, read-after-write
+                                        guarantees, causal
+                                        consistency, and
+                                        linearizability. They are not
+                                        interchangeable.
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="flex gap-4">
+                                <span
+                                    class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-400 font-bold text-slate-950"
+                                    >4</span
+                                >
+                                <div>
+                                    <p
+                                        class="font-semibold text-white"
+                                    >
+                                        What happens after a conflict?
+                                    </p>
+                                    <p
+                                        class="mt-1 text-sm leading-6 text-slate-400"
+                                    >
+                                        For eventually consistent
+                                        systems, define conflict
+                                        resolution, idempotency,
+                                        retries, and reconciliation --
+                                        not just "it will eventually
+                                        sync."
+                                    </p>
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="mx-auto max-w-7xl px-5 py-14 sm:px-8 lg:py-20"
+            >
+                <div
+                    class="rounded-3xl border border-cyan-400/20 bg-cyan-400/5 p-7 sm:p-10"
+                >
+                    <p
+                        class="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-400"
+                    >
+                        One more useful concept
+                    </p>
+                    <h2 class="mt-3 text-3xl font-bold text-white">
+                        CAP is about partitions; PACELC explains the
+                        normal case too
+                    </h2>
+                    <p class="mt-4 leading-7 text-slate-400">
+                        PACELC extends the discussion:
+                        <strong class="text-slate-200"
+                            >if there is a Partition
+                            <span aria-hidden="true">(P)</span>,
+                            choose Availability
+                            <span aria-hidden="true">(A)</span> or
+                            Consistency
+                            <span aria-hidden="true">(C)</span>; Else
+                            <span aria-hidden="true">(E)</span>, when
+                            the system is healthy, choose Latency
+                            <span aria-hidden="true">(L)</span> or
+                            Consistency
+                            <span aria-hidden="true">(C)</span
+                            >.</strong
+                        >
+                        This helps explain why two distributed
+                        databases can both tolerate partitions yet
+                        make different latency/consistency trade-offs
+                        during normal operation.
+                    </p>
+                    <p class="mt-4 leading-7 text-slate-400">
+                        A Postgres primary with a synchronous replica
+                        lives on the "choose Consistency" side even
+                        when healthy: every commit waits on the
+                        replica, adding latency. Switch
+                        <code
+                            class="rounded bg-slate-800 px-1.5 py-0.5 text-xs"
+                            >synchronous_commit</code
+                        >
+                        to
+                        <code
+                            class="rounded bg-slate-800 px-1.5 py-0.5 text-xs"
+                            >local</code
+                        >
+                        or
+                        <code
+                            class="rounded bg-slate-800 px-1.5 py-0.5 text-xs"
+                            >off</code
+                        >, and you've moved to the "choose Latency"
+                        side, trading a little consistency for speed
+                        even when nothing is broken.
+                    </p>
+                </div>
+            </section>
+        </main>
+
+        <footer class="border-t border-slate-800">
+            <div
+                class="mx-auto flex md:justify-end max-w-7xl flex-col gap-3 px-5 py-8 text-sm text-slate-500 sm:px-8 sm:flex-row sm:items-center sm:justify-between"
+            >
+                <a href="#top" class="text-slate-300 hover:text-white"
+                    >Back to top ↑</a
+                >
+            </div>
+        </footer>
+    </body>
+</html>
