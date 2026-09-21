@@ -78,6 +78,26 @@
                 backdrop-filter: blur(2px);
             }
 
+            .vertical-tabs {
+                position: sticky;
+                top: 1rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+                flex-shrink: 0;
+                z-index: 20;
+            }
+
+            .vertical-tab {
+                writing-mode: vertical-rl;
+                text-orientation: mixed;
+                min-height: 9rem;
+                width: 3.25rem;
+                justify-content: center;
+                padding: 0.75rem 0.65rem;
+                border-radius: 0.9rem;
+            }
+
             @media (max-width: 640px) {
                 dialog {
                     width: 100vw;
@@ -97,219 +117,241 @@
         </style>
     </head>
 
-    <body class="flex min-h-screen flex-col items-center gap-3 bg-[#050507] p-4">
-        <nav class="flex shrink-0 items-center gap-3">
-            <a
-                href="/#/aws-flashcards"
-                class="z-10 inline-flex shrink-0 items-center gap-2 self-center rounded-full bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-100 no-underline shadow-md transition hover:-translate-y-0.5 hover:bg-slate-900 hover:shadow-lg active:translate-y-0 sm:px-5 sm:py-2.5 sm:text-sm"
-                title="Go to AWS Flashcards"
-            >
-                <svg
-                    viewBox="0 0 24 24"
-                    width="20"
-                    height="20"
-                    fill="currentColor"
-                >
-                    <path
-                        d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5L13 3.5zM8 13h8v2H8zm0 4h5v2H8z"
-                    />
-                </svg>
-                <span>AWS Flashcards</span>
-            </a>
-            <button
-                type="button"
-                onclick="document.getElementById('deep-dive').showModal()"
-                class="z-10 inline-flex shrink-0 items-center gap-2 self-center rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1.5 text-xs font-semibold text-amber-300 shadow-md transition hover:-translate-y-0.5 hover:bg-amber-400/20 active:translate-y-0 sm:px-5 sm:py-2.5 sm:text-sm"
-            >
-                <span>Deep dive</span>
-            </button>
-        </nav>
-
-        <!-- ============ CARD ============ -->
-        <div class="w-full max-w-3xl">
-            <div
-                class="relative overflow-hidden rounded-2xl bg-[#07070b] font-sans text-white"
-            >
-                <!-- Background layers -->
-                <div class="absolute inset-0 grid-bg"></div>
-                <div
-                    class="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-amber-500/[0.13] blur-3xl sm:h-72 sm:w-72 md:h-96 md:w-96"
-                ></div>
-                <div
-                    class="absolute -bottom-28 -left-24 h-48 w-48 rounded-full bg-sky-500/[0.09] blur-3xl sm:h-64 sm:w-64 md:h-80 md:w-80"
-                ></div>
-                <div
-                    class="absolute left-0 right-0 top-0 h-1.5 bg-gradient-to-r from-amber-300 via-orange-500 to-amber-300"
-                ></div>
-                <div
-                    class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50"
-                ></div>
-
-                <!-- Content -->
-                <div
-                    class="relative z-10 flex flex-col px-6 py-8 sm:px-10 sm:py-10 md:px-14 md:py-12"
-                >
-                    <!-- Header -->
-                    <header class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div
-                                class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-amber-400/30 bg-amber-400/10 sm:h-11 sm:w-11"
-                            >
-                                <span class="text-base leading-none sm:text-xl"
-                                    >⚠️</span
-                                >
-                            </div>
-                            <span
-                                class="font-mono text-xs uppercase tracking-widest text-amber-400/90 sm:text-sm"
-                            >
-                                CloudWatch × Terraform
-                            </span>
-                        </div>
-                        <span
-                            class="font-mono text-xs text-zinc-600 sm:text-sm"
-                        >
-                            @kasir-barati
-                        </span>
-                    </header>
-
-                    <!-- Headline + sub -->
-                    <div class="mt-6 sm:mt-8 md:mt-10">
-                        <h1
-                            class="text-3xl font-black leading-tight tracking-tight sm:text-5xl md:text-6xl"
-                        >
-                            Terraform won't
-                            <span class="text-amber-400">delete</span>
-                            what it never created.
-                        </h1>
-
-                        <p
-                            class="mt-3 text-sm leading-relaxed text-zinc-400 sm:mt-5 sm:text-base md:text-lg"
-                        >
-                            Skip defining your
-                            <span class="font-semibold text-zinc-100"
-                                >CloudWatch log groups</span
-                            >
-                            in Terraform and AWS creates them for you
-                            without retention policy
-                        </p>
-                    </div>
-
-                    <!-- Pain points -->
-                    <div class="mt-5 space-y-3 sm:mt-8 sm:space-y-4">
+    <body
+        class="flex min-h-screen items-start justify-center gap-4 bg-[#050507] p-4"
+    >
+        <main
+            class="flex w-full max-w-4xl items-start justify-center gap-4"
+        >
+            <div class="w-full max-w-3xl">
+                <div class="w-full max-w-3xl">
+                    <div
+                        class="relative overflow-hidden rounded-2xl bg-[#07070b] font-sans text-white"
+                    >
+                        <!-- Background layers -->
+                        <div class="absolute inset-0 grid-bg"></div>
                         <div
-                            class="flex items-center gap-4 rounded-xl border border-white/10 bg-gradient-to-r from-white/[0.055] to-white/[0.012] px-4 py-3.5 sm:gap-5 sm:rounded-2xl sm:px-6 sm:py-5"
-                        >
-                            <div
-                                class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-base sm:h-12 sm:w-12 sm:text-xl"
-                            >
-                                ♾️
-                            </div>
-                            <div class="min-w-0">
-                                <div
-                                    class="text-sm font-bold leading-tight sm:text-lg md:text-xl"
-                                >
-                                    Logs never expire
-                                </div>
-                                <div
-                                    class="mt-1 text-xs leading-snug text-zinc-500 sm:text-sm md:text-base"
-                                >
-                                    No retention policy means they're
-                                    stored and billed forever.
-                                </div>
-                            </div>
-                        </div>
-
+                            class="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-amber-500/[0.13] blur-3xl sm:h-72 sm:w-72 md:h-96 md:w-96"
+                        ></div>
                         <div
-                            class="flex items-center gap-4 rounded-xl border border-white/10 bg-gradient-to-r from-white/[0.055] to-white/[0.012] px-4 py-3.5 sm:gap-5 sm:rounded-2xl sm:px-6 sm:py-5"
-                        >
-                            <div
-                                class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-base sm:h-12 sm:w-12 sm:text-xl"
-                            >
-                                👻
-                            </div>
-                            <div class="min-w-0">
-                                <div
-                                    class="text-sm font-bold leading-tight sm:text-lg md:text-xl"
-                                >
-                                    Invisible to Terraform
-                                </div>
-                                <div
-                                    class="mt-1 text-xs leading-snug text-zinc-500 sm:text-sm md:text-base"
-                                >
-                                    It was never in your state file.
-                                    Plan and destroy can't see it.
-                                </div>
-                            </div>
-                        </div>
-
+                            class="absolute -bottom-28 -left-24 h-48 w-48 rounded-full bg-sky-500/[0.09] blur-3xl sm:h-64 sm:w-64 md:h-80 md:w-80"
+                        ></div>
                         <div
-                            class="flex items-center gap-4 rounded-xl border border-amber-400/25 bg-gradient-to-r from-amber-400/[0.12] to-amber-400/[0.02] px-4 py-3.5 sm:gap-5 sm:rounded-2xl sm:px-6 sm:py-5"
-                        >
-                            <div
-                                class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-amber-400/25 bg-amber-400/10 text-base sm:h-12 sm:w-12 sm:text-xl"
-                            >
-                                💥
-                            </div>
-                            <div class="min-w-0">
-                                <div
-                                    class="text-sm font-bold leading-tight text-amber-300 sm:text-lg md:text-xl"
-                                >
-                                    Survives terraform destroy
-                                </div>
-                                <div
-                                    class="mt-1 text-xs leading-snug text-zinc-400 sm:text-sm md:text-base"
-                                >
-                                    Your whole stack is gone. The log
-                                    group isn't (this might be ideal
-                                    in some scenarios though).
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Bottom block -->
-                    <div class="mt-6 sm:mt-8 md:mt-10">
-                        <!-- Code -->
+                            class="absolute left-0 right-0 top-0 h-1.5 bg-gradient-to-r from-amber-300 via-orange-500 to-amber-300"
+                        ></div>
                         <div
-                            class="rounded-xl border border-white/10 bg-[#0b0b12] px-4 pb-4 pt-3 sm:rounded-2xl sm:px-6 sm:pb-5 sm:pt-4"
+                            class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50"
+                        ></div>
+
+                        <!-- Content -->
+                        <div
+                            class="relative z-10 flex flex-col px-6 py-8 sm:px-10 sm:py-10 md:px-14 md:py-12"
                         >
-                            <div class="mb-3 flex items-center gap-2 sm:mb-4">
+                            <!-- Header -->
+                            <header
+                                class="flex items-center justify-between"
+                            >
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-amber-400/30 bg-amber-400/10 sm:h-11 sm:w-11"
+                                    >
+                                        <span
+                                            class="text-base leading-none sm:text-xl"
+                                            >⚠️</span
+                                        >
+                                    </div>
+                                    <span
+                                        class="font-mono text-xs uppercase tracking-widest text-amber-400/90 sm:text-sm"
+                                    >
+                                        CloudWatch × Terraform
+                                    </span>
+                                </div>
                                 <span
-                                    class="h-3 w-3 rounded-full bg-[#ff5f57]"
-                                ></span>
-                                <span
-                                    class="h-3 w-3 rounded-full bg-[#febc2e]"
-                                ></span>
-                                <span
-                                    class="h-3 w-3 rounded-full bg-[#28c840]"
-                                ></span>
-                                <span
-                                    class="ml-3 font-mono text-xs text-zinc-600 sm:text-sm"
-                                    >main.tf</span
+                                    class="font-mono text-xs text-zinc-600 sm:text-sm"
                                 >
+                                    @kasir-barati
+                                </span>
+                            </header>
+
+                            <!-- Headline + sub -->
+                            <div class="mt-6 sm:mt-8 md:mt-10">
+                                <h1
+                                    class="text-3xl font-black leading-tight tracking-tight sm:text-5xl md:text-6xl"
+                                >
+                                    Terraform won't
+                                    <span class="text-amber-400"
+                                        >delete</span
+                                    >
+                                    what it never created.
+                                </h1>
+
+                                <p
+                                    class="mt-3 text-sm leading-relaxed text-zinc-400 sm:mt-5 sm:text-base md:text-lg"
+                                >
+                                    Skip defining your
+                                    <span
+                                        class="font-semibold text-zinc-100"
+                                        >CloudWatch log groups</span
+                                    >
+                                    in Terraform and AWS creates them
+                                    for you without retention policy
+                                </p>
                             </div>
-                            <pre
-                                class="overflow-x-auto whitespace-pre font-mono text-xs leading-relaxed sm:text-sm md:text-base"
-                            ><span class="text-fuchsia-400">resource</span> <span class="text-amber-300">"aws_cloudwatch_log_group"</span> <span class="text-emerald-300">"app"</span> <span class="text-zinc-500">{</span>
+
+                            <!-- Pain points -->
+                            <div
+                                class="mt-5 space-y-3 sm:mt-8 sm:space-y-4"
+                            >
+                                <div
+                                    class="flex items-center gap-4 rounded-xl border border-white/10 bg-gradient-to-r from-white/[0.055] to-white/[0.012] px-4 py-3.5 sm:gap-5 sm:rounded-2xl sm:px-6 sm:py-5"
+                                >
+                                    <div
+                                        class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-base sm:h-12 sm:w-12 sm:text-xl"
+                                    >
+                                        ♾️
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div
+                                            class="text-sm font-bold leading-tight sm:text-lg md:text-xl"
+                                        >
+                                            Logs never expire
+                                        </div>
+                                        <div
+                                            class="mt-1 text-xs leading-snug text-zinc-500 sm:text-sm md:text-base"
+                                        >
+                                            No retention policy means
+                                            they're stored and billed
+                                            forever.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="flex items-center gap-4 rounded-xl border border-white/10 bg-gradient-to-r from-white/[0.055] to-white/[0.012] px-4 py-3.5 sm:gap-5 sm:rounded-2xl sm:px-6 sm:py-5"
+                                >
+                                    <div
+                                        class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-base sm:h-12 sm:w-12 sm:text-xl"
+                                    >
+                                        👻
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div
+                                            class="text-sm font-bold leading-tight sm:text-lg md:text-xl"
+                                        >
+                                            Invisible to Terraform
+                                        </div>
+                                        <div
+                                            class="mt-1 text-xs leading-snug text-zinc-500 sm:text-sm md:text-base"
+                                        >
+                                            It was never in your state
+                                            file. Plan and destroy
+                                            can't see it.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="flex items-center gap-4 rounded-xl border border-amber-400/25 bg-gradient-to-r from-amber-400/[0.12] to-amber-400/[0.02] px-4 py-3.5 sm:gap-5 sm:rounded-2xl sm:px-6 sm:py-5"
+                                >
+                                    <div
+                                        class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-amber-400/25 bg-amber-400/10 text-base sm:h-12 sm:w-12 sm:text-xl"
+                                    >
+                                        💥
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div
+                                            class="text-sm font-bold leading-tight text-amber-300 sm:text-lg md:text-xl"
+                                        >
+                                            Survives terraform destroy
+                                        </div>
+                                        <div
+                                            class="mt-1 text-xs leading-snug text-zinc-400 sm:text-sm md:text-base"
+                                        >
+                                            Your whole stack is gone.
+                                            The log group isn't (this
+                                            might be ideal in some
+                                            scenarios though).
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bottom block -->
+                            <div class="mt-6 sm:mt-8 md:mt-10">
+                                <!-- Code -->
+                                <div
+                                    class="rounded-xl border border-white/10 bg-[#0b0b12] px-4 pb-4 pt-3 sm:rounded-2xl sm:px-6 sm:pb-5 sm:pt-4"
+                                >
+                                    <div
+                                        class="mb-3 flex items-center gap-2 sm:mb-4"
+                                    >
+                                        <span
+                                            class="h-3 w-3 rounded-full bg-[#ff5f57]"
+                                        ></span>
+                                        <span
+                                            class="h-3 w-3 rounded-full bg-[#febc2e]"
+                                        ></span>
+                                        <span
+                                            class="h-3 w-3 rounded-full bg-[#28c840]"
+                                        ></span>
+                                        <span
+                                            class="ml-3 font-mono text-xs text-zinc-600 sm:text-sm"
+                                            >main.tf</span
+                                        >
+                                    </div>
+                                    <pre
+                                        class="overflow-x-auto whitespace-pre font-mono text-xs leading-relaxed sm:text-sm md:text-base"
+                                    ><span class="text-fuchsia-400">resource</span> <span class="text-amber-300">"aws_cloudwatch_log_group"</span> <span class="text-emerald-300">"app"</span> <span class="text-zinc-500">{</span>
   <span class="text-sky-300">name</span>              <span class="text-zinc-500">=</span> <span class="text-amber-300">"/aws/lambda/my-fn"</span>
   <span class="text-sky-300">retention_in_days</span> <span class="text-zinc-500">=</span> <span class="text-orange-400">14</span>
 <span class="text-zinc-500">}</span></pre>
-                        </div>
+                                </div>
 
-                        <!-- Footer -->
-                        <div
-                            class="mt-4 flex items-center justify-between border-t border-white/10 pt-4 sm:mt-6 sm:pt-5"
-                        >
-                            <span
-                                class="font-mono text-xs text-zinc-600 sm:text-sm"
-                                >#terraform #aws</span
-                            >
+                                <!-- Footer -->
+                                <div
+                                    class="mt-4 flex items-center justify-between border-t border-white/10 pt-4 sm:mt-6 sm:pt-5"
+                                >
+                                    <span
+                                        class="font-mono text-xs text-zinc-600 sm:text-sm"
+                                        >#terraform #aws</span
+                                    >
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- ============ /CARD ============ -->
+            <!-- ============ /CARD ============ -->
+
+            <nav class="vertical-tabs" aria-label="Page navigation">
+                <a
+                    href="/#/aws-flashcards"
+                    class="vertical-tab z-10 inline-flex shrink-0 items-center gap-2 bg-slate-800 text-xs font-semibold text-slate-100 no-underline shadow-md transition hover:-translate-x-0.5 hover:bg-slate-900 hover:shadow-lg active:translate-x-0 sm:text-sm"
+                    title="Go to AWS Flashcards"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        width="18"
+                        height="18"
+                        fill="currentColor"
+                        aria-hidden="true"
+                    >
+                        <path
+                            d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5L13 3.5zM8 13h8v2H8zm0 4h5v2H8z"
+                        />
+                    </svg>
+                    <span>AWS Flashcards</span>
+                </a>
+                <button
+                    type="button"
+                    onclick="document.getElementById('deep-dive').showModal()"
+                    class="vertical-tab z-10 inline-flex shrink-0 items-center gap-2 border border-amber-400/30 bg-amber-400/10 text-xs font-semibold text-amber-300 shadow-md transition hover:-translate-x-0.5 hover:bg-amber-400/20 active:translate-x-0 sm:text-sm"
+                >
+                    <span>Deep dive</span>
+                </button>
+            </nav>
+        </main>
 
         <dialog id="deep-dive" class="font-sans">
             <div
