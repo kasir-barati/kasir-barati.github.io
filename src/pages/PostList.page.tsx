@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import posts from '../data/posts.json';
+import flashcards from '../data/aws-flashcards.json';
 import { searchPosts } from '../utils/postsSearch';
 import { getRandomColor } from '../utils/genRandomColor';
 import { CopyToClipboardButton } from '../components/CopyToClipboardButton.component';
@@ -24,7 +25,11 @@ export function PostList() {
         let isCurrent = true;
         setIsSearching(true);
 
-        searchPosts(posts, query).then((results) => {
+        const searchTargets = query.trim()
+            ? [...posts, ...flashcards]
+            : posts;
+
+        searchPosts(searchTargets, query).then((results) => {
             if (isCurrent) {
                 setFilteredPosts(results);
                 setIsSearching(false);
