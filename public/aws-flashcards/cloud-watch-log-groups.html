@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <meta name="color-scheme" content="dark" />
+        <title>CloudWatch Log Groups — AWS Flashcard</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossorigin
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: [
+                                'Inter',
+                                'system-ui',
+                                'sans-serif',
+                            ],
+                            mono: ['"JetBrains Mono"', 'monospace'],
+                        },
+                    },
+                },
+            };
+        </script>
+        <style>
+            html,
+            body {
+                height: 100%;
+                overflow: hidden;
+            }
+
+            body {
+                background: #050507;
+            }
+
+            .grid-bg {
+                background-image: linear-gradient(
+                        rgba(255, 255, 255, 0.045) 1px,
+                        transparent 1px
+                    ),
+                    linear-gradient(
+                        90deg,
+                        rgba(255, 255, 255, 0.045) 1px,
+                        transparent 1px
+                    );
+                background-size: 72px 72px;
+                -webkit-mask-image: radial-gradient(
+                    ellipse 95% 75% at 50% 25%,
+                    #000 25%,
+                    transparent 78%
+                );
+                mask-image: radial-gradient(
+                    ellipse 95% 75% at 50% 25%,
+                    #000 25%,
+                    transparent 78%
+                );
+            }
+
+            /* Fits the fixed 1080x1350 poster inside whatever space is
+               left on screen (both width and height), so the card is
+               always a single screen with no page scrollbar. */
+            .poster-viewport {
+                container-type: size;
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
+
+            .poster {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 1080px;
+                height: 1350px;
+                transform: translate(-50%, -50%)
+                    scale(min(100cqw / 1080px, 100cqh / 1350px));
+                transform-origin: center;
+            }
+
+            dialog {
+                background: #0b0f19;
+                color: #e2e8f0;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 1rem;
+                padding: 0;
+                width: min(720px, 92vw);
+                max-height: 85vh;
+            }
+
+            dialog::backdrop {
+                background: rgba(0, 0, 0, 0.65);
+                backdrop-filter: blur(2px);
+            }
+
+            @media (max-width: 640px) {
+                dialog {
+                    width: 100vw;
+                    height: 100vh;
+                    max-width: none;
+                    max-height: none;
+                    border-radius: 0;
+                    margin: 0;
+                    inset: 0;
+                }
+            }
+
+            dialog[open] {
+                display: flex;
+                flex-direction: column;
+            }
+        </style>
+    </head>
+
+    <body class="flex flex-col items-center gap-3 bg-[#050507] p-4">
+        <nav class="flex shrink-0 items-center gap-3">
+            <a
+                href="/#/aws-flashcards"
+                class="z-10 inline-flex shrink-0 items-center gap-2 self-center rounded-full bg-slate-800 px-2.5 py-1.5 text-[0.8rem] font-semibold text-slate-100 no-underline shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition hover:-translate-y-0.5 hover:bg-slate-900 hover:shadow-[0_6px_20px_rgba(0,0,0,0.25)] active:translate-y-0 sm:px-[18px] sm:py-2.5 sm:text-[0.95rem]"
+                title="Go to AWS Flashcards"
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    width="20"
+                    height="20"
+                    fill="currentColor"
+                >
+                    <path
+                        d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5L13 3.5zM8 13h8v2H8zm0 4h5v2H8z"
+                    />
+                </svg>
+                <span>AWS Flashcards</span>
+            </a>
+            <button
+                type="button"
+                onclick="document.getElementById('deep-dive').showModal()"
+                class="z-10 inline-flex shrink-0 items-center gap-2 self-center rounded-full border border-amber-400/30 bg-amber-400/10 px-2.5 py-1.5 text-[0.8rem] font-semibold text-amber-300 shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition hover:-translate-y-0.5 hover:bg-amber-400/20 active:translate-y-0 sm:px-[18px] sm:py-2.5 sm:text-[0.95rem]"
+            >
+                <span>Deep dive</span>
+            </button>
+        </nav>
+
+        <!-- ============ INSTAGRAM POST · 1080 × 1350 ============ -->
+        <div class="poster-viewport min-h-0 flex-1">
+            <div
+                class="poster relative overflow-hidden bg-[#07070b] font-sans text-white"
+            >
+                <!-- Background layers -->
+                <div class="absolute inset-0 grid-bg"></div>
+                <div
+                    class="absolute -right-40 -top-40 h-[720px] w-[720px] rounded-full bg-amber-500/[0.13] blur-[150px]"
+                ></div>
+                <div
+                    class="absolute -bottom-56 -left-44 h-[620px] w-[620px] rounded-full bg-sky-500/[0.09] blur-[150px]"
+                ></div>
+                <div
+                    class="absolute left-0 right-0 top-0 h-[6px] bg-gradient-to-r from-amber-300 via-orange-500 to-amber-300"
+                ></div>
+                <div
+                    class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50"
+                ></div>
+
+                <!-- Content -->
+                <div
+                    class="relative z-10 flex h-full flex-col px-16 py-14"
+                >
+                    <!-- Header -->
+                    <header class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="flex h-12 w-12 items-center justify-center rounded-xl border border-amber-400/30 bg-amber-400/10"
+                            >
+                                <span class="text-[24px] leading-none"
+                                    >⚠️</span
+                                >
+                            </div>
+                            <span
+                                class="font-mono text-[19px] uppercase tracking-[0.28em] text-amber-400/90"
+                            >
+                                CloudWatch × Terraform
+                            </span>
+                        </div>
+                        <span
+                            class="font-mono text-[19px] text-zinc-600"
+                        >
+                            @kasir-barati
+                        </span>
+                    </header>
+
+                    <!-- Headline + sub -->
+                    <div class="mt-10">
+                        <h1
+                            class="text-[76px] font-black leading-[0.98] tracking-[-0.035em]"
+                        >
+                            Terraform won't
+                            <span class="text-amber-400">delete</span>
+                            what it never created.
+                        </h1>
+
+                        <p
+                            class="mt-7 text-[26px] leading-[1.5] text-zinc-400"
+                        >
+                            Skip defining your
+                            <span class="font-semibold text-zinc-100"
+                                >CloudWatch log groups</span
+                            >
+                            in Terraform and AWS creates them for you
+                            without retention policy
+                        </p>
+                    </div>
+
+                    <!-- Pain points -->
+                    <div class="mt-9 space-y-4">
+                        <div
+                            class="flex items-center gap-6 rounded-2xl border border-white/10 bg-gradient-to-r from-white/[0.055] to-white/[0.012] px-7 py-6"
+                        >
+                            <div
+                                class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-[26px]"
+                            >
+                                ♾️
+                            </div>
+                            <div class="min-w-0">
+                                <div
+                                    class="text-[26px] font-bold leading-tight"
+                                >
+                                    Logs never expire
+                                </div>
+                                <div
+                                    class="mt-1 text-[21px] leading-snug text-zinc-500"
+                                >
+                                    No retention policy means they're
+                                    stored and billed forever.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="flex items-center gap-6 rounded-2xl border border-white/10 bg-gradient-to-r from-white/[0.055] to-white/[0.012] px-7 py-6"
+                        >
+                            <div
+                                class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-[26px]"
+                            >
+                                👻
+                            </div>
+                            <div class="min-w-0">
+                                <div
+                                    class="text-[26px] font-bold leading-tight"
+                                >
+                                    Invisible to Terraform
+                                </div>
+                                <div
+                                    class="mt-1 text-[21px] leading-snug text-zinc-500"
+                                >
+                                    It was never in your state file.
+                                    Plan and destroy can't see it.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="flex items-center gap-6 rounded-2xl border border-amber-400/25 bg-gradient-to-r from-amber-400/[0.12] to-amber-400/[0.02] px-7 py-6"
+                        >
+                            <div
+                                class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-amber-400/25 bg-amber-400/10 text-[26px]"
+                            >
+                                💥
+                            </div>
+                            <div class="min-w-0">
+                                <div
+                                    class="text-[26px] font-bold leading-tight text-amber-300"
+                                >
+                                    Survives terraform destroy
+                                </div>
+                                <div
+                                    class="mt-1 text-[21px] leading-snug text-zinc-400"
+                                >
+                                    Your whole stack is gone. The log
+                                    group isn't (this might be ideal
+                                    in some scenarios though).
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom block -->
+                    <div class="mt-auto pt-8">
+                        <!-- Code -->
+                        <div
+                            class="rounded-2xl border border-white/10 bg-[#0b0b12] px-7 pb-6 pt-5"
+                        >
+                            <div class="mb-4 flex items-center gap-2">
+                                <span
+                                    class="h-3 w-3 rounded-full bg-[#ff5f57]"
+                                ></span>
+                                <span
+                                    class="h-3 w-3 rounded-full bg-[#febc2e]"
+                                ></span>
+                                <span
+                                    class="h-3 w-3 rounded-full bg-[#28c840]"
+                                ></span>
+                                <span
+                                    class="ml-3 font-mono text-[15px] text-zinc-600"
+                                    >main.tf</span
+                                >
+                            </div>
+                            <pre
+                                class="whitespace-pre font-mono text-[19px] leading-[1.75]"
+                            ><span class="text-fuchsia-400">resource</span> <span class="text-amber-300">"aws_cloudwatch_log_group"</span> <span class="text-emerald-300">"app"</span> <span class="text-zinc-500">{</span>
+  <span class="text-sky-300">name</span>              <span class="text-zinc-500">=</span> <span class="text-amber-300">"/aws/lambda/my-fn"</span>
+  <span class="text-sky-300">retention_in_days</span> <span class="text-zinc-500">=</span> <span class="text-orange-400">14</span>
+<span class="text-zinc-500">}</span></pre>
+                        </div>
+
+                        <!-- Footer -->
+                        <div
+                            class="mt-8 flex items-center justify-between border-t border-white/10 pt-7"
+                        >
+                            <span
+                                class="font-mono text-[19px] text-zinc-600"
+                                >#terraform #aws</span
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ============ /POST ============ -->
+
+        <dialog id="deep-dive" class="font-sans">
+            <div
+                class="flex shrink-0 items-center justify-between border-b border-white/10 px-6 py-4"
+            >
+                <h2 class="text-lg font-bold text-white">
+                    When does AWS auto-create a log group?
+                </h2>
+                <button
+                    type="button"
+                    onclick="document.getElementById('deep-dive').close()"
+                    class="rounded-full p-1 text-slate-400 hover:bg-white/10 hover:text-white"
+                    aria-label="Close"
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        width="22"
+                        height="22"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <path d="M6 6l12 12M18 6L6 18" />
+                    </svg>
+                </button>
+            </div>
+
+            <div
+                id="deep-dive-content"
+                class="overflow-y-auto px-6 py-5 text-[15px] leading-7 text-slate-300"
+            >
+                <h3 class="mb-2 text-base font-semibold text-white">
+                    The general rule
+                </h3>
+                <p class="mb-4">
+                    AWS doesn't auto-create a CloudWatch log group for
+                    every service — only ones that produce
+                    execution/runtime logs as part of running your
+                    code (Lambda, CodeBuild, ECS with the
+                    <code class="font-mono text-amber-300"
+                        >awslogs</code
+                    >
+                    driver, Step Functions, Glue, etc.) <em>and</em>
+                    have
+                    <code class="font-mono text-amber-300"
+                        >logs:CreateLogGroup</code
+                    >,
+                    <code class="font-mono text-amber-300"
+                        >logs:CreateLogStream</code
+                    >
+                    and
+                    <code class="font-mono text-amber-300"
+                        >logs:PutLogEvents</code
+                    >
+                    permission in whatever role they execute under.
+                </p>
+                <p class="mb-6">
+                    If the role can't create the log group, the
+                    service either fails to log (Lambda) or fails
+                    outright (some services validate at deploy time).
+                    So the presence of
+                    <code class="font-mono text-amber-300"
+                        >logs:Create*</code
+                    >
+                    in an execution role's policy is the tell — that's
+                    the mechanism, not something arbitrary.
+                </p>
+
+                <h3 class="mb-2 text-base font-semibold text-white">
+                    Naming isn't always "resource name" verbatim
+                </h3>
+                <p class="mb-4">
+                    It's a fixed prefix per service plus an
+                    identifier, and the identifier varies by service:
+                </p>
+                <div
+                    class="mb-6 overflow-x-auto rounded-lg border border-white/10"
+                >
+                    <table
+                        class="w-full border-collapse text-left text-sm"
+                    >
+                        <thead>
+                            <tr class="bg-white/5 text-slate-200">
+                                <th class="px-3 py-2 font-semibold">
+                                    Service
+                                </th>
+                                <th class="px-3 py-2 font-semibold">
+                                    Log group pattern
+                                </th>
+                                <th class="px-3 py-2 font-semibold">
+                                    Identifier used
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/10">
+                            <tr>
+                                <td class="px-3 py-2">Lambda</td>
+                                <td
+                                    class="px-3 py-2 font-mono text-amber-300"
+                                >
+                                    /aws/lambda/&lt;function-name&gt;
+                                </td>
+                                <td class="px-3 py-2">
+                                    function name
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-2">
+                                    ECS (awslogs driver)
+                                </td>
+                                <td class="px-3 py-2">
+                                    the
+                                    <code
+                                        class="font-mono text-amber-300"
+                                        >awslogs-group</code
+                                    >
+                                    you set in the task def — not
+                                    automatic; ECS won't create it
+                                    unless you also set
+                                    <code
+                                        class="font-mono text-amber-300"
+                                        >awslogs-create-group:
+                                        true</code
+                                    >
+                                </td>
+                                <td class="px-3 py-2">your choice</td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-2">CodeBuild</td>
+                                <td
+                                    class="px-3 py-2 font-mono text-amber-300"
+                                >
+                                    /aws/codebuild/&lt;project-name&gt;
+                                </td>
+                                <td class="px-3 py-2">
+                                    project name
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-2">
+                                    API Gateway (execution logs)
+                                </td>
+                                <td
+                                    class="px-3 py-2 font-mono text-amber-300"
+                                >
+                                    API-Gateway-Execution-Logs_&lt;api-id&gt;/&lt;stage&gt;
+                                </td>
+                                <td class="px-3 py-2">
+                                    API ID, not name
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-2">
+                                    VPC Flow Logs
+                                </td>
+                                <td class="px-3 py-2">
+                                    user-specified when you create the
+                                    flow log — not automatic
+                                </td>
+                                <td class="px-3 py-2">your choice</td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-2">
+                                    RDS (exported DB logs)
+                                </td>
+                                <td
+                                    class="px-3 py-2 font-mono text-amber-300"
+                                >
+                                    /aws/rds/instance/&lt;db-instance-id&gt;/&lt;log-type&gt;
+                                </td>
+                                <td class="px-3 py-2">
+                                    instance identifier
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-2">
+                                    Step Functions
+                                </td>
+                                <td
+                                    class="px-3 py-2 font-mono text-amber-300"
+                                >
+                                    /aws/vendedlogs/states/&lt;state-machine-name&gt;-Logs-&lt;suffix&gt;
+                                </td>
+                                <td class="px-3 py-2">
+                                    name + suffix
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-2">CloudTrail</td>
+                                <td class="px-3 py-2">
+                                    user-specified explicitly
+                                </td>
+                                <td class="px-3 py-2">your choice</td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-2">
+                                    Amplify / AppSync / Glue, etc.
+                                </td>
+                                <td
+                                    class="px-3 py-2 font-mono text-amber-300"
+                                >
+                                    varies, usually
+                                    /aws/&lt;service&gt;/&lt;resource&gt;
+                                </td>
+                                <td class="px-3 py-2">mixed</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="mb-6">
+                    So: some services use the human-readable name
+                    (Lambda, CodeBuild), some use an opaque API ID you
+                    don't know until after creation (hard to
+                    pre-declare cleanly), and several don't
+                    auto-create at all — they require you to opt in
+                    explicitly (ECS, VPC Flow Logs, CloudTrail).
+                </p>
+
+                <h3 class="mb-2 text-base font-semibold text-white">
+                    How to actually find out, per service, reliably
+                </h3>
+                <p class="mb-3">
+                    Don't try to memorize or guess — check two things
+                    when you add a new AWS resource:
+                </p>
+                <ol class="mb-4 list-decimal space-y-2 pl-5">
+                    <li>
+                        The resource's execution/service role policy —
+                        if it includes
+                        <code class="font-mono text-amber-300"
+                            >logs:CreateLogGroup</code
+                        >, expect auto-creation. AWS-managed policies
+                        like
+                        <code class="font-mono text-amber-300"
+                            >AWSLambdaBasicExecutionRole</code
+                        >
+                        are the giveaway — that policy literally
+                        grants
+                        <code class="font-mono text-amber-300"
+                            >logs:CreateLogGroup</code
+                        >,
+                        <code class="font-mono text-amber-300"
+                            >logs:CreateLogStream</code
+                        >, and
+                        <code class="font-mono text-amber-300"
+                            >logs:PutLogEvents</code
+                        >
+                        on
+                        <code class="font-mono text-amber-300"
+                            >arn:aws:logs:*:*:*</code
+                        >.
+                    </li>
+                    <li>
+                        The service's own docs page for "logging" —
+                        e.g. "Monitoring [X] with CloudWatch Logs" —
+                        it states explicitly whether it creates the
+                        group or requires you to pre-create it.
+                    </li>
+                </ol>
+                <p class="mb-2">
+                    Rather than trying to predict names in advance,
+                    flip the dependency: for a Lambda function, strip
+                    <code class="font-mono text-amber-300"
+                        >logs:CreateLogGroup</code
+                    >
+                    from its execution role and only grant
+                    <code class="font-mono text-amber-300"
+                        >logs:CreateLogStream</code
+                    >/<code class="font-mono text-amber-300"
+                        >logs:PutLogEvents</code
+                    >
+                    scoped to the log group Terraform already owns. If
+                    anything tries to auto-create a group you didn't
+                    declare, it fails loudly (permission denied)
+                    instead of silently leaking an unmanaged resource
+                    — a much more reliable way to catch this class of
+                    drift than enumerating every service's naming
+                    convention upfront.
+                </p>
+
+                <button
+                    type="button"
+                    onclick="document.getElementById('deep-dive-content').scrollTo({top: 0, behavior: 'smooth'})"
+                    class="mt-6 inline-block text-sm text-slate-400 hover:text-white"
+                >
+                    Back to top ↑
+                </button>
+            </div>
+        </dialog>
+    </body>
+</html>

@@ -1,0 +1,9 @@
+[
+    {
+        "id": "b1e7c9a0-2f4d-4b7a-9c1e-5a3d8f0e6b21",
+        "title": "CloudWatch Log Groups × Terraform",
+        "description": "Terraform won't delete what it never created. Skip defining your CloudWatch log groups in Terraform and AWS creates them for you without a retention policy.",
+        "href": "./aws-flashcards/cloud-watch-log-groups.html",
+        "tags": ["AWS", "CloudWatch", "Terraform", "IAM"]
+    }
+]

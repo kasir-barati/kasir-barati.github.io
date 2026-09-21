@@ -148,5 +148,12 @@
             "Availability",
             "Reliability"
         ]
+    },
+    {
+        "id": "c4e2a9b1-7d3f-4a8e-b6c0-1f9d4e7a2b53",
+        "title": "AWS Flashcards",
+        "description": "A growing set of bite-sized AWS gotchas and rules of thumb, each one a quick, shareable flashcard with an optional deep dive.",
+        "href": "#/aws-flashcards",
+        "tags": ["AWS", "Cheat Sheet", "Flashcards"]
     }
 ]
