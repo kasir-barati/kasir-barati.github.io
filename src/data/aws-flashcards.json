@@ -5,5 +5,12 @@
         "description": "Terraform won't delete what it never created. Skip defining your CloudWatch log groups in Terraform and AWS creates them for you without a retention policy.",
         "href": "./aws-flashcards/cloud-watch-log-groups.html",
         "tags": ["AWS", "CloudWatch", "Terraform", "IAM"]
+    },
+    {
+        "id": "17c7fe72-1914-479c-b9bc-8e7e7cff023d",
+        "title": "Privilege Escalation Vulnerability",
+        "description": "This is about when you unintentionally enable a IAM user to grant themselves admin level access by utilizing the permissions they have been granted.",
+        "href": "./aws-flashcards/privilege-escalation-vulnerability.html",
+        "tags": ["AWS", "IAM", "Terraform", "Security"]
     }
 ]
