@@ -1,0 +1,9 @@
+[
+    {
+        "id": "387c1e5b-0ca5-4e92-a73e-cf1a03333dbf",
+        "title": "ReactJS Component Organization",
+        "description": "Where should a component, its styles, tests and stories live? A quick rule of thumb for organizing a ReactJS codebase so it stays discoverable, testable and easy to scale across a team.",
+        "href": "./react-flashcards/component-organization.html",
+        "tags": ["ReactJS", "Architecture", "Flashcards"]
+    }
+]

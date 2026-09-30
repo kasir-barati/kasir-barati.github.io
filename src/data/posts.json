@@ -155,5 +155,12 @@
         "description": "A growing set of bite-sized AWS gotchas and rules of thumb, each one a quick, shareable flashcard with an optional deep dive.",
         "href": "#/aws-flashcards",
         "tags": ["AWS", "Cheat Sheet", "Flashcards"]
+    },
+    {
+        "id": "056a3016-9702-4f5e-8a85-d646e23190ff",
+        "title": "ReactJS Flashcards",
+        "description": "A growing set of bite-sized ReactJS rules of thumb, each one a quick, shareable flashcard.",
+        "href": "#/react-flashcards",
+        "tags": ["ReactJS", "Cheat Sheet", "Flashcards"]
     }
 ]

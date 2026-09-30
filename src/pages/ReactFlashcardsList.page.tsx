@@ -5,73 +5,30 @@ import {
     Card,
     CardActions,
     CardContent,
+    Link,
     Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import posts from '../data/posts.json';
-import awsFlashcards from '../data/aws-flashcards.json';
-import reactFlashcards from '../data/react-flashcards.json';
-import { searchPosts } from '../utils/postsSearch';
+import flashcards from '../data/react-flashcards.json';
 import { getRandomColor } from '../utils/genRandomColor';
 import { CopyToClipboardButton } from '../components/CopyToClipboardButton.component';
 
-export function PostList() {
-    const [searchParams] = useSearchParams();
-    const query = searchParams.get('q') ?? '';
-    const [filteredPosts, setFilteredPosts] = useState(posts);
-    const [isSearching, setIsSearching] = useState(false);
-
-    useEffect(() => {
-        let isCurrent = true;
-        setIsSearching(true);
-
-        const searchTargets = query.trim()
-            ? [...posts, ...awsFlashcards, ...reactFlashcards]
-            : posts;
-
-        searchPosts(searchTargets, query).then((results) => {
-            if (isCurrent) {
-                setFilteredPosts(results);
-                setIsSearching(false);
-            }
-        });
-
-        return () => {
-            isCurrent = false;
-        };
-    }, [query]);
-
-    if (isSearching) {
-        return (
-            <Box padding={2}>
-                <Typography>Searching...</Typography>
-            </Box>
-        );
-    }
-
-    if (query && filteredPosts.length === 0) {
-        return (
-            <Box padding={2}>
-                <Typography>
-                    No posts found for &quot;{query}&quot;
-                </Typography>
-            </Box>
-        );
-    }
-
+export function ReactFlashcardsList() {
     return (
         <Box padding={2}>
-            <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={2}>
-                {filteredPosts.map((post) => (
-                    <Card key={post.id}>
+            <Masonry
+                columns={{ xs: 1, sm: 2, md: 3 }}
+                spacing={2}
+                sx={{ mt: 1 }}
+            >
+                {flashcards.map((flashcard) => (
+                    <Card key={flashcard.id}>
                         <CardContent>
                             <Typography
                                 color={getRandomColor()}
                                 variant="h5"
                                 gutterBottom
                             >
-                                {post.title}
+                                {flashcard.title}
                             </Typography>
                             <Typography
                                 variant="body1"
@@ -80,19 +37,19 @@ export function PostList() {
                                 mt={1}
                                 mb={2}
                             >
-                                {post.description}
+                                {flashcard.description}
                             </Typography>
                             <Typography
                                 variant="body2"
                                 align="center"
                                 color="white"
                             >
-                                {post.tags.map((tag, index) => (
+                                {flashcard.tags.map((tag, index) => (
                                     <>
                                         {tag}{' '}
                                         {index !==
-                                            post.tags.length - 1 &&
-                                            ' . '}
+                                            flashcard.tags.length -
+                                                1 && ' . '}
                                     </>
                                 ))}
                             </Typography>
@@ -101,14 +58,14 @@ export function PostList() {
                             <Button
                                 variant="contained"
                                 color="success"
-                                href={post.href}
+                                href={flashcard.href}
                             >
-                                Read more
+                                View flashcard
                             </Button>
                             <CopyToClipboardButton
                                 variant="contained"
                                 color="primary"
-                                url={post.href}
+                                url={flashcard.href}
                             >
                                 Share
                             </CopyToClipboardButton>

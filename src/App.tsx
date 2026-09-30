@@ -4,6 +4,7 @@ import './App.css';
 import { Navbar, navBarItems } from './components/Navbar.component';
 import { Notification } from './components/Notification.component';
 import { AwsFlashcardsList } from './pages/AwsFlashcardsList.page';
+import { ReactFlashcardsList } from './pages/ReactFlashcardsList.page';
 import { ThemeProvider } from './providers/Theme.provider';
 
 function App() {
@@ -34,6 +35,10 @@ function App() {
                             <Route
                                 path="/aws-flashcards"
                                 element={<AwsFlashcardsList />}
+                            />
+                            <Route
+                                path="/react-flashcards"
+                                element={<ReactFlashcardsList />}
                             />
                         </Routes>
                     </Box>
