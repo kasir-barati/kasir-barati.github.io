@@ -22,6 +22,18 @@
         ]
     },
     {
+        "name": "golang-template",
+        "org": "Ponos-OS",
+        "alt": "Golang Template",
+        "description": "A solid template for Golang",
+        "links": [
+            {
+                "buttonName": "GitHub",
+                "address": "https://github.com/Ponos-OS/golang-template"
+            }
+        ]
+    },
+    {
         "name": "smart-novel",
         "org": "Ponos-OS",
         "alt": "Smart-Novel",
