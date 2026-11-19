@@ -8,22 +8,24 @@ import {
     Grid,
     Typography,
 } from '@mui/material';
-import projects from '../data/projects.json';
+import data from '../data/projects.json';
 
-type Project = (typeof projects)[number];
+type Group = (typeof groups)[number];
+type Project = Group['projects'][number];
+
+const groups = data as Array<{
+    type: 'org' | 'other';
+    name: string;
+    description: string | null;
+    projects: Array<{
+        name: string;
+        alt: string;
+        description: string;
+        links: Array<{ buttonName: string; address: string }>;
+    }>;
+}>;
 
 export function Portfolio() {
-    const standaloneProjects = projects.filter(
-        (project) => !project.org,
-    );
-    const orgs = [
-        ...new Set(
-            projects
-                .map((project) => project.org)
-                .filter((org): org is string => Boolean(org)),
-        ),
-    ];
-
     return (
         <Box
             component="div"
@@ -32,84 +34,68 @@ export function Portfolio() {
             sx={{ py: 6, px: { xs: 2, md: 4 } }}
         >
             <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-                {/* Organizations Sections */}
-                {orgs.map((org) => (
-                    <Box
-                        key={org}
-                        mb={6}
-                        sx={{
-                            bgcolor: 'rgba(0, 0, 0, 0.2)',
-                            borderRadius: 4,
-                            padding: { xs: 2, md: 4 },
-                            border: '1px solid rgba(255, 255, 255, 0.08)',
-                        }}
-                    >
-                        <Typography
-                            variant="h4"
-                            component="a"
-                            href={`https://github.com/${org}`}
-                            target="_blank"
-                            sx={{
-                                'color': 'white',
-                                'textDecoration': 'none',
-                                'fontWeight': 'bold',
-                                'display': 'inline-block',
-                                'mb': 4,
-                                '&:hover': { color: 'primary.light' },
-                            }}
-                        >
-                            {org}
-                        </Typography>
-
-                        <Grid container spacing={4}>
-                            {projects
-                                .filter(
-                                    (project) => project.org === org,
-                                )
-                                .map((project) => (
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={6}
-                                        md={4}
-                                        key={project.name}
-                                    >
-                                        <ProjectCard
-                                            project={project}
-                                        />
-                                    </Grid>
-                                ))}
-                        </Grid>
-                    </Box>
+                {groups.map((group) => (
+                    <ProjectGroup key={group.name} group={group} />
                 ))}
-
-                {/* Standalone Projects Section */}
-                {standaloneProjects.length > 0 && (
-                    <Box mb={8}>
-                        <Typography
-                            variant="h4"
-                            color="white"
-                            fontWeight="bold"
-                            mb={4}
-                        >
-                            Featured Projects
-                        </Typography>
-                        <Grid container spacing={4}>
-                            {standaloneProjects.map((project) => (
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={6}
-                                    md={4}
-                                    key={project.name}
-                                >
-                                    <ProjectCard project={project} />
-                                </Grid>
-                            ))}
-                        </Grid>
-                    </Box>
-                )}
             </Box>
+        </Box>
+    );
+}
+
+function ProjectGroup({ group }: { group: Group }) {
+    const isOrg = group.type === 'org';
+
+    return (
+        <Box
+            mb={isOrg ? 6 : 8}
+            sx={{
+                padding: { xs: 2, md: 4 },
+                bgcolor: 'rgba(0, 0, 0, 0.2)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: 4,
+                ...(isOrg && {
+                    bgcolor: 'rgba(0, 0, 0, 0.4)',
+                }),
+            }}
+        >
+            <Typography
+                variant="h4"
+                {...(isOrg && {
+                    component: 'a',
+                    href: `https://github.com/${group.name}`,
+                    target: '_blank',
+                })}
+                sx={{
+                    color: 'white',
+                    textDecoration: 'none',
+                    fontWeight: 'bold',
+                    display: 'inline-block',
+                    mb: group.description ? 1 : 4,
+                    ...(isOrg && {
+                        '&:hover': { color: 'primary.light' },
+                    }),
+                }}
+            >
+                {group.name}
+            </Typography>
+            {group.description && (
+                <Typography color="text.secondary" mb={4}>
+                    {group.description}
+                </Typography>
+            )}
+            <Grid container spacing={4}>
+                {group.projects.map((project) => (
+                    <Grid
+                        item
+                        xs={12}
+                        sm={6}
+                        md={4}
+                        key={project.name}
+                    >
+                        <ProjectCard project={project} />
+                    </Grid>
+                ))}
+            </Grid>
         </Box>
     );
 }
@@ -147,7 +133,7 @@ function ProjectCard({ project }: { project: Project }) {
                         gutterBottom
                         fontWeight="bold"
                     >
-                        {project.name.trim()}
+                        {project.name}
                     </Typography>
                     <Typography
                         variant="body2"
