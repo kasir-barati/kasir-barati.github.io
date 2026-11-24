@@ -23,7 +23,7 @@ import avatarSrc from '../assets/me.jpg';
 import { useAppDispatch, useAppSelector } from '../hooks/redux.hook';
 import { toggleTheme } from '../redux/theme.slice';
 import { Link } from './Link.component';
-import { navBarItems } from './Navbar.component';
+import { navBarItems, noteLinks } from './Navbar.component';
 import { SearchBox } from './SearchBox.component';
 
 export function MobileNavbar() {
@@ -110,6 +110,27 @@ export function MobileNavbar() {
                                 </Link>
                             );
                         })}
+                        {noteLinks.map((noteLink) => (
+                            <ListItemButton
+                                component="a"
+                                href={noteLink.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                key={noteLink.href}
+                            >
+                                <ListItemText inset>
+                                    <Typography
+                                        color={
+                                            !darkMode
+                                                ? 'primary.main'
+                                                : 'white'
+                                        }
+                                    >
+                                        {noteLink.text}
+                                    </Typography>
+                                </ListItemText>
+                            </ListItemButton>
+                        ))}
                         <ListItemButton onClick={handleThemeToggle}>
                             <ListItemIcon>
                                 {darkMode ? (

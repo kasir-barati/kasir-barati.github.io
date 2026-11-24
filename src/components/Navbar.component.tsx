@@ -47,6 +47,21 @@ export const navBarItems = [
     },
 ];
 
+export const noteLinks = [
+    {
+        text: 'Dev.to Posts',
+        href: 'https://kasir-barati.github.io/dev.to/',
+    },
+    {
+        text: 'Python Notes',
+        href: 'https://kasir-barati.github.io/python/',
+    },
+    {
+        text: 'Golang Notes',
+        href: 'https://kasir-barati.github.io/golang/',
+    },
+];
+
 export function Navbar() {
     const minWidth600px = useMediaQuery('(min-width:600px)');
 

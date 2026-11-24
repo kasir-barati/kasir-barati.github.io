@@ -1,21 +1,26 @@
 import {
     Brightness4 as Brightness4Icon,
     Brightness7 as Brightness7Icon,
+    ArrowDropDown as ArrowDropDownIcon,
 } from '@mui/icons-material';
 import {
     AppBar,
     Box,
+    Button,
     IconButton,
+    Menu,
+    MenuItem,
     Toolbar,
     Tooltip,
     Typography,
     useTheme,
 } from '@mui/material';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks/redux.hook';
 import { toggleTheme } from '../redux/theme.slice';
 import { Link } from './Link.component';
-import { navBarItems } from './Navbar.component';
+import { navBarItems, noteLinks } from './Navbar.component';
 import { SearchBox } from './SearchBox.component';
 
 export function DesktopNavbar() {
@@ -25,6 +30,9 @@ export function DesktopNavbar() {
     );
     const theme = useTheme();
     const navigate = useNavigate();
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(
+        null,
+    );
 
     const blogNavBarItem = navBarItems.find(
         (navBarItem) => navBarItem.href === '/posts',
@@ -125,6 +133,34 @@ export function DesktopNavbar() {
                                 </Tooltip>
                             );
                         })}
+                    <Button
+                        color={!darkMode ? 'primary' : 'inherit'}
+                        endIcon={<ArrowDropDownIcon />}
+                        onClick={(event) =>
+                            setAnchorEl(event.currentTarget)
+                        }
+                        sx={{ textTransform: 'none' }}
+                    >
+                        Knowledge Base
+                    </Button>
+                    <Menu
+                        anchorEl={anchorEl}
+                        open={!!anchorEl}
+                        onClose={() => setAnchorEl(null)}
+                    >
+                        {noteLinks.map((noteLink) => (
+                            <MenuItem
+                                component="a"
+                                href={noteLink.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={() => setAnchorEl(null)}
+                                key={noteLink.href}
+                            >
+                                {noteLink.text}
+                            </MenuItem>
+                        ))}
+                    </Menu>
                 </Box>
             </Toolbar>
         </AppBar>
