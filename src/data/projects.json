@@ -16,6 +16,17 @@
                 ]
             },
             {
+                "name": "python-template",
+                "alt": "Python Template",
+                "description": "A solid template for Python",
+                "links": [
+                    {
+                        "buttonName": "GitHub",
+                        "address": "https://github.com/Ponos-OS/python-template"
+                    }
+                ]
+            },
+            {
                 "name": "smart-novel",
                 "alt": "Smart-Novel",
                 "description": "A novel reading application",
