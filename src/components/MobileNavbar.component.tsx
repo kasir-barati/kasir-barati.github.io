@@ -114,7 +114,6 @@ export function MobileNavbar() {
                             <ListItemButton
                                 component="a"
                                 href={noteLink.href}
-                                target="_blank"
                                 rel="noopener noreferrer"
                                 key={noteLink.href}
                             >
