@@ -141,7 +141,7 @@ export function DesktopNavbar() {
                         }
                         sx={{ textTransform: 'none' }}
                     >
-                        Knowledge Base
+                        My Writing
                     </Button>
                     <Menu
                         anchorEl={anchorEl}
