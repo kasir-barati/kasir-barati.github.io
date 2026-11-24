@@ -152,7 +152,6 @@ export function DesktopNavbar() {
                             <MenuItem
                                 component="a"
                                 href={noteLink.href}
-                                target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={() => setAnchorEl(null)}
                                 key={noteLink.href}
