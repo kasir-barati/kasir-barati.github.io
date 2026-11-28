@@ -25,43 +25,6 @@
                 font-size: 0.9em;
             }
 
-            .code-block {
-                background: #0d1117;
-                color: #e6edf3;
-                padding: 1rem 1.25rem;
-                border-radius: 0.75rem;
-                overflow-x: auto;
-                font-size: 0.8rem;
-                line-height: 1.6;
-                tab-size: 2;
-                border: 1px solid #1e293b;
-                height: 100%;
-            }
-
-            .code-block .comment {
-                color: #8b949e;
-            }
-
-            .code-block .keyword {
-                color: #ff7b72;
-            }
-
-            .code-block .string {
-                color: #a5d6ff;
-            }
-
-            .code-block .func {
-                color: #d2a8ff;
-            }
-
-            .code-block .num {
-                color: #79c0ff;
-            }
-
-            .code-block .log {
-                color: #ffa657;
-            }
-
             .flow-arrow {
                 color: #475569;
                 font-size: 1.5rem;
@@ -157,6 +120,15 @@
                 height: auto;
             }
         </style>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/styles/github-dark.min.css"
+        />
+        <link rel="stylesheet" href="./shared.css" />
+        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/highlight.min.js"></script>
+        <script>
+            hljs.highlightAll();
+        </script>
     </head>
 
     <body
@@ -494,132 +466,120 @@
                 >
                     <!-- Left: event-loop-demo.js -->
                     <div>
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <span
-                                class="text-s font-mono bg-slate-700 px-2 py-0.5 rounded text-slate-300"
-                                >event-loop-demo.js</span
-                            >
-                            <span class="text-s text-slate-500"
-                                >(main script)</span
-                            >
-                        </div>
-                        <div class="code-block">
-                            <pre><span class="keyword">const</span> fs = <span class="func">require</span>(<span class="string">'fs'</span>);
-<span class="keyword">const</span> http = <span class="func">require</span>(<span class="string">'http'</span>);
+                        <div class="code-card">
+                            <div class="code-card-title">
+                                event-loop-demo.js (main script)
+                            </div>
+                            <pre><code class="language-javascript">const fs = require('fs');
+const http = require('http');
 
-console.<span class="func">log</span>(<span class="string">'=== Event Loop Order ===\n'</span>);
+console.log('=== Event Loop Order ===\n');
 
-<span class="comment">// -------- Close queue --------</span>
-<span class="keyword">const</span> server = http.<span class="func">createServer</span>((req, res) => res.<span class="func">end</span>(<span class="string">'OK'</span>));
-server.<span class="func">on</span>(<span class="string">'close'</span>, () => {
-  console.<span class="func">log</span>(<span class="string">'8. [Close] server closed'</span>);
+// -------- Close queue --------
+const server = http.createServer((req, res) => res.end('OK'));
+server.on('close', () => {
+  console.log('8. [Close] server closed');
 });
 
-server.<span class="func">listen</span>(<span class="num">0</span>, () => {
-  console.<span class="func">log</span>(<span class="string">`Server listening on port ${server.address().port}`</span>);
+server.listen(0, () => {
+  console.log(`Server listening on port ${server.address().port}`);
   setImmediate(() => {
-    console.<span class="func">log</span>(<span class="string">'Closing server...'</span>);
-    server.<span class="func">close</span>();
+    console.log('Closing server...');
+    server.close();
   });
 });
 
-<span class="comment">// -------- 1. Microtasks (nextTick) --------</span>
-process.<span class="func">nextTick</span>(() => {
-  console.<span class="func">log</span>(<span class="string">'1. [Micro] nextTick'</span>);
+// -------- 1. Microtasks (nextTick) --------
+process.nextTick(() => {
+  console.log('1. [Micro] nextTick');
 });
 
-<span class="comment">// -------- 2. Microtasks (Promise) --------</span>
-Promise.<span class="func">resolve</span>().<span class="func">then</span>(() => {
-  console.<span class="func">log</span>(<span class="string">'2. [Micro] Promise'</span>);
+// -------- 2. Microtasks (Promise) --------
+Promise.resolve().then(() => {
+  console.log('2. [Micro] Promise');
 });
 
-<span class="comment">// -------- 3. Timer queue --------</span>
+// -------- 3. Timer queue --------
 setTimeout(() => {
-  console.<span class="func">log</span>(<span class="string">'3. [Timer] setTimeout 0ms'</span>);
-}, <span class="num">0</span>);
+  console.log('3. [Timer] setTimeout 0ms');
+}, 0);
 
-<span class="comment">// -------- 4. I/O queue --------</span>
-fs.<span class="func">readFile</span>(__filename, () => {
-  console.<span class="func">log</span>(<span class="string">'4. [I/O] fs.readFile'</span>);
+// -------- 4. I/O queue --------
+fs.readFile(__filename, () => {
+  console.log('4. [I/O] fs.readFile');
 });
 
-<span class="comment">// -------- 5. Check queue --------</span>
+// -------- 5. Check queue --------
 setImmediate(() => {
-  console.<span class="func">log</span>(<span class="string">'5. [Check] setImmediate'</span>);
+  console.log('5. [Check] setImmediate');
 });
 
-<span class="comment">// -------- Microtasks between phases --------</span>
+// -------- Microtasks between phases --------
 setTimeout(() => {
-  process.<span class="func">nextTick</span>(() => console.<span class="func">log</span>(<span class="string">'   [Micro] nextTick (after timer)'</span>));
-  Promise.<span class="func">resolve</span>().<span class="func">then</span>(() => console.<span class="func">log</span>(<span class="string">'   [Micro] Promise (after timer)'</span>));
-}, <span class="num">0</span>);
+  process.nextTick(() => console.log('   [Micro] nextTick (after timer)'));
+  Promise.resolve().then(() => console.log('   [Micro] Promise (after timer)'));
+}, 0);
 
-fs.<span class="func">readFile</span>(__filename, () => {
-  process.<span class="func">nextTick</span>(() => console.<span class="func">log</span>(<span class="string">'   [Micro] nextTick (after I/O)'</span>));
-  Promise.<span class="func">resolve</span>().<span class="func">then</span>(() => console.<span class="func">log</span>(<span class="string">'   [Micro] Promise (after I/O)'</span>));
+fs.readFile(__filename, () => {
+  process.nextTick(() => console.log('   [Micro] nextTick (after I/O)'));
+  Promise.resolve().then(() => console.log('   [Micro] Promise (after I/O)'));
 });
 
 setImmediate(() => {
-  process.<span class="func">nextTick</span>(() => console.<span class="func">log</span>(<span class="string">'   [Micro] nextTick (after check)'</span>));
-  Promise.<span class="func">resolve</span>().<span class="func">then</span>(() => console.<span class="func">log</span>(<span class="string">'   [Micro] Promise (after check)'</span>));
+  process.nextTick(() => console.log('   [Micro] nextTick (after check)'));
+  Promise.resolve().then(() => console.log('   [Micro] Promise (after check)'));
 });
 
-server.<span class="func">on</span>(<span class="string">'close'</span>, () => {
-  process.<span class="func">nextTick</span>(() => console.<span class="func">log</span>(<span class="string">'   [Micro] nextTick (after close)'</span>));
-  Promise.<span class="func">resolve</span>().<span class="func">then</span>(() => console.<span class="func">log</span>(<span class="string">'   [Micro] Promise (after close)'</span>));
-});</pre>
+server.on('close', () => {
+  process.nextTick(() => console.log('   [Micro] nextTick (after close)'));
+  Promise.resolve().then(() => console.log('   [Micro] Promise (after close)'));
+});</code></pre>
                         </div>
                     </div>
 
                     <!-- Right: probe-iter.js -->
                     <div>
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <span
-                                class="text-s font-mono bg-slate-700 px-2 py-0.5 rounded text-slate-300"
-                                >probe-iter.js</span
-                            >
-                            <span class="text-s text-slate-500"
-                                >(preload with
+                        <div class="code-card">
+                            <div class="code-card-title">
+                                probe-iter.js (preload with
                                 <code
                                     class="bg-slate-700 px-1 py-0.5 rounded text-xs"
                                     >-r</code
-                                >)</span
-                            >
-                        </div>
-                        <div class="code-block">
-                            <pre><span class="comment">// Annotates every log line with loop iteration + phase</span>
-<span class="keyword">const</span> async_hooks = <span class="func">require</span>(<span class="string">'async_hooks'</span>);
-<span class="keyword">const</span> types = <span class="keyword">new</span> <span class="func">Map</span>();
+                                >)
+                            </div>
+                            <pre><code class="language-javascript">// Annotates every log line with loop iteration + phase
+const async_hooks = require('async_hooks');
+const types = new Map();
 
-async_hooks.<span class="func">createHook</span>({
-  <span class="func">init</span>(id, type) { types.<span class="func">set</span>(id, type); }
-}).<span class="func">enable</span>();
+async_hooks.createHook({
+  init(id, type) { types.set(id, type); }
+}).enable();
 
-<span class="keyword">let</span> iter = <span class="num">0</span>;
-<span class="comment">// a "sentinel" immediate re-armed every iteration marks each check phase</span>
+let iter = 0;
+// a "sentinel" immediate re-armed every iteration marks each check phase
 (
-  <span class="keyword">function</span> <span class="func">mark</span>() {
+  function mark() {
     iter++;
-    <span class="keyword">const</span> im = <span class="func">setImmediate</span>(mark);
-    im.<span class="func">unref</span> && im.<span class="func">unref</span>();
+    const im = setImmediate(mark);
+    im.unref && im.unref();
   }
 )();
 
-iter = <span class="num">0</span>;
+iter = 0;
 
-<span class="keyword">const</span> PHASE = {
-  Timeout: <span class="string">'TIMER phase'</span>,
-  Immediate: <span class="string">'CHECK phase'</span>,
-  FSREQCALLBACK: <span class="string">'POLL phase (I/O)'</span>,
-  TickObject: <span class="string">'nextTick drain'</span>,
-  PROMISE: <span class="string">'microtask drain'</span>
+const PHASE = {
+  Timeout: 'TIMER phase',
+  Immediate: 'CHECK phase',
+  FSREQCALLBACK: 'POLL phase (I/O)',
+  TickObject: 'nextTick drain',
+  PROMISE: 'microtask drain'
 };
-<span class="keyword">const</span> orig = console.<span class="func">log</span>.<span class="func">bind</span>(console);
+const orig = console.log.bind(console);
 
-console.<span class="func">log</span> = (...a) => {
-  <span class="keyword">const</span> t = types.<span class="func">get</span>(async_hooks.<span class="func">executionAsyncId</span>()) || <span class="string">'sync'</span>;
-  orig(<span class="string">`[iter ${iter}] [${(PHASE[t] || t).padEnd(17)}] ${a.join(' ')}`</span>);
-};</pre>
+console.log = (...a) => {
+  const t = types.get(async_hooks.executionAsyncId()) || 'sync';
+  orig(`[iter ${iter}] [${(PHASE[t] || t).padEnd(17)}] ${a.join(' ')}`);
+};</code></pre>
                         </div>
                     </div>
                 </div>

@@ -29,6 +29,15 @@
                 sequence: { useMaxWidth: true },
             });
         </script>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/styles/github-dark.min.css"
+        />
+        <link rel="stylesheet" href="./shared.css" />
+        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/highlight.min.js"></script>
+        <script>
+            hljs.highlightAll();
+        </script>
     </head>
 
     <body
@@ -438,17 +447,11 @@ flowchart TB
                     quietly implement a rival version.
                 </p>
 
-                <div
-                    class="mt-6 overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
-                >
-                    <div
-                        class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
-                    >
+                <div class="mt-6 code-card">
+                    <div class="code-card-title">
                         src/shared/domain/entity.ts
                     </div>
-                    <pre
-                        class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
-                    ><code>import { UniqueId } from './value-objects/unique-id.vo';
+                    <pre><code class="language-typescript">import { UniqueId } from './value-objects/unique-id.vo';
 
 export abstract class Entity&lt;T extends UniqueId = UniqueId&gt; {
   constructor(protected readonly id: T) {}
@@ -494,17 +497,11 @@ export abstract class Entity&lt;T extends UniqueId = UniqueId&gt; {
                 </p>
 
                 <div class="mt-6 grid gap-5 lg:grid-cols-2">
-                    <div
-                        class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
-                    >
-                        <div
-                            class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
-                        >
+                    <div class="code-card">
+                        <div class="code-card-title">
                             src/shared/domain/value-objects/unique-id.vo.ts
                         </div>
-                        <pre
-                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
-                        ><code>import { randomUUID } from 'crypto';
+                        <pre><code class="language-typescript">import { randomUUID } from 'crypto';
 
 export class UniqueId {
   private readonly value: string;   // private: data stays hidden
@@ -526,17 +523,11 @@ export class UniqueId {
   }
 }</code></pre>
                     </div>
-                    <div
-                        class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
-                    >
-                        <div
-                            class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
-                        >
+                    <div class="code-card">
+                        <div class="code-card-title">
                             src/product/domain/value-objects/sku.vo.ts
                         </div>
-                        <pre
-                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
-                        ><code>export class Sku {
+                        <pre><code class="language-typescript">export class Sku {
   private static readonly SKU_PATTERN = /^[A-Za-z0-9-]+$/;
   private static readonly MIN_LENGTH = 3;
   private static readonly MAX_LENGTH = 50;
@@ -620,17 +611,11 @@ export class UniqueId {
                     the coupling in one file:
                 </p>
 
-                <div
-                    class="mt-6 overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
-                >
-                    <div
-                        class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
-                    >
+                <div class="mt-6 code-card">
+                    <div class="code-card-title">
                         src/shared/domain/aggregate-root.ts
                     </div>
-                    <pre
-                        class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
-                    ><code>import { AggregateRoot as CqrsAggregateRoot } from '@nestjs/cqrs';
+                    <pre><code class="language-typescript">import { AggregateRoot as CqrsAggregateRoot } from '@nestjs/cqrs';
 
 export abstract class AggregateRoot extends CqrsAggregateRoot {}</code></pre>
                 </div>
@@ -681,18 +666,12 @@ export abstract class AggregateRoot extends CqrsAggregateRoot {}</code></pre>
                     storage without re-running creation rules:
                 </p>
 
-                <div
-                    class="mt-6 overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
-                >
-                    <div
-                        class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
-                    >
+                <div class="mt-6 code-card">
+                    <div class="code-card-title">
                         src/product/domain/entities/product.entity.ts
                         -- abridged
                     </div>
-                    <pre
-                        class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
-                    ><code>export class Product extends AggregateRoot {
+                    <pre><code class="language-typescript">export class Product extends AggregateRoot {
   private _sku: Sku;
   private _price: Money;
   private _stock: number;
@@ -779,17 +758,11 @@ flowchart LR
                 </div>
 
                 <div class="mt-8 grid gap-5 lg:grid-cols-2">
-                    <div
-                        class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
-                    >
-                        <div
-                            class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
-                        >
+                    <div class="code-card">
+                        <div class="code-card-title">
                             src/product/application/ports/product.repository.port.ts
                         </div>
-                        <pre
-                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
-                        ><code>export const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
+                        <pre><code class="language-typescript">export const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
 
 export interface ProductRepository {
   save(product: Product): Promise&lt;void&gt;;
@@ -800,18 +773,12 @@ export interface ProductRepository {
   delete(id: ProductId): Promise&lt;void&gt;;
 }</code></pre>
                     </div>
-                    <div
-                        class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
-                    >
-                        <div
-                            class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
-                        >
+                    <div class="code-card">
+                        <div class="code-card-title">
                             src/product/infrastructure/repositories/mongo-product.repository.ts
                             -- abridged
                         </div>
-                        <pre
-                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
-                        ><code>export class MongoProductRepository implements ProductRepository {
+                        <pre><code class="language-typescript">export class MongoProductRepository implements ProductRepository {
   private readonly collection: Collection&lt;ProductDocument&gt;;
 
   constructor(@Inject(MONGO_DB) private readonly db: Db) {
@@ -986,17 +953,13 @@ export interface ProductRepository {
                 </p>
 
                 <div class="mt-6 grid gap-5 lg:grid-cols-2">
-                    <div
-                        class="overflow-x-auto rounded-2xl border border-rose-900/50 bg-slate-900/60"
-                    >
+                    <div class="code-card border-rose-900/50">
                         <div
-                            class="border-b border-rose-900/50 px-4 py-2 text-xs text-rose-300/80"
+                            class="code-card-title border-rose-900/50 text-rose-300/80"
                         >
                             Intent has to be GUESSED from the payload
                         </div>
-                        <pre
-                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
-                        ><code>// PATCH /products/:id
+                        <pre><code class="language-typescript">// PATCH /products/:id
 class UpdateProductDto {
   price?: number;
   stock?: number;
@@ -1010,17 +973,13 @@ class UpdateProductDto {
 //   should stock changes emit a low-stock warning?
 //   three business processes, one method body</code></pre>
                     </div>
-                    <div
-                        class="overflow-x-auto rounded-2xl border border-cyan-900/50 bg-slate-900/60"
-                    >
+                    <div class="code-card border-cyan-900/50">
                         <div
-                            class="border-b border-cyan-900/50 px-4 py-2 text-xs text-cyan-300/80"
+                            class="code-card-title border-cyan-900/50 text-cyan-300/80"
                         >
                             Intent ARRIVES with the message
                         </div>
-                        <pre
-                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
-                        ><code>class RepriceProductCommand { /* id, price, currency */ }
+                        <pre><code class="language-typescript">class RepriceProductCommand { /* id, price, currency */ }
 class RestockProductCommand { /* id, quantity */ }
 class DeactivateProductCommand { /* id, reason */ }
 
@@ -1073,18 +1032,12 @@ class DeactivateProductCommand { /* id, reason */ }
                     handler:
                 </p>
 
-                <div
-                    class="mt-6 overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
-                >
-                    <div
-                        class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
-                    >
+                <div class="mt-6 code-card">
+                    <div class="code-card-title">
                         src/product/presentation/product.controller.ts
                         -- abridged
                     </div>
-                    <pre
-                        class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
-                    ><code>@Controller('products')
+                    <pre><code class="language-typescript">@Controller('products')
 export class ProductsController {
   constructor(
     private readonly commandBus: CommandBus,
@@ -1123,17 +1076,11 @@ export class ProductsController {
                 </p>
 
                 <div class="mt-6 grid gap-5 lg:grid-cols-2">
-                    <div
-                        class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
-                    >
-                        <div
-                            class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
-                        >
+                    <div class="code-card">
+                        <div class="code-card-title">
                             application/use-cases/create-product/create-product.command.ts
                         </div>
-                        <pre
-                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
-                        ><code>export class CreateProductCommand {
+                        <pre><code class="language-typescript">export class CreateProductCommand {
   constructor(
     public readonly name: string,
     public readonly description: string,
@@ -1144,17 +1091,11 @@ export class ProductsController {
   ) {}
 }</code></pre>
                     </div>
-                    <div
-                        class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
-                    >
-                        <div
-                            class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
-                        >
+                    <div class="code-card">
+                        <div class="code-card-title">
                             application/use-cases/create-product/create-product.handler.ts
                         </div>
-                        <pre
-                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
-                        ><code>@CommandHandler(CreateProductCommand)
+                        <pre><code class="language-typescript">@CommandHandler(CreateProductCommand)
 export class CreateProductHandler
   implements ICommandHandler&lt;CreateProductCommand, void&gt; {
   constructor(
@@ -1459,17 +1400,11 @@ flowchart LR
                 </p>
 
                 <div class="mt-8 grid gap-5 lg:grid-cols-2">
-                    <div
-                        class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
-                    >
-                        <div
-                            class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
-                        >
+                    <div class="code-card">
+                        <div class="code-card-title">
                             src/shared/domain/exceptions/application.exception.ts
                         </div>
-                        <pre
-                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
-                        ><code>export enum ApplicationExceptionCode {
+                        <pre><code class="language-typescript">export enum ApplicationExceptionCode {
   VALIDATION_ERROR = 'VALIDATION_ERROR',
   NOT_FOUND = 'NOT_FOUND',
   CONFLICT = 'CONFLICT',
@@ -1486,17 +1421,11 @@ export class ApplicationException extends Error {
   }
 }</code></pre>
                     </div>
-                    <div
-                        class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
-                    >
-                        <div
-                            class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
-                        >
+                    <div class="code-card">
+                        <div class="code-card-title">
                             src/shared/infrastructure/filters/application-exception.filter.ts
                         </div>
-                        <pre
-                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
-                        ><code>const CODE_TO_HTTP: Record&lt;ApplicationExceptionCode, HttpStatus&gt; = {
+                        <pre><code class="language-typescript">const CODE_TO_HTTP: Record&lt;ApplicationExceptionCode, HttpStatus&gt; = {
   [ApplicationExceptionCode.VALIDATION_ERROR]: HttpStatus.BAD_REQUEST,
   [ApplicationExceptionCode.NOT_FOUND]: HttpStatus.NOT_FOUND,
   [ApplicationExceptionCode.CONFLICT]: HttpStatus.CONFLICT,
@@ -1633,17 +1562,11 @@ sequenceDiagram
                 </p>
 
                 <div class="mt-6 grid gap-5 lg:grid-cols-2">
-                    <div
-                        class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
-                    >
-                        <div
-                            class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
-                        >
+                    <div class="code-card">
+                        <div class="code-card-title">
                             src/customers/application/ports/notification.port.ts
                         </div>
-                        <pre
-                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
-                        ><code>export const NOTIFICATION_SERVICE = Symbol('NOTIFICATION_SERVICE');
+                        <pre><code class="language-typescript">export const NOTIFICATION_SERVICE = Symbol('NOTIFICATION_SERVICE');
 
 export interface Notification {
   recipientId: string;
@@ -1655,17 +1578,11 @@ export interface NotificationPort {
   sendNotification(notification: Notification): Promise&lt;void&gt;;
 }</code></pre>
                     </div>
-                    <div
-                        class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60"
-                    >
-                        <div
-                            class="border-b border-slate-800 px-4 py-2 text-xs text-slate-500"
-                        >
+                    <div class="code-card">
+                        <div class="code-card-title">
                             src/customers/application/events/customer-registered.handler.ts
                         </div>
-                        <pre
-                            class="overflow-x-auto p-4 text-[0.8rem] leading-6 text-slate-300"
-                        ><code>@EventsHandler(CustomerRegisteredEvent)
+                        <pre><code class="language-typescript">@EventsHandler(CustomerRegisteredEvent)
 export class CustomerRegisteredHandler
   implements IEventHandler&lt;CustomerRegisteredEvent&gt; {
   constructor(

@@ -130,6 +130,15 @@
                 flex-direction: column;
             }
         </style>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/styles/github-dark.min.css"
+        />
+        <link rel="stylesheet" href="../shared.css" />
+        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/highlight.min.js"></script>
+        <script>
+            hljs.highlightAll();
+        </script>
     </head>
 
     <body
@@ -270,36 +279,11 @@
                             <!-- Bottom block -->
                             <div class="mt-6 sm:mt-8 md:mt-10">
                                 <!-- Code: drop in a short, self-contained snippet (Terraform, CLI, JSON, etc.) -->
-                                <div
-                                    class="rounded-xl border border-white/10 bg-[#0b0b12] px-4 pb-4 pt-3 sm:rounded-2xl sm:px-6 sm:pb-5 sm:pt-4"
-                                >
-                                    <div
-                                        class="mb-3 flex items-center gap-2 sm:mb-4"
-                                    >
-                                        <span
-                                            class="h-3 w-3 rounded-full bg-[#ff5f57]"
-                                        ></span>
-                                        <span
-                                            class="h-3 w-3 rounded-full bg-[#febc2e]"
-                                        ></span>
-                                        <span
-                                            class="h-3 w-3 rounded-full bg-[#28c840]"
-                                        ></span>
-                                        <!-- TODO: filename shown in the "window" -->
-                                        <span
-                                            class="ml-3 font-mono text-xs text-zinc-600 sm:text-sm"
-                                            >[filename]</span
-                                        >
+                                <div class="code-card">
+                                    <div class="code-card-title">
+                                        [filename]
                                     </div>
-                                    <!--
-                                        TODO: syntax-colored snippet. Reuse these span colors:
-                                        text-fuchsia-400 keyword, text-amber-300 string/type,
-                                        text-emerald-300 name, text-sky-300 attribute,
-                                        text-orange-400 number, text-zinc-500 punctuation
-                                    -->
-                                    <pre
-                                        class="overflow-x-auto whitespace-pre font-mono text-xs leading-relaxed sm:text-sm md:text-base"
-                                    ><span class="text-zinc-500">[code snippet]</span></pre>
+                                    <pre><code class="language-[language]">[code snippet]</code></pre>
                                 </div>
 
                                 <!-- Footer -->

@@ -9,6 +9,15 @@
         <meta name="color-scheme" content="dark" />
         <title>Kubernetes Deployment Strategies</title>
         <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/styles/github-dark.min.css"
+        />
+        <link rel="stylesheet" href="./shared.css" />
+        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/highlight.min.js"></script>
+        <script>
+            hljs.highlightAll();
+        </script>
     </head>
 
     <body
@@ -1111,36 +1120,20 @@
                 </div>
 
                 <div class="grid gap-5 lg:grid-cols-2">
-                    <div
-                        class="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/70"
-                    >
-                        <div
-                            class="border-b border-slate-800 px-5 py-4"
-                        >
-                            <p class="font-bold text-white">
-                                Recreate
-                            </p>
+                    <div class="code-card">
+                        <div class="code-card-title">
+                            recreate.yaml
                         </div>
-                        <pre
-                            class="overflow-x-auto p-5 text-sm leading-7 text-slate-300"
-                        ><code>spec:
+                        <pre><code class="language-yaml">spec:
   strategy:
     type: Recreate</code></pre>
                     </div>
 
-                    <div
-                        class="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/70"
-                    >
-                        <div
-                            class="border-b border-slate-800 px-5 py-4"
-                        >
-                            <p class="font-bold text-white">
-                                RollingUpdate
-                            </p>
+                    <div class="code-card">
+                        <div class="code-card-title">
+                            rollingUpdate.yaml
                         </div>
-                        <pre
-                            class="overflow-x-auto p-5 text-sm leading-7 text-slate-300"
-                        ><code>spec:
+                        <pre><code class="language-yaml">spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:

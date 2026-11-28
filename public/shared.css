@@ -1,0 +1,22 @@
+pre code.hljs {
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    tab-size: 2;
+}
+
+.code-card {
+    overflow: hidden;
+    border: 1px solid #1e293b;
+    border-radius: 1rem;
+    background: rgb(15 23 42 / 0.6);
+}
+
+.code-card-title {
+    border-bottom: 1px solid #1e293b;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: #64748b;
+}
