@@ -55,10 +55,9 @@ export function SocialLinks() {
     return (
         <Stack
             direction="row"
-            justifyContent="center"
-            flexWrap="wrap"
             useFlexGap
             spacing={0.5}
+            sx={{ justifyContent: 'center', flexWrap: 'wrap' }}
         >
             {socialLinks.map((link) => (
                 <Tooltip key={link.title} title={link.title} arrow>

@@ -1,10 +1,10 @@
 import {
     Alert,
     Slide,
+    SlideProps,
     Snackbar,
     SnackbarCloseReason,
 } from '@mui/material';
-import { TransitionProps } from '@mui/material/transitions';
 import { useAppDispatch, useAppSelector } from '../hooks/redux.hook';
 import { closeNotification } from '../redux/notification.slice';
 
@@ -33,7 +33,7 @@ export function Notification() {
             open={notification.open}
             autoHideDuration={notification.autoHideDuration}
             onClose={handleClose}
-            TransitionComponent={TransitionLeftDirection}
+            slots={{ transition: TransitionLeftDirection }}
         >
             <Alert
                 onClose={handleClose}
@@ -46,8 +46,6 @@ export function Notification() {
     );
 }
 
-function TransitionLeftDirection(props: TransitionProps) {
-    // FIXME: https://github.com/mui/material-ui/issues/36806
-    // @ts-ignore
+function TransitionLeftDirection(props: SlideProps) {
     return <Slide {...props} direction="left" />;
 }

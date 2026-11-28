@@ -6,7 +6,7 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
-import Typed from 'react-typed';
+import { ReactTyped } from 'react-typed';
 import avatarSrc from '../assets/me.jpg';
 import { MyParticles } from '../components/MyParticles.component';
 import { SocialLinks } from '../components/SocialLinks.component';
@@ -27,25 +27,27 @@ export function Home() {
         <>
             <MyParticles />
             <Box
-                display="grid"
-                gridTemplateColumns={{
-                    xs: 'minmax(0, 1fr)',
-                    md: '400px minmax(0, 1fr)',
-                }}
-                gap={2}
-                minHeight={{ md: '100%' }}
-                margin="0 auto"
-                padding={{ xs: 2, md: 3 }}
                 sx={{
+                    display: 'grid',
+                    gridTemplateColumns: {
+                        xs: 'minmax(0, 1fr)',
+                        md: '400px minmax(0, 1fr)',
+                    },
+                    gap: 2,
+                    minHeight: { md: '100%' },
+                    m: '0 auto',
+                    p: { xs: 2, md: 3 },
                     maxWidth: (theme: Theme) =>
                         theme.breakpoints.values.lg,
                 }}
             >
                 <Box
-                    display="flex"
-                    flexDirection="column"
-                    gap={2}
-                    sx={{ height: 'fit-content' }}
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                        height: 'fit-content',
+                    }}
                 >
                     <Paper
                         variant="outlined"
@@ -74,12 +76,16 @@ export function Home() {
                         <Typography
                             variant="h1"
                             color="primary"
-                            textTransform="uppercase"
+                            sx={{ textTransform: 'uppercase' }}
                         >
-                            <Typed strings={['Kasir Barati']}></Typed>
+                            <ReactTyped strings={['Kasir Barati']} />
                         </Typography>
-                        <Typography variant="h2" component="p" my={1}>
-                            <Typed
+                        <Typography
+                            variant="h2"
+                            component="p"
+                            sx={{ my: 1 }}
+                        >
+                            <ReactTyped
                                 strings={[
                                     'Fullstack Engineer',
                                     'Backend Engineer',
@@ -87,19 +93,18 @@ export function Home() {
                                 typeSpeed={37}
                                 backSpeed={47}
                                 loop={true}
-                            ></Typed>
+                            />
                         </Typography>
                         <Typography
-                            color="text.secondary"
-                            mb={2}
-                            sx={{ textWrap: 'balance' }}
+                            color="textSecondary"
+                            sx={{ mb: 2, textWrap: 'balance' }}
                         >
                             Everything rises & falls on leadership.
                             John C. Maxwell
                         </Typography>
                         <SocialLinks />
                     </Paper>
-                    <Box height={{ xs: 393, md: 330 }}>
+                    <Box sx={{ height: { xs: 393, md: 330 } }}>
                         <iframe
                             src={`https://player.rss.com/testing-llm-and-sharing-my-personal-experience-with-them?theme=${palette.mode}&v=2`}
                             style={frameStyle}

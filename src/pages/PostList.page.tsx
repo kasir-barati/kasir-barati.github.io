@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import { EntryList } from '../components/EntryList.component';
 import { Page } from '../components/Page.component';
 import awsFlashcards from '../data/aws-flashcards.json';

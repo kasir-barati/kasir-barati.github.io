@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { ChevronDownIcon } from 'lucide-react';
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router';
 import { Brand } from './Brand.component';
 import { navBarItems, noteLinks } from './Navbar.component';
 import { SearchBox } from './SearchBox.component';
@@ -34,8 +34,7 @@ export function DesktopNavbar() {
                 <Brand />
                 <Box
                     component="nav"
-                    display="flex"
-                    alignSelf="stretch"
+                    sx={{ display: 'flex', alignSelf: 'stretch' }}
                 >
                     {navBarItems.map((navBarItem) => (
                         <Button

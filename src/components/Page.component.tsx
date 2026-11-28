@@ -9,8 +9,8 @@ export function Page({
         <Container maxWidth="lg" sx={{ py: { xs: 3, md: 5 } }}>
             <Typography
                 variant="h1"
-                mb={4}
                 sx={{
+                    'mb': 4,
                     '&::after': {
                         content: '""',
                         display: 'block',

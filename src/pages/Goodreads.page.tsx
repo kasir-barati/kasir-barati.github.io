@@ -13,12 +13,14 @@ export function Goodreads() {
     return (
         <Page title="Goodreads">
             <Box
-                display="grid"
-                gridTemplateColumns={{
-                    xs: 'repeat(2, 1fr)',
-                    sm: 'repeat(auto-fill, minmax(200px, 1fr))',
+                sx={{
+                    display: 'grid',
+                    gridTemplateColumns: {
+                        xs: 'repeat(2, 1fr)',
+                        sm: 'repeat(auto-fill, minmax(200px, 1fr))',
+                    },
+                    gap: 2,
                 }}
-                gap={2}
             >
                 {books.map((book) => (
                     <Card key={book.link}>
@@ -50,7 +52,7 @@ export function Goodreads() {
                                 </Typography>
                                 <Typography
                                     variant="body2"
-                                    color="text.secondary"
+                                    color="textSecondary"
                                 >
                                     {book.author}
                                 </Typography>

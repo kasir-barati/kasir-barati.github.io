@@ -6,8 +6,8 @@ import {
     Theme,
 } from '@mui/material';
 import { SearchIcon } from 'lucide-react';
-import { ChangeEvent, FormEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { ChangeEvent, SubmitEvent, useState } from 'react';
+import { useNavigate } from 'react-router';
 
 interface SearchBoxProps {
     sx?: SxProps<Theme>;
@@ -18,7 +18,7 @@ export function SearchBox({ sx, onSearch }: SearchBoxProps) {
     const [searchText, setSearchText] = useState('');
     const navigate = useNavigate();
 
-    const handleSubmit = (event: FormEvent) => {
+    const handleSubmit = (event: SubmitEvent) => {
         event.preventDefault();
         navigate(`/posts?q=${encodeURIComponent(searchText.trim())}`);
         onSearch?.();
@@ -42,14 +42,16 @@ export function SearchBox({ sx, onSearch }: SearchBoxProps) {
                         HTMLInputElement | HTMLTextAreaElement
                     >,
                 ) => setSearchText(event.target.value)}
-                inputProps={{ 'aria-label': 'Search posts' }}
-                InputProps={{
-                    startAdornment: (
-                        <InputAdornment position="start">
-                            <SearchIcon size={18} />
-                        </InputAdornment>
-                    ),
-                    sx: { borderRadius: 99 },
+                slotProps={{
+                    htmlInput: { 'aria-label': 'Search posts' },
+                    input: {
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon size={18} />
+                            </InputAdornment>
+                        ),
+                        sx: { borderRadius: 99 },
+                    },
                 }}
             />
         </Box>

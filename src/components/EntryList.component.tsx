@@ -32,14 +32,14 @@ export function EntryList({
                         <Typography
                             variant="h3"
                             component="h2"
-                            mb={1}
+                            sx={{ mb: 1 }}
                         >
                             {entry.title}
                         </Typography>
                         <Typography
                             variant="body2"
-                            color="text.secondary"
-                            mb={2}
+                            color="textSecondary"
+                            sx={{ mb: 2 }}
                         >
                             {entry.description}
                         </Typography>

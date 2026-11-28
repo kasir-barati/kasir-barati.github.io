@@ -1,5 +1,5 @@
 import { Avatar, Link, Typography } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 
 export function Brand() {
     return (
@@ -8,9 +8,7 @@ export function Brand() {
             to="/"
             underline="none"
             color="text.primary"
-            display="flex"
-            alignItems="center"
-            gap={1.5}
+            sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}
         >
             <Avatar
                 src="/logo.png"

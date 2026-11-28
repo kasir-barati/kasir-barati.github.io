@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -132,8 +132,7 @@
 └── components/
     ├── Button.jsx
     ├── Header.jsx
-    └── Modal.jsx</pre
-                                >
+    └── Modal.jsx</pre>
                             </div>
 
                             <!-- Feature-Based (recommended) -->
@@ -166,8 +165,7 @@
 └── components/  (shared)
 └── hooks/
 └── pages/
-└── utils/</pre
-                                >
+└── utils/</pre>
                             </div>
 
                             <!-- Atomic Design -->
@@ -198,8 +196,7 @@
 └── molecules/
 └── organisms/
 └── templates/
-└── pages/</pre
-                                >
+└── pages/</pre>
                             </div>
                         </div>
                     </section>
@@ -373,7 +370,11 @@
                 <!-- Optional: remove this button (and the <dialog> below) if the topic doesn't need a deep dive -->
                 <button
                     type="button"
-                    onclick="document.getElementById('deep-dive').showModal()"
+                    onclick="
+                        document
+                            .getElementById('deep-dive')
+                            .showModal()
+                    "
                     class="vertical-tab z-10 inline-flex shrink-0 items-center gap-2 border border-amber-400/30 bg-amber-400/10 text-xs font-semibold text-amber-300 shadow-md transition hover:-translate-x-0.5 hover:bg-amber-400/20 active:translate-x-0 sm:text-sm"
                 >
                     <span>Deep dive</span>
@@ -392,7 +393,9 @@
                 </h2>
                 <button
                     type="button"
-                    onclick="document.getElementById('deep-dive').close()"
+                    onclick="
+                        document.getElementById('deep-dive').close()
+                    "
                     class="rounded-full p-1 text-slate-400 hover:bg-white/10 hover:text-white"
                     aria-label="Close"
                 >
@@ -420,7 +423,11 @@
 
                 <button
                     type="button"
-                    onclick="document.getElementById('deep-dive-content').scrollTo({top: 0, behavior: 'smooth'})"
+                    onclick="
+                        document
+                            .getElementById('deep-dive-content')
+                            .scrollTo({ top: 0, behavior: 'smooth' })
+                    "
                     class="mt-6 inline-block text-sm text-slate-400 hover:text-white"
                 >
                     Back to top ↑

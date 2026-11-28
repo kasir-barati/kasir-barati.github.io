@@ -27,9 +27,12 @@ export function Resume() {
         <Page title="Resume">
             <Section title="Languages">
                 <Box
-                    display="grid"
-                    gridTemplateColumns="repeat(auto-fit, minmax(240px, 1fr))"
-                    gap={2}
+                    sx={{
+                        display: 'grid',
+                        gridTemplateColumns:
+                            'repeat(auto-fit, minmax(240px, 1fr))',
+                        gap: 2,
+                    }}
                 >
                     {languages.map((language) => (
                         <Card key={language.name}>
@@ -52,7 +55,7 @@ export function Resume() {
                                 />
                                 <Typography
                                     variant="body2"
-                                    color="text.secondary"
+                                    color="textSecondary"
                                 >
                                     {language.level.label}
                                 </Typography>
@@ -99,8 +102,8 @@ function Section({
     children,
 }: PropsWithChildren<{ title: string }>) {
     return (
-        <Box component="section" mb={6}>
-            <Typography variant="h2" mb={2}>
+        <Box component="section" sx={{ mb: 6 }}>
+            <Typography variant="h2" sx={{ mb: 2 }}>
                 {title}
             </Typography>
             {children}
@@ -116,9 +119,9 @@ function Experience({
     return (
         <Box
             component="li"
-            position="relative"
-            mb={3}
             sx={{
+                'position': 'relative',
+                'mb': 3,
                 // Dot centered on the timeline border
                 '&::before': {
                     content: '""',
@@ -140,10 +143,10 @@ function Experience({
                     <Typography variant="h3">
                         {experience.position}
                     </Typography>
-                    <Typography color="text.secondary">
+                    <Typography color="textSecondary">
                         {experience.company}
                     </Typography>
-                    <Box component="ul" pl={2.5} my={2}>
+                    <Box component="ul" sx={{ pl: 2.5, my: 2 }}>
                         {experience.description.map((description) => (
                             <Typography
                                 component="li"

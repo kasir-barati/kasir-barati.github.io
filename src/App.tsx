@@ -1,10 +1,5 @@
 import { Box, CssBaseline } from '@mui/material';
-import {
-    HashRouter,
-    Route,
-    Routes,
-    useLocation,
-} from 'react-router-dom';
+import { HashRouter, Route, Routes, useLocation } from 'react-router';
 import { Navbar, navBarItems } from './components/Navbar.component';
 import { Notification } from './components/Notification.component';
 import { AwsFlashcardsList } from './pages/AwsFlashcardsList.page';
@@ -18,9 +13,11 @@ function App() {
             <HashRouter>
                 <CssBaseline enableColorScheme />
                 <Box
-                    display="flex"
-                    flexDirection="column"
-                    height="100dvh"
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: '100dvh',
+                    }}
                 >
                     <Navbar />
                     <Main />
@@ -39,9 +36,7 @@ function Main() {
         <Box
             key={pathname}
             component="main"
-            flex="1 1 auto"
-            minHeight={0}
-            sx={{ overflowY: 'auto' }}
+            sx={{ flex: '1 1 auto', minHeight: 0, overflowY: 'auto' }}
         >
             <Routes>
                 {navBarItems.map((navBarItem) => (

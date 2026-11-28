@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { MenuIcon } from 'lucide-react';
 import { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router';
 import { Brand } from './Brand.component';
 import { navBarItems, noteLinks } from './Navbar.component';
 import { SearchBox } from './SearchBox.component';
@@ -38,7 +38,7 @@ export function MobileNavbar() {
             >
                 <Toolbar>
                     <Brand />
-                    <Box flexGrow={1} />
+                    <Box sx={{ flexGrow: 1 }} />
                     <ThemeToggle />
                     <IconButton
                         color="primary"
@@ -51,8 +51,8 @@ export function MobileNavbar() {
                 </Toolbar>
             </AppBar>
             <Drawer open={isOpen} anchor="right" onClose={close}>
-                <Box width={280}>
-                    <Box padding={2}>
+                <Box sx={{ width: 280 }}>
+                    <Box sx={{ p: 2 }}>
                         <SearchBox onSearch={close} />
                     </Box>
                     <Divider />
@@ -67,7 +67,8 @@ export function MobileNavbar() {
                                 }
                                 onClick={close}
                             >
-                                <ListItemIcon>
+                                {/* Lines up with the inset links below */}
+                                <ListItemIcon sx={{ minWidth: 56 }}>
                                     {navBarItem.icon}
                                 </ListItemIcon>
                                 <ListItemText>

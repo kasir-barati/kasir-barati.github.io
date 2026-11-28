@@ -37,8 +37,8 @@ export function Portfolio() {
 
 function ProjectGroup({ group }: { group: Group }) {
     return (
-        <Box component="section" mb={6}>
-            <Typography variant="h2" mb={1}>
+        <Box component="section" sx={{ mb: 6 }}>
+            <Typography variant="h2" sx={{ mb: 1 }}>
                 {group.type === 'org' ? (
                     <Link
                         href={`https://github.com/${group.name}`}
@@ -53,15 +53,18 @@ function ProjectGroup({ group }: { group: Group }) {
                 )}
             </Typography>
             {group.description && (
-                <Typography color="text.secondary">
+                <Typography color="textSecondary">
                     {group.description}
                 </Typography>
             )}
             <Box
-                display="grid"
-                gridTemplateColumns="repeat(auto-fill, minmax(280px, 1fr))"
-                gap={2}
-                mt={2}
+                sx={{
+                    display: 'grid',
+                    gridTemplateColumns:
+                        'repeat(auto-fill, minmax(280px, 1fr))',
+                    gap: 2,
+                    mt: 2,
+                }}
             >
                 {group.projects.map((project) => (
                     <ProjectCard
@@ -78,10 +81,10 @@ function ProjectCard({ project }: { project: Project }) {
     return (
         <Card sx={{ display: 'flex', flexDirection: 'column' }}>
             <CardContent sx={{ flexGrow: 1 }}>
-                <Typography variant="h3" mb={1}>
+                <Typography variant="h3" sx={{ mb: 1 }}>
                     {project.name}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="textSecondary">
                     {project.description}
                 </Typography>
             </CardContent>

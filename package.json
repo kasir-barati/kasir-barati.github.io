@@ -16,27 +16,28 @@
     "dependencies": {
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",
-        "@mui/icons-material": "^5.18.0",
-        "@mui/lab": "9.0.0-beta.9",
-        "@mui/material": "^5.18.0",
-        "@reduxjs/toolkit": "^1.9.7",
-        "lucide-react": "^1.81.0",
+        "@mui/icons-material": "^9.6.0",
+        "@mui/lab": "9.0.0-beta.11",
+        "@mui/material": "^9.6.0",
+        "@reduxjs/toolkit": "^2.15.0",
+        "lucide-react": "^1.82.0",
         "particles-bg": "^2.5.5",
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1",
-        "react-redux": "^8.1.3",
-        "react-router-dom": "^6.30.4",
-        "react-typed": "^1.2.0"
+        "react": "^19.3.1",
+        "react-dom": "^19.3.1",
+        "react-redux": "^9.3.1",
+        "react-router": "^8.5.3",
+        "react-typed": "^2.0.12"
     },
     "devDependencies": {
-        "@types/react": "^18.3.31",
-        "@types/react-dom": "^18.3.7",
-        "@vitejs/plugin-react": "^3.1.0",
-        "concurrently": "^9.2.1",
-        "gh-pages": "^5.0.0",
+        "@types/node": "^24.19.4",
+        "@types/react": "^19.3.3",
+        "@types/react-dom": "^19.3.0",
+        "@vitejs/plugin-react": "^6.3.0",
+        "concurrently": "^10.0.7",
+        "gh-pages": "^6.3.0",
         "husky": "^9.1.7",
-        "prettier": "^2.8.8",
+        "prettier": "^3.10.1",
         "typescript": "^7.0.2",
-        "vite": "^4.5.14"
+        "vite": "^8.4.0"
     }
 }
