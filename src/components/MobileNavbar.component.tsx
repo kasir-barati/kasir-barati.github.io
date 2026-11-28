@@ -1,6 +1,5 @@
 import {
     AppBar,
-    Avatar,
     Box,
     Divider,
     Drawer,
@@ -9,103 +8,80 @@ import {
     ListItemButton,
     ListItemIcon,
     ListItemText,
+    ListSubheader,
     Toolbar,
-    Typography,
-    useTheme,
 } from '@mui/material';
-import { MenuIcon, MoonIcon, SunIcon } from 'lucide-react';
+import { MenuIcon } from 'lucide-react';
 import { useState } from 'react';
-import avatarSrc from '../assets/me.jpg';
-import { useAppDispatch, useAppSelector } from '../hooks/redux.hook';
-import { toggleTheme } from '../redux/theme.slice';
-import { Link } from './Link.component';
+import { NavLink, useLocation } from 'react-router-dom';
+import { Brand } from './Brand.component';
 import { navBarItems, noteLinks } from './Navbar.component';
 import { SearchBox } from './SearchBox.component';
+import { ThemeToggle } from './ThemeToggle.component';
 
 export function MobileNavbar() {
-    const [isMobileNavBarOpen, setIsMobileNavBarOpen] =
-        useState(false);
-    const { darkMode } = useAppSelector(
-        (state) => state.themeReducer,
-    );
-    const theme = useTheme();
-    const dispatch = useAppDispatch();
-    const handleThemeToggle = () => {
-        dispatch(toggleTheme());
-    };
+    const [isOpen, setIsOpen] = useState(false);
+    const { pathname } = useLocation();
+    const close = () => setIsOpen(false);
 
     return (
         <>
             <AppBar
                 position="static"
+                color="transparent"
+                elevation={0}
                 sx={{
-                    background: '#222',
-                    margin: 0,
+                    bgcolor: 'background.paper',
+                    borderBottom: 1,
+                    borderColor: 'divider',
                 }}
             >
                 <Toolbar>
+                    <Brand />
+                    <Box flexGrow={1} />
+                    <ThemeToggle />
                     <IconButton
-                        onClick={() => setIsMobileNavBarOpen(true)}
+                        color="primary"
+                        edge="end"
+                        aria-label="Open menu"
+                        onClick={() => setIsOpen(true)}
                     >
-                        <MenuIcon color={theme.palette.error.main} />
+                        <MenuIcon />
                     </IconButton>
                 </Toolbar>
             </AppBar>
-            <Drawer
-                open={isMobileNavBarOpen}
-                anchor="right"
-                onClose={() => setIsMobileNavBarOpen(false)}
-            >
-                <Box
-                    width="250px"
-                    height="100%"
-                    bgcolor="#511"
-                    component="div"
-                >
-                    <Avatar
-                        src={avatarSrc}
-                        alt="Kasir Barati"
-                        sx={{
-                            display: 'block',
-                            margin: '0.5rem auto',
-                            width: 57,
-                            height: 57,
-                        }}
-                    />
-                    <Box paddingX={1}>
-                        <SearchBox
-                            onSearch={() =>
-                                setIsMobileNavBarOpen(false)
-                            }
-                        />
+            <Drawer open={isOpen} anchor="right" onClose={close}>
+                <Box width={280}>
+                    <Box padding={2}>
+                        <SearchBox onSearch={close} />
                     </Box>
                     <Divider />
-                    <List>
-                        {navBarItems.map((navBarItem, index) => {
-                            return (
-                                <Link
-                                    href={navBarItem.href}
-                                    key={index}
-                                    underline="none"
-                                    color={
-                                        !darkMode
-                                            ? 'primary.main'
-                                            : 'white'
-                                    }
-                                >
-                                    <ListItemButton>
-                                        <ListItemIcon>
-                                            {navBarItem.icon}
-                                        </ListItemIcon>
-                                        <ListItemText>
-                                            <Typography>
-                                                {navBarItem.text}
-                                            </Typography>
-                                        </ListItemText>
-                                    </ListItemButton>
-                                </Link>
-                            );
-                        })}
+                    <List component="nav">
+                        {navBarItems.map((navBarItem) => (
+                            <ListItemButton
+                                key={navBarItem.href}
+                                component={NavLink}
+                                to={navBarItem.href}
+                                selected={
+                                    pathname === navBarItem.href
+                                }
+                                onClick={close}
+                            >
+                                <ListItemIcon>
+                                    {navBarItem.icon}
+                                </ListItemIcon>
+                                <ListItemText>
+                                    {navBarItem.text}
+                                </ListItemText>
+                            </ListItemButton>
+                        ))}
+                    </List>
+                    <Divider />
+                    <List
+                        subheader={
+                            <ListSubheader>Writing</ListSubheader>
+                        }
+                    >
                         {noteLinks.map((noteLink) => (
                             <ListItemButton
                                 component="a"
@@ -114,46 +90,10 @@ export function MobileNavbar() {
                                 key={noteLink.href}
                             >
                                 <ListItemText inset>
-                                    <Typography
-                                        color={
-                                            !darkMode
-                                                ? 'primary.main'
-                                                : 'white'
-                                        }
-                                    >
-                                        {noteLink.text}
-                                    </Typography>
+                                    {noteLink.text}
                                 </ListItemText>
                             </ListItemButton>
                         ))}
-                        <ListItemButton onClick={handleThemeToggle}>
-                            <ListItemIcon>
-                                {darkMode ? (
-                                    <MoonIcon
-                                        color={
-                                            theme.palette.primary.main
-                                        }
-                                    />
-                                ) : (
-                                    <SunIcon
-                                        color={
-                                            theme.palette.warning.main
-                                        }
-                                    />
-                                )}
-                            </ListItemIcon>
-                            <ListItemText>
-                                <Typography
-                                    color={
-                                        !darkMode
-                                            ? 'primary.main'
-                                            : 'white'
-                                    }
-                                >
-                                    {`Toggle to ${theme.palette.mode} mode`}
-                                </Typography>
-                            </ListItemText>
-                        </ListItemButton>
                     </List>
                 </Box>
             </Drawer>

@@ -1,4 +1,4 @@
-import { useMediaQuery } from '@mui/material';
+import { Theme, useMediaQuery } from '@mui/material';
 import {
     BoldIcon,
     BookOpenIcon,
@@ -6,7 +6,7 @@ import {
     HouseIcon,
     LayoutGridIcon,
 } from 'lucide-react';
-import { Book } from '../pages/Book.page';
+import { Goodreads } from '../pages/Goodreads.page';
 import { Home } from '../pages/Home.page';
 import { Portfolio } from '../pages/Portfolio.page';
 import { PostList } from '../pages/PostList.page';
@@ -35,13 +35,13 @@ export const navBarItems = [
     },
     {
         icon: <BookOpenIcon />,
-        text: 'Book',
-        href: '/book',
-        component: <Book />,
+        text: 'Goodreads',
+        href: '/goodreads',
+        component: <Goodreads />,
     },
     {
         icon: <BoldIcon />,
-        text: 'My Posts',
+        text: 'Posts',
         href: '/posts',
         component: <PostList />,
     },
@@ -63,9 +63,10 @@ export const noteLinks = [
 ];
 
 export function Navbar() {
-    const minWidth600px = useMediaQuery('(min-width:600px)');
-
-    return (
-        <>{minWidth600px ? <DesktopNavbar /> : <MobileNavbar />}</>
+    const isDesktop = useMediaQuery(
+        (theme: Theme) => theme.breakpoints.up('md'),
+        { noSsr: true },
     );
+
+    return isDesktop ? <DesktopNavbar /> : <MobileNavbar />;
 }

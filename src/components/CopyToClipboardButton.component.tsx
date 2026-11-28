@@ -7,7 +7,9 @@ export function CopyToClipboardButton({
     children,
     url,
     ...props
-}: PropsWithChildren<Omit<ButtonProps, 'onClick'> & { url: string }>) {
+}: PropsWithChildren<
+    Omit<ButtonProps, 'onClick'> & { url: string }
+>) {
     const handleClick = () => {
         navigator.clipboard.writeText(
             new URL(url, window.location.href).toString(),

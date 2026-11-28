@@ -2,165 +2,100 @@ import {
     AppBar,
     Box,
     Button,
-    IconButton,
     Menu,
     MenuItem,
     Toolbar,
-    Tooltip,
-    Typography,
-    useTheme,
 } from '@mui/material';
-import { ChevronDownIcon, MoonIcon, SunIcon } from 'lucide-react';
+import { ChevronDownIcon } from 'lucide-react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../hooks/redux.hook';
-import { toggleTheme } from '../redux/theme.slice';
-import { Link } from './Link.component';
+import { NavLink } from 'react-router-dom';
+import { Brand } from './Brand.component';
 import { navBarItems, noteLinks } from './Navbar.component';
 import { SearchBox } from './SearchBox.component';
+import { ThemeToggle } from './ThemeToggle.component';
 
 export function DesktopNavbar() {
-    const dispatch = useAppDispatch();
-    const { darkMode } = useAppSelector(
-        (state) => state.themeReducer,
-    );
-    const theme = useTheme();
-    const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(
         null,
     );
 
-    const blogNavBarItem = navBarItems.find(
-        (navBarItem) => navBarItem.href === '/posts',
-    );
-
-    if (!blogNavBarItem) {
-        throw new Error('blogNavBarItem not found');
-    }
-
-    const handleThemeToggle = () => {
-        dispatch(toggleTheme());
-    };
-    const handleNavigateToPage = (href: string) => {
-        navigate(href);
-    };
-
     return (
-        <AppBar position="static" sx={{ backgroundColor: '#222' }}>
-            <Toolbar>
-                <Link href={blogNavBarItem.href} underline="none">
-                    <Typography
-                        variant="h5"
-                        noWrap
-                        fontWeight={900}
-                        sx={{
-                            display: 'block',
-                            marginRight: 1,
-                            [theme.breakpoints.down(470)]: {
-                                display: 'none',
-                                marginRight: 0,
-                            },
-                        }}
-                    >
-                        {blogNavBarItem.text}
-                    </Typography>
-                </Link>
+        <AppBar
+            position="static"
+            color="transparent"
+            elevation={0}
+            sx={{
+                bgcolor: 'background.paper',
+                borderBottom: 1,
+                borderColor: 'divider',
+            }}
+        >
+            <Toolbar sx={{ gap: 2 }}>
+                <Brand />
+                <Box
+                    component="nav"
+                    display="flex"
+                    alignSelf="stretch"
+                >
+                    {navBarItems.map((navBarItem) => (
+                        <Button
+                            key={navBarItem.href}
+                            component={NavLink}
+                            to={navBarItem.href}
+                            color="inherit"
+                            sx={{
+                                'minWidth': 0,
+                                'px': { md: 1, lg: 1.5 },
+                                'borderRadius': 0,
+                                'borderBottom': 3,
+                                'borderTop': 3,
+                                'borderColor': 'transparent',
+                                'color': 'text.secondary',
+                                '&.active': {
+                                    color: 'text.primary',
+                                    borderBottomColor: 'primary.main',
+                                },
+                            }}
+                        >
+                            {navBarItem.text}
+                        </Button>
+                    ))}
+                </Box>
+                <Button
+                    color="inherit"
+                    endIcon={<ChevronDownIcon size={18} />}
+                    onClick={(event) =>
+                        setAnchorEl(event.currentTarget)
+                    }
+                    sx={{ color: 'text.secondary', minWidth: 0 }}
+                >
+                    Writing
+                </Button>
+                <Menu
+                    anchorEl={anchorEl}
+                    open={!!anchorEl}
+                    onClose={() => setAnchorEl(null)}
+                >
+                    {noteLinks.map((noteLink) => (
+                        <MenuItem
+                            component="a"
+                            href={noteLink.href}
+                            rel="noopener noreferrer"
+                            onClick={() => setAnchorEl(null)}
+                            key={noteLink.href}
+                        >
+                            {noteLink.text}
+                        </MenuItem>
+                    ))}
+                </Menu>
                 <SearchBox
                     sx={{
-                        display: {
-                            md: 'flex',
-                            xs: 'none',
-                        },
+                        ml: 'auto',
+                        flex: '0 1 260px',
+                        minWidth: 0,
                     }}
                 />
-                <Box sx={{ flexGrow: 1 }} />
-                <Box
-                    sx={{
-                        'display': {
-                            xs: 'none',
-                            md: 'flex',
-                        },
-                        '& > *': {
-                            marginX: 0.5,
-                        },
-                    }}
-                >
-                    <Tooltip
-                        title={`Toggle to ${theme.palette.mode} mode`}
-                    >
-                        <IconButton
-                            size="large"
-                            onClick={handleThemeToggle}
-                        >
-                            {darkMode ? (
-                                <MoonIcon
-                                    color={theme.palette.primary.main}
-                                />
-                            ) : (
-                                <SunIcon
-                                    color={theme.palette.warning.main}
-                                />
-                            )}
-                        </IconButton>
-                    </Tooltip>
-                    {navBarItems
-                        .filter(
-                            (navBarItem) =>
-                                navBarItem.href !== '/posts',
-                        )
-                        .map((navBarItem) => {
-                            return (
-                                <Tooltip
-                                    title={navBarItem.text}
-                                    arrow
-                                    key={navBarItem.href}
-                                >
-                                    <IconButton
-                                        size="large"
-                                        onClick={() =>
-                                            handleNavigateToPage(
-                                                navBarItem.href,
-                                            )
-                                        }
-                                        color={
-                                            !darkMode
-                                                ? 'primary'
-                                                : 'default'
-                                        }
-                                    >
-                                        {navBarItem.icon}
-                                    </IconButton>
-                                </Tooltip>
-                            );
-                        })}
-                    <Button
-                        color={!darkMode ? 'primary' : 'inherit'}
-                        endIcon={<ChevronDownIcon size={20} />}
-                        onClick={(event) =>
-                            setAnchorEl(event.currentTarget)
-                        }
-                        sx={{ textTransform: 'none' }}
-                    >
-                        Me Writing
-                    </Button>
-                    <Menu
-                        anchorEl={anchorEl}
-                        open={!!anchorEl}
-                        onClose={() => setAnchorEl(null)}
-                    >
-                        {noteLinks.map((noteLink) => (
-                            <MenuItem
-                                component="a"
-                                href={noteLink.href}
-                                rel="noopener noreferrer"
-                                onClick={() => setAnchorEl(null)}
-                                key={noteLink.href}
-                            >
-                                {noteLink.text}
-                            </MenuItem>
-                        ))}
-                    </Menu>
-                </Box>
+                <ThemeToggle />
             </Toolbar>
         </AppBar>
     );

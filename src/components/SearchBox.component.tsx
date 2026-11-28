@@ -1,13 +1,12 @@
 import {
-    Divider,
-    IconButton,
-    InputBase,
-    Paper,
+    Box,
+    InputAdornment,
     SxProps,
+    TextField,
     Theme,
 } from '@mui/material';
 import { SearchIcon } from 'lucide-react';
-import { useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface SearchBoxProps {
@@ -19,52 +18,40 @@ export function SearchBox({ sx, onSearch }: SearchBoxProps) {
     const [searchText, setSearchText] = useState('');
     const navigate = useNavigate();
 
-    const handleSearch = () => {
-        navigate(
-            `/posts?q=${encodeURIComponent(searchText.trim())}`,
-        );
+    const handleSubmit = (event: FormEvent) => {
+        event.preventDefault();
+        navigate(`/posts?q=${encodeURIComponent(searchText.trim())}`);
         onSearch?.();
     };
 
-    const handleKeyUp = (
-        event: React.KeyboardEvent<HTMLInputElement>,
-    ) => {
-        if (event.key === 'Enter') {
-            handleSearch();
-        }
-    };
-
     return (
-        <Paper
-            sx={{
-                padding: 1,
-                display: 'flex',
-                border: 1,
-                borderColor: 'primary.main',
-                alignItems: 'center',
-                marginY: 1,
-                ...sx,
-            }}
+        <Box
+            component="form"
+            role="search"
+            onSubmit={handleSubmit}
+            sx={sx}
         >
-            <InputBase
-                placeholder="Search"
+            <TextField
+                type="search"
+                size="small"
+                fullWidth
+                placeholder="Search posts"
                 value={searchText}
-                onChange={(event) =>
-                    setSearchText(event.currentTarget.value)
-                }
-                onKeyUp={handleKeyUp}
-            />
-            <Divider
-                flexItem
-                orientation="vertical"
-                sx={{
-                    borderColor: 'secondary.main',
-                    marginX: 1,
+                onChange={(
+                    event: ChangeEvent<
+                        HTMLInputElement | HTMLTextAreaElement
+                    >,
+                ) => setSearchText(event.target.value)}
+                inputProps={{ 'aria-label': 'Search posts' }}
+                InputProps={{
+                    startAdornment: (
+                        <InputAdornment position="start">
+                            <SearchIcon size={18} />
+                        </InputAdornment>
+                    ),
+                    sx: { borderRadius: 99 },
                 }}
             />
-            <IconButton type="button" onClick={handleSearch}>
-                <SearchIcon />
-            </IconButton>
-        </Paper>
+        </Box>
     );
 }

@@ -1,5 +1,16 @@
+import { useTheme } from '@mui/material';
 import ParticlesBg from 'particles-bg';
 
 export function MyParticles() {
-    return <ParticlesBg type="cobweb" bg={true} />;
+    const { palette } = useTheme();
+
+    return (
+        <ParticlesBg
+            key={palette.mode}
+            type="cobweb"
+            color={palette.primary.main}
+            num={50}
+            bg={true}
+        />
+    );
 }

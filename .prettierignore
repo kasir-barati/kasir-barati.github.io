@@ -65,3 +65,8 @@ baseline.json
 **/*.yaml
 **/*LICENCE*
 LICENSE
+
+# Python
+.venv
+.ruff_cache
+__pycache__

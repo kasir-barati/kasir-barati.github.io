@@ -54,42 +54,21 @@ const socialLinks = [
 export function SocialLinks() {
     return (
         <Stack
-            direction={{ xs: 'row', sm: 'column' }}
+            direction="row"
             justifyContent="center"
-            alignItems="center"
-            spacing={{ xs: 1, sm: 1.5 }}
             flexWrap="wrap"
             useFlexGap
-            sx={{
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                backdropFilter: 'blur(8px)',
-                borderRadius: 4,
-                padding: { xs: 1, sm: 1.5 },
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                maxWidth: '90vw',
-            }}
+            spacing={0.5}
         >
             {socialLinks.map((link) => (
-                <Tooltip
-                    key={link.title}
-                    title={link.title}
-                    arrow
-                    placement="left"
-                >
+                <Tooltip key={link.title} title={link.title} arrow>
                     <IconButton
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={link.title}
                         sx={{
-                            'color': '#e0e0e0',
-                            'transition': 'all 0.2s ease-in-out',
-                            '&:hover': {
-                                color: '#4caf50',
-                                transform: 'translateY(-3px)',
-                                backgroundColor:
-                                    'rgba(76, 175, 80, 0.1)',
-                            },
+                            '&:hover': { color: 'primary.main' },
                         }}
                     >
                         {link.icon}

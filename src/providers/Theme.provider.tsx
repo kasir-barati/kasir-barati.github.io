@@ -1,21 +1,14 @@
-import {
-    ThemeProvider as MuiThemeProvider,
-    createTheme,
-} from '@mui/material';
+import { ThemeProvider as MuiThemeProvider } from '@mui/material';
 import { PropsWithChildren, useMemo } from 'react';
 import { useAppSelector } from '../hooks/redux.hook';
+import { createAppTheme } from './theme';
 
 export function ThemeProvider({ children }: PropsWithChildren) {
     const { darkMode } = useAppSelector(
         (state) => state.themeReducer,
     );
     const theme = useMemo(
-        () =>
-            createTheme({
-                palette: {
-                    mode: darkMode ? 'dark' : 'light',
-                },
-            }),
+        () => createAppTheme(darkMode ? 'dark' : 'light'),
         [darkMode],
     );
 
