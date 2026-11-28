@@ -1,4 +1,3 @@
-import CircleIcon from '@mui/icons-material/Circle';
 import {
     Avatar,
     Box,
@@ -14,6 +13,7 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
+import { CircleIcon } from 'lucide-react';
 import languages from '../data/languages.json';
 import skills from '../data/skills.json';
 import workExperiences from '../data/work-experiences.json';
@@ -241,7 +241,7 @@ export function Resume() {
                                             <ListItem>
                                                 <ListItemAvatar>
                                                     <Avatar>
-                                                        <CircleIcon />
+                                                        <CircleIcon fill="currentColor" />
                                                     </Avatar>
                                                 </ListItemAvatar>
                                                 <ListItemText>

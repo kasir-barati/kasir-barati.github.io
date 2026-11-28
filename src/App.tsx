@@ -4,6 +4,7 @@ import './App.css';
 import { Navbar, navBarItems } from './components/Navbar.component';
 import { Notification } from './components/Notification.component';
 import { AwsFlashcardsList } from './pages/AwsFlashcardsList.page';
+import { GolangFlashcardsList } from './pages/GolangFlashcardsList.page';
 import { ReactFlashcardsList } from './pages/ReactFlashcardsList.page';
 import { ThemeProvider } from './providers/Theme.provider';
 
@@ -35,6 +36,10 @@ function App() {
                             <Route
                                 path="/aws-flashcards"
                                 element={<AwsFlashcardsList />}
+                            />
+                            <Route
+                                path="/golang-flashcards"
+                                element={<GolangFlashcardsList />}
                             />
                             <Route
                                 path="/react-flashcards"

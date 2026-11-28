@@ -1,11 +1,11 @@
-import {
-    Apps as AppsIcon,
-    AssignmentInd as AssignmentIndIcon,
-    FormatBold as FormatBoldIcon,
-    Home as HomeIcon,
-    MenuBook as MenuBookIcon,
-} from '@mui/icons-material';
 import { useMediaQuery } from '@mui/material';
+import {
+    BoldIcon,
+    BookOpenIcon,
+    FileUserIcon,
+    HouseIcon,
+    LayoutGridIcon,
+} from 'lucide-react';
 import { Book } from '../pages/Book.page';
 import { Home } from '../pages/Home.page';
 import { Portfolio } from '../pages/Portfolio.page';
@@ -16,31 +16,31 @@ import { MobileNavbar } from './MobileNavbar.component';
 
 export const navBarItems = [
     {
-        icon: <HomeIcon />,
+        icon: <HouseIcon />,
         text: 'Home',
         href: '/',
         component: <Home />,
     },
     {
-        icon: <AssignmentIndIcon />,
+        icon: <FileUserIcon />,
         text: 'Resume',
         href: '/resume',
         component: <Resume />,
     },
     {
-        icon: <AppsIcon />,
+        icon: <LayoutGridIcon />,
         text: 'Portfolio',
         href: '/portfolio',
         component: <Portfolio />,
     },
     {
-        icon: <MenuBookIcon />,
+        icon: <BookOpenIcon />,
         text: 'Book',
         href: '/book',
         component: <Book />,
     },
     {
-        icon: <FormatBoldIcon />,
+        icon: <BoldIcon />,
         text: 'My Posts',
         href: '/posts',
         component: <PostList />,

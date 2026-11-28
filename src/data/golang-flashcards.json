@@ -1,0 +1,9 @@
+[
+    {
+        "id": "b42da6ac-f294-410e-aa59-3bb8d20bbbc5",
+        "title": "Go Concurrency × Data Races",
+        "description": "A program can appear to work and still contain a data race. Use the race detector in your tests, and lint package-level globals to handle shared state more deliberately.",
+        "href": "./golang-flashcards/concurrency-and-data-race.html",
+        "tags": ["Golang", "Concurrency", "Race Detection", "Linter"]
+    }
+]

@@ -1,4 +1,3 @@
-import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import InstagramIcon from '@mui/icons-material/Instagram';
@@ -6,6 +5,7 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import RedditIcon from '@mui/icons-material/Reddit';
 import XIcon from '@mui/icons-material/X';
 import { IconButton, Stack, Tooltip } from '@mui/material';
+import { AtSignIcon } from 'lucide-react';
 import { DevToIcon } from './DevtoIcon.component';
 
 const socialLinks = [
@@ -22,7 +22,7 @@ const socialLinks = [
     {
         title: 'Email',
         href: 'mailto:kasir.barati@gmail.com',
-        icon: <AlternateEmailIcon />,
+        icon: <AtSignIcon />,
     },
     {
         title: 'Reddit',

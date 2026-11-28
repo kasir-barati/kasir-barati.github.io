@@ -1,9 +1,4 @@
 import {
-    Brightness4 as Brightness4Icon,
-    Brightness7 as Brightness7Icon,
-    Menu as MenuIcon,
-} from '@mui/icons-material';
-import {
     AppBar,
     Avatar,
     Box,
@@ -18,6 +13,7 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
+import { MenuIcon, MoonIcon, SunIcon } from 'lucide-react';
 import { useState } from 'react';
 import avatarSrc from '../assets/me.jpg';
 import { useAppDispatch, useAppSelector } from '../hooks/redux.hook';
@@ -51,7 +47,7 @@ export function MobileNavbar() {
                     <IconButton
                         onClick={() => setIsMobileNavBarOpen(true)}
                     >
-                        <MenuIcon color="error" />
+                        <MenuIcon color={theme.palette.error.main} />
                     </IconButton>
                 </Toolbar>
             </AppBar>
@@ -133,9 +129,17 @@ export function MobileNavbar() {
                         <ListItemButton onClick={handleThemeToggle}>
                             <ListItemIcon>
                                 {darkMode ? (
-                                    <Brightness4Icon color="primary" />
+                                    <MoonIcon
+                                        color={
+                                            theme.palette.primary.main
+                                        }
+                                    />
                                 ) : (
-                                    <Brightness7Icon color="warning" />
+                                    <SunIcon
+                                        color={
+                                            theme.palette.warning.main
+                                        }
+                                    />
                                 )}
                             </ListItemIcon>
                             <ListItemText>

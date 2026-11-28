@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1"
+        />
+        <meta name="color-scheme" content="dark" />
+        <!-- TODO: page title -->
+        <title>[Flashcard Title] — Golang Flashcard</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            .vertical-tabs {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                gap: 0.75rem;
+                width: 100%;
+            }
+
+            .vertical-tab {
+                justify-content: center;
+                padding: 0.6rem 1rem;
+                border-radius: 0.75rem;
+            }
+
+            @media (min-width: 640px) {
+                .vertical-tabs {
+                    position: sticky;
+                    top: 1rem;
+                    flex-direction: column;
+                    width: auto;
+                    flex-shrink: 0;
+                    z-index: 20;
+                }
+
+                .vertical-tab {
+                    writing-mode: vertical-rl;
+                    text-orientation: mixed;
+                    min-height: 9rem;
+                    width: 3.25rem;
+                    padding: 0.75rem 0.65rem;
+                    border-radius: 0.9rem;
+                }
+            }
+        </style>
+    </head>
+    <body
+        class="flex min-h-screen items-start justify-center bg-slate-950 p-4 text-slate-100 antialiased"
+    >
+        <main
+            class="flex w-full max-w-6xl flex-col items-center gap-4 sm:flex-row sm:items-start"
+        >
+            <div
+                class="flex w-full min-w-0 max-w-[1080px] flex-col overflow-hidden rounded-[2rem] border border-slate-800 bg-slate-950 shadow-2xl shadow-cyan-950/30"
+            >
+                <header
+                    class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-950 to-cyan-950 px-8 py-4"
+                >
+                    <div
+                        class="absolute -right-20 -top-44 h-80 w-80 rounded-full bg-cyan-400/10 blur-3xl"
+                    ></div>
+
+                    <div
+                        class="flex flex-wrap gap-2 text-sm font-medium text-slate-300 mb-2"
+                    >
+                        <!-- TODO: one pill per tag -->
+                        <span
+                            class="rounded-full border border-slate-700 bg-slate-900/70 px-4 py-2"
+                            >Golang</span
+                        >
+                        <span
+                            class="rounded-full border border-slate-700 bg-slate-900/70 px-4 py-2"
+                            >[Tag]</span
+                        >
+                    </div>
+
+                    <div class="relative max-w-4xl">
+                        <h1
+                            class="text-3xl font-black tracking-tight text-white"
+                        >
+                            [Headline with an
+                            <span class="text-cyan-300"
+                                >emphasized</span
+                            >
+                            word.]
+                        </h1>
+                    </div>
+                </header>
+
+                <section
+                    class="grid gap-5 bg-slate-900/70 p-3 grid-cols-2"
+                >
+                    <article
+                        class="flex flex-col rounded-3xl border border-rose-400/20 bg-slate-950 p-3"
+                    >
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="rounded-2xl bg-rose-400/10 p-3 text-rose-300"
+                            >
+                                <i
+                                    data-lucide="triangle-alert"
+                                    class="h-7 w-7"
+                                ></i>
+                            </div>
+                            <div>
+                                <p
+                                    class="text-xs font-bold uppercase tracking-[0.2em] text-rose-300"
+                                >
+                                    The risk
+                                </p>
+                                <h2
+                                    class="mt-1 text-xl font-bold text-white"
+                                >
+                                    [Problem title]
+                                </h2>
+                            </div>
+                        </div>
+                        <p
+                            class="mt-2 text-base leading-relaxed text-slate-300"
+                        >
+                            [Problem explanation with a
+                            <span class="font-semibold text-rose-300"
+                                >key term</span
+                            >.]
+                        </p>
+                        <div
+                            class="mt-2 rounded-2xl border border-slate-800 bg-slate-900 p-4"
+                        >
+                            <div
+                                class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500"
+                            >
+                                <span
+                                    class="h-2 w-2 rounded-full bg-rose-400"
+                                ></span>
+                                Example pattern
+                            </div>
+                            <pre
+                                class="overflow-x-auto text-sm leading-7 text-slate-200 sm:text-base"
+                            ><code><span class="text-slate-500">[code snippet]</span></code></pre>
+                        </div>
+                    </article>
+
+                    <article
+                        class="flex flex-col rounded-3xl border border-cyan-400/20 bg-slate-950 p-3"
+                    >
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="rounded-2xl bg-cyan-400/10 p-3 text-cyan-300"
+                            >
+                                <i
+                                    data-lucide="shield-check"
+                                    class="h-7 w-7"
+                                ></i>
+                            </div>
+                            <div>
+                                <p
+                                    class="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300"
+                                >
+                                    The safeguards
+                                </p>
+                                <h2
+                                    class="mt-1 text-xl font-bold text-white"
+                                >
+                                    [Solution title]
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <div
+                                class="flex items-start gap-3 rounded-2xl bg-rose-400/10 p-4 text-sm leading-relaxed text-rose-100"
+                            >
+                                <i
+                                    data-lucide="lightbulb"
+                                    class="mt-0.5 h-5 w-5 shrink-0 text-rose-300"
+                                ></i>
+                                <span>[Important note.]</span>
+                            </div>
+                        </div>
+                        <div
+                            class="mt-2 rounded-2xl border border-slate-800 bg-slate-900 p-5"
+                        >
+                            <div
+                                class="flex items-center justify-between gap-3"
+                            >
+                                <span
+                                    class="text-xs font-bold tracking-[0.18em] text-cyan-300"
+                                    >[Tool name]</span
+                                >
+                                <i
+                                    data-lucide="file-check-corner"
+                                    class="h-5 w-5 text-cyan-300"
+                                ></i>
+                            </div>
+                            <!-- TODO: duplicate this block for each tool -->
+                            <p
+                                class="mt-3 text-sm leading-relaxed text-slate-300"
+                            >
+                                [What the tool does and its limits.]
+                            </p>
+                            <div
+                                class="mt-4 rounded-xl bg-slate-950 px-4 py-3"
+                            >
+                                <p
+                                    class="mb-1 text-xs font-medium text-slate-500"
+                                >
+                                    [filename or command label]
+                                </p>
+                                <code
+                                    class="text-sm font-semibold leading-6 text-emerald-300"
+                                    >[snippet]</code
+                                >
+                            </div>
+                        </div>
+                    </article>
+                </section>
+
+                <footer class="bg-slate-950 px-4 py-2">
+                    <div
+                        class="rounded-3xl border border-cyan-300/20 bg-gradient-to-r from-cyan-300/10 via-slate-900 to-indigo-400/10 p-3"
+                    >
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="rounded-2xl bg-cyan-300 p-3 text-slate-950"
+                            >
+                                <i
+                                    data-lucide="check-check"
+                                    class="h-7 w-7"
+                                ></i>
+                            </div>
+                            <div>
+                                <p
+                                    class="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300"
+                                >
+                                    Takeaway
+                                </p>
+                                <p
+                                    class="mt-2 text-xl font-extrabold leading-snug text-white"
+                                >
+                                    [Takeaway with an
+                                    <span class="text-cyan-300"
+                                        >emphasized</span
+                                    >
+                                    word.]
+                                </p>
+                                <p
+                                    class="mt-2 text-lg leading-relaxed text-slate-300"
+                                >
+                                    [Supporting detail or link.]
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+            <nav
+                class="vertical-tabs order-first sm:order-none"
+                aria-label="Page navigation"
+            >
+                <a
+                    href="/#/golang-flashcards"
+                    class="vertical-tab z-10 inline-flex shrink-0 items-center gap-2 bg-slate-800 text-xs font-semibold text-slate-100 no-underline shadow-md transition hover:-translate-x-0.5 hover:bg-slate-900 hover:shadow-lg active:translate-x-0 sm:text-sm"
+                    title="Go to Golang Flashcards"
+                >
+                    <i
+                        data-lucide="file-text"
+                        width="18"
+                        height="18"
+                    ></i>
+                    <span>Golang Flashcards</span>
+                </a>
+            </nav>
+        </main>
+        <script src="https://unpkg.com/lucide@1.81.0/dist/umd/lucide.min.js"></script>
+        <script>
+            lucide.createIcons();
+        </script>
+    </body>
+</html>

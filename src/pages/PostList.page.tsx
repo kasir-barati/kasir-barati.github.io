@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import posts from '../data/posts.json';
 import awsFlashcards from '../data/aws-flashcards.json';
+import golangFlashcards from '../data/golang-flashcards.json';
 import reactFlashcards from '../data/react-flashcards.json';
 import { searchPosts } from '../utils/postsSearch';
 import { getRandomColor } from '../utils/genRandomColor';
@@ -27,7 +28,12 @@ export function PostList() {
         setIsSearching(true);
 
         const searchTargets = query.trim()
-            ? [...posts, ...awsFlashcards, ...reactFlashcards]
+            ? [
+                  ...posts,
+                  ...awsFlashcards,
+                  ...golangFlashcards,
+                  ...reactFlashcards,
+              ]
             : posts;
 
         searchPosts(searchTargets, query).then((results) => {

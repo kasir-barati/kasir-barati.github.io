@@ -1,4 +1,3 @@
-import { Search as SearchIcon } from '@mui/icons-material';
 import {
     Divider,
     IconButton,
@@ -7,6 +6,7 @@ import {
     SxProps,
     Theme,
 } from '@mui/material';
+import { SearchIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

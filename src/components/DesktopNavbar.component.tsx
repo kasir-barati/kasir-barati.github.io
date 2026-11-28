@@ -1,9 +1,4 @@
 import {
-    Brightness4 as Brightness4Icon,
-    Brightness7 as Brightness7Icon,
-    ArrowDropDown as ArrowDropDownIcon,
-} from '@mui/icons-material';
-import {
     AppBar,
     Box,
     Button,
@@ -15,6 +10,7 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
+import { ChevronDownIcon, MoonIcon, SunIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks/redux.hook';
@@ -97,9 +93,13 @@ export function DesktopNavbar() {
                             onClick={handleThemeToggle}
                         >
                             {darkMode ? (
-                                <Brightness4Icon color="primary" />
+                                <MoonIcon
+                                    color={theme.palette.primary.main}
+                                />
                             ) : (
-                                <Brightness7Icon color="warning" />
+                                <SunIcon
+                                    color={theme.palette.warning.main}
+                                />
                             )}
                         </IconButton>
                     </Tooltip>
@@ -135,7 +135,7 @@ export function DesktopNavbar() {
                         })}
                     <Button
                         color={!darkMode ? 'primary' : 'inherit'}
-                        endIcon={<ArrowDropDownIcon />}
+                        endIcon={<ChevronDownIcon size={20} />}
                         onClick={(event) =>
                             setAnchorEl(event.currentTarget)
                         }

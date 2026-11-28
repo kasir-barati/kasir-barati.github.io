@@ -1,4 +1,3 @@
-import InfoIcon from '@mui/icons-material/Info';
 import {
     Box,
     IconButton,
@@ -6,6 +5,7 @@ import {
     ImageListItem,
     ImageListItemBar,
 } from '@mui/material';
+import { InfoIcon } from 'lucide-react';
 import books from '../data/books.json';
 
 export function Book() {
