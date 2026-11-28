@@ -5,5 +5,17 @@
         "description": "A program can appear to work and still contain a data race. Use the race detector in your tests, and lint package-level globals to handle shared state more deliberately.",
         "href": "./golang-flashcards/concurrency-and-data-race.html",
         "tags": ["Golang", "Concurrency", "Race Detection", "Linter"]
+    },
+    {
+        "id": "1527bf5c-ccde-469e-8ce7-3870d62a800e",
+        "title": "Goroutine Leaks × goleak",
+        "description": "Go happily compiles and runs code that never waits for its goroutines. Use goleak in your tests to catch the ones still running.",
+        "href": "./golang-flashcards/goroutine-leaks.html",
+        "tags": [
+            "Golang",
+            "Concurrency",
+            "Goroutine Leaks",
+            "Testing"
+        ]
     }
 ]
