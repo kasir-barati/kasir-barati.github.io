@@ -43,7 +43,8 @@ export function Home() {
             >
                 <Box
                     sx={{
-                        display: 'flex',
+                        // Lets the children be reordered by the parent grid on mobile
+                        display: { xs: 'contents', md: 'flex' },
                         flexDirection: 'column',
                         gap: 2,
                         height: 'fit-content',
@@ -104,7 +105,12 @@ export function Home() {
                         </Typography>
                         <SocialLinks />
                     </Paper>
-                    <Box sx={{ height: { xs: 393, md: 330 } }}>
+                    <Box
+                        sx={{
+                            height: { xs: 393, md: 330 },
+                            order: { xs: 1, md: 0 },
+                        }}
+                    >
                         <iframe
                             src={`https://player.rss.com/testing-llm-and-sharing-my-personal-experience-with-them?theme=${palette.mode}&v=2`}
                             style={frameStyle}
