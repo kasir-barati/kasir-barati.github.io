@@ -17,11 +17,15 @@
                 themeVariables: { fontSize: '14px' },
             });
         </script>
-        <style>
-            pre.sql {
-                tab-size: 2;
-            }
-        </style>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/styles/github-dark.min.css"
+        />
+        <link rel="stylesheet" href="./shared.css" />
+        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/highlight.min.js"></script>
+        <script>
+            hljs.highlightAll();
+        </script>
     </head>
 
     <body
@@ -354,9 +358,8 @@
                             without arriving in the other, even if the
                             server crashes mid-transaction.
                         </p>
-                        <pre
-                            class="sql mt-4 overflow-x-auto rounded-xl border border-slate-800 bg-slate-900 p-4 text-sm text-slate-300"
-                        ><code>BEGIN;
+                        <div class="code-card mt-4">
+                            <pre><code class="language-sql">BEGIN;
 
 UPDATE accounts SET balance = balance - 100 WHERE id = 1;
 UPDATE accounts SET balance = balance + 100 WHERE id = 2;
@@ -364,6 +367,7 @@ UPDATE accounts SET balance = balance + 100 WHERE id = 2;
 COMMIT;
 -- If either UPDATE fails, or you run ROLLBACK instead of COMMIT,
 -- neither balance changes. There is no "half transfer" state.</code></pre>
+                        </div>
                         <pre class="mermaid mt-6">
 flowchart LR
     A["BEGIN"] --> B["UPDATE accounts: balance -= 100 WHERE id=1"]
@@ -388,9 +392,8 @@ flowchart LR
                             it simply refuses to commit a transaction
                             that would break an invariant.
                         </p>
-                        <pre
-                            class="sql mt-4 overflow-x-auto rounded-xl border border-slate-800 bg-slate-900 p-4 text-sm text-slate-300"
-                        ><code>CREATE TABLE accounts (
+                        <div class="code-card mt-4">
+                            <pre><code class="language-sql">CREATE TABLE accounts (
   id      serial PRIMARY KEY,
   balance numeric NOT NULL CHECK (balance >= 0)
 );
@@ -399,6 +402,7 @@ INSERT INTO accounts (id, balance) VALUES (1, -50);
 -- ERROR: new row for relation "accounts" violates
 --        check constraint "accounts_balance_check"
 -- The invariant "balance can never go negative" always holds.</code></pre>
+                        </div>
                     </div>
 
                     <div
@@ -423,9 +427,8 @@ INSERT INTO accounts (id, balance) VALUES (1, -50);
                             when two transactions must not be allowed
                             to conflict silently.
                         </p>
-                        <pre
-                            class="sql mt-4 overflow-x-auto rounded-xl border border-slate-800 bg-slate-900 p-4 text-sm text-slate-300"
-                        ><code>-- Transaction A
+                        <div class="code-card mt-4">
+                            <pre><code class="language-sql">-- Transaction A
 BEGIN;
 SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 SELECT balance FROM accounts WHERE id = 1; -- reads 100
@@ -436,6 +439,7 @@ COMMIT;
 -- and tries to subtract 30. Postgres detects the conflict:
 -- ERROR: could not serialize access due to concurrent update
 -- Transaction B must retry instead of silently overwriting A's work.</code></pre>
+                        </div>
                         <pre class="mermaid mt-6">
 sequenceDiagram
     participant A as Transaction A
@@ -468,13 +472,13 @@ sequenceDiagram
                             disk <em>before</em> acknowledging the
                             commit.
                         </p>
-                        <pre
-                            class="sql mt-4 overflow-x-auto rounded-xl border border-slate-800 bg-slate-900 p-4 text-sm text-slate-300"
-                        ><code>SHOW fsync;               -- on: changes are flushed to disk, not just OS cache
+                        <div class="code-card mt-4">
+                            <pre><code class="language-sql">SHOW fsync;               -- on: changes are flushed to disk, not just OS cache
 SHOW synchronous_commit;  -- on: COMMIT waits until the WAL write is flushed
 
 -- If the server crashes right after COMMIT returns, on restart Postgres
 -- replays the WAL and the committed row is still there.</code></pre>
+                        </div>
                         <pre class="mermaid mt-6">
 flowchart LR
     A["Client: COMMIT"] --> B["Write change to WAL on disk"]
@@ -682,9 +686,8 @@ flowchart TD
                         state" / "eventually consistent" part of BASE
                         in practice.
                     </p>
-                    <pre
-                        class="sql mt-4 overflow-x-auto rounded-xl border border-slate-800 bg-slate-900 p-4 text-sm text-slate-300"
-                    ><code>-- On the primary: don't wait for the replica to confirm before
+                    <div class="code-card mt-4">
+                        <pre><code class="language-sql">-- On the primary: don't wait for the replica to confirm before
 -- acknowledging the write to the client
 ALTER SYSTEM SET synchronous_commit = 'local';
 
@@ -696,6 +699,7 @@ ALTER SYSTEM SET synchronous_commit = 'local';
 INSERT INTO post_likes (post_id, user_id) VALUES (42, 7);
 -- ...and COMMIT returns right away. The replica applies this
 -- WAL record a moment later, asynchronously.</code></pre>
+                    </div>
                     <pre class="mermaid mt-6">
 sequenceDiagram
     participant App as Application
@@ -733,9 +737,8 @@ sequenceDiagram
                         correct as of the last refresh, not as of
                         right now.
                     </p>
-                    <pre
-                        class="sql mt-4 overflow-x-auto rounded-xl border border-slate-800 bg-slate-900 p-4 text-sm text-slate-300"
-                    ><code>CREATE MATERIALIZED VIEW like_counts AS
+                    <div class="code-card mt-4">
+                        <pre><code class="language-sql">CREATE MATERIALIZED VIEW like_counts AS
 SELECT post_id, count(*) AS likes
 FROM post_likes
 GROUP BY post_id;
@@ -748,6 +751,7 @@ REFRESH MATERIALIZED VIEW CONCURRENTLY like_counts;
 
 -- Reads are cheap and fast, but "likes" can lag reality by up to 30s.
 SELECT likes FROM like_counts WHERE post_id = 42;</code></pre>
+                    </div>
                 </div>
             </section>
 
@@ -988,14 +992,14 @@ SELECT likes FROM like_counts WHERE post_id = 42;</code></pre>
                                     Overselling a scarce item is worse
                                     than briefly rejecting checkout.
                                 </p>
-                                <pre
-                                    class="sql mt-3 overflow-x-auto rounded-lg border border-slate-800 bg-slate-900 p-3 text-xs text-slate-300"
-                                ><code>BEGIN;
+                                <div class="code-card mt-3">
+                                    <pre><code class="language-sql">BEGIN;
 UPDATE inventory SET stock = stock - 1
   WHERE product_id = 9 AND stock > 0;
 -- 0 rows updated means "out of stock": abort instead of overselling
 INSERT INTO orders (product_id, user_id) VALUES (9, 7);
 COMMIT;</code></pre>
+                                </div>
                             </div>
                             <div
                                 class="rounded-xl border border-slate-800 bg-slate-950 p-5"
@@ -1013,12 +1017,12 @@ COMMIT;</code></pre>
                                     matter more than an immediately
                                     identical count.
                                 </p>
-                                <pre
-                                    class="sql mt-3 overflow-x-auto rounded-lg border border-slate-800 bg-slate-900 p-3 text-xs text-slate-300"
-                                ><code>-- Write hits the primary and returns immediately
+                                <div class="code-card mt-3">
+                                    <pre><code class="language-sql">-- Write hits the primary and returns immediately
 INSERT INTO post_likes (post_id, user_id) VALUES (42, 7);
 -- Read hits a replica/materialized view, may lag a bit
 SELECT likes FROM like_counts WHERE post_id = 42;</code></pre>
+                                </div>
                             </div>
                             <div
                                 class="rounded-xl border border-slate-800 bg-slate-950 p-5"

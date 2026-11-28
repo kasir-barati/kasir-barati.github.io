@@ -44,6 +44,15 @@
                 }
             }
         </style>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/styles/github-dark.min.css"
+        />
+        <link rel="stylesheet" href="../shared.css" />
+        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/highlight.min.js"></script>
+        <script>
+            hljs.highlightAll();
+        </script>
     </head>
     <body
         class="flex min-h-screen items-start justify-center bg-slate-950 p-4 text-slate-100 antialiased"
@@ -131,37 +140,26 @@
                                 >data race</span
                             >.
                         </p>
-                        <div
-                            class="mt-2 rounded-2xl border border-slate-800 bg-slate-900 p-4"
-                        >
-                            <div
-                                class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500"
-                            >
-                                <span
-                                    class="h-2 w-2 rounded-full bg-rose-400"
-                                ></span>
-                                Example pattern
-                            </div>
-                            <pre
-                                class="overflow-x-auto text-sm leading-8 text-slate-200 sm:text-base"
-                            ><code><span class="text-fuchsia-300">package</span> main
+                        <div class="code-card mt-2">
+                            <div class="code-card-title">main.go</div>
+                            <pre><code class="language-go">package main
 
 <span class="text-fuchsia-300">import</span> (
     <span class="text-emerald-300">"fmt"</span>
     <span class="text-emerald-300">"sync"</span>
 )
-<span class="text-fuchsia-300">func</span> <span class="text-cyan-300">main</span>() {
-    <span class="text-fuchsia-300">var</span> wg sync.WaitGroup
-    results := []<span class="text-cyan-300">string</span>{<span class="text-emerald-300">"id1"</span>, <span class="text-emerald-300">"id2"</span>, <span class="text-emerald-300">"id3"</span>}
-    <span class="text-fuchsia-300">for</span> _, value := <span class="text-fuchsia-300">range</span> results {
-        wg.<span class="text-cyan-300">Add</span>(<span class="text-orange-300">1</span>)
-        <span class="text-fuchsia-300">go func</span>() {
-            <span class="text-fuchsia-300">defer</span> wg.<span class="text-cyan-300">Done</span>()
-            results = <span class="text-cyan-300">append</span>(results, value)
+func main() {
+    var wg sync.WaitGroup
+    results := []string{"id1", "id2", "id3"}
+    for _, value := range results {
+        wg.Add(1)
+        go func() {
+            defer wg.Done()
+            results = append(results, value)
         }()
     }
-    wg.<span class="text-cyan-300">Wait</span>()
-    fmt.<span class="text-cyan-300">Println</span>(results)
+    wg.Wait()
+    fmt.Println(results)
 }</code></pre>
                         </div>
                     </article>

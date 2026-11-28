@@ -44,6 +44,15 @@
                 }
             }
         </style>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/styles/github-dark.min.css"
+        />
+        <link rel="stylesheet" href="../shared.css" />
+        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/highlight.min.js"></script>
+        <script>
+            hljs.highlightAll();
+        </script>
     </head>
     <body
         class="flex min-h-screen items-start justify-center bg-slate-950 p-4 text-slate-100 antialiased"
@@ -130,34 +139,23 @@
                             >
                             means.
                         </p>
-                        <div
-                            class="mt-2 rounded-2xl border border-slate-800 bg-slate-900 p-4"
-                        >
-                            <div
-                                class="flex items-center gap-2 text-xs font-semibold tracking-wider text-slate-500"
-                            >
-                                <span
-                                    class="h-2 w-2 rounded-full bg-rose-400"
-                                ></span>
-                                main.go
-                            </div>
-                            <pre
-                                class="overflow-x-auto text-sm leading-8 text-slate-200 sm:text-base"
-                            ><code><span class="text-fuchsia-300">package</span> main
+                        <div class="code-card mt-2">
+                            <div class="code-card-title">main.go</div>
+                            <pre><code class="language-go">package main
 
-<span class="text-fuchsia-300">import</span> <span class="text-emerald-300">"fmt"</span>
+import "fmt"
 
-<span class="text-fuchsia-300">func</span> <span class="text-cyan-300">notify</span>() {
-    ch := <span class="text-cyan-300">make</span>(<span class="text-fuchsia-300">chan</span> <span class="text-cyan-300">string</span>)
-    <span class="text-fuchsia-300">go func</span>() {
-        <span class="text-slate-500">// Blocks forever: no receiver</span>
-        ch &lt;- <span class="text-emerald-300">"done"</span>
+func notify() {
+    ch := make(chan string)
+    go func() {
+        // Blocks forever: no receiver
+        ch &lt;- "done"
     }()
 }
 
-<span class="text-fuchsia-300">func</span> <span class="text-cyan-300">main</span>() {
-    <span class="text-cyan-300">notify</span>()
-    fmt.<span class="text-cyan-300">Println</span>(<span class="text-emerald-300">"All good?"</span>)
+func main() {
+    notify()
+    fmt.Println("All good?")
 }</code></pre>
                         </div>
                     </article>
@@ -230,17 +228,11 @@
                                 >: it does <b>not</b> work with
                                 <code>t.Parallel</code>.
                             </p>
-                            <div
-                                class="mt-4 rounded-xl bg-slate-950 px-4 py-3"
-                            >
-                                <p
-                                    class="mb-1 text-xs font-medium text-slate-500"
-                                >
+                            <div class="code-card mt-4">
+                                <div class="code-card-title">
                                     notify_test.go
-                                </p>
-                                <pre
-                                    class="overflow-x-auto text-base font-semibold leading-7 text-emerald-300"
-                                ><code>func TestNotify(t *testing.T) {
+                                </div>
+                                <pre><code class="language-go">func TestNotify(t *testing.T) {
     defer goleak.VerifyNone(t)
     notify()
 }</code></pre>
@@ -269,17 +261,11 @@
                                 package have passed. Use it for
                                 parallel tests.
                             </p>
-                            <div
-                                class="mt-4 rounded-xl bg-slate-950 px-4 py-3"
-                            >
-                                <p
-                                    class="mb-1 text-xs font-medium text-slate-500"
-                                >
+                            <div class="code-card mt-4">
+                                <div class="code-card-title">
                                     main_test.go
-                                </p>
-                                <pre
-                                    class="overflow-x-auto text-base font-semibold leading-7 text-emerald-300"
-                                ><code>func TestMain(m *testing.M) {
+                                </div>
+                                <pre><code class="language-go">func TestMain(m *testing.M) {
     goleak.VerifyTestMain(m)
 }</code></pre>
                             </div>
