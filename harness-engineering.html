@@ -17,10 +17,11 @@
                 <a href="/#/posts"
                     class="z-10 inline-flex shrink-0 items-center gap-2 self-center rounded-full bg-slate-800 px-2.5 py-1.5 text-[0.8rem] font-semibold text-slate-100 no-underline shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition hover:-translate-y-0.5 hover:bg-slate-900 hover:shadow-[0_6px_20px_rgba(0,0,0,0.25)] active:translate-y-0 sm:px-[18px] sm:py-2.5 sm:text-[0.95rem]"
                     title="Go to Posts">
-                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                        <path
-                            d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5L13 3.5zM8 13h8v2H8zm0 4h5v2H8z" />
-                    </svg>
+                    <i
+                        data-lucide="file-text"
+                        width="20"
+                        height="20"
+                    ></i>
                     <span class="hidden sm:inline">Posts</span>
                 </a>
             </div>
@@ -115,36 +116,24 @@
                     <h2 class="text-xl font-semibold text-white">A simple lifecycle</h2>
                     <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
                         <div class="rounded-xl bg-slate-800 px-4 py-3 text-center">Feature starts</div>
-                        <svg class="w-5 self-center" viewBox="0 0 16 16" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                            <g id="SVGRepo_iconCarrier">
-                                <path d="M8 6L8 2L10 2L16 8L10 14L8 14L8 10L-1.74845e-07 10L-3.01991e-07 6L8 6Z"
-                                    fill="#aaaa00"></path>
-                            </g>
-                        </svg>
+                        <i
+                            data-lucide="arrow-big-right"
+                            class="h-5 w-5 self-center text-[#aaaa00]"
+                            fill="currentColor"
+                        ></i>
                         <div class="rounded-xl bg-slate-800 px-4 py-3 text-center">Work + self-improvement</div>
-                        <svg class="w-5 self-center" viewBox="0 0 16 16" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                            <g id="SVGRepo_iconCarrier">
-                                <path d="M8 6L8 2L10 2L16 8L10 14L8 14L8 10L-1.74845e-07 10L-3.01991e-07 6L8 6Z"
-                                    fill="#aaaa00"></path>
-                            </g>
-                        </svg>
+                        <i
+                            data-lucide="arrow-big-right"
+                            class="h-5 w-5 self-center text-[#aaaa00]"
+                            fill="currentColor"
+                        ></i>
                         <div class="rounded-xl bg-cyan-400/15 px-4 py-3 text-center text-cyan-200">Promote durable
                             lessons</div>
-                        <svg class="w-5 self-center" viewBox="0 0 16 16" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                            <g id="SVGRepo_iconCarrier">
-                                <path d="M8 6L8 2L10 2L16 8L10 14L8 14L8 10L-1.74845e-07 10L-3.01991e-07 6L8 6Z"
-                                    fill="#aaaa00"></path>
-                            </g>
-                        </svg>
+                        <i
+                            data-lucide="arrow-big-right"
+                            class="h-5 w-5 self-center text-[#aaaa00]"
+                            fill="currentColor"
+                        ></i>
                         <div class="rounded-xl bg-amber-400/15 px-4 py-3 text-center text-amber-200">Archive feature
                             content</div>
                     </div>
@@ -192,6 +181,10 @@
             <a href="#top" class="text-slate-300 hover:text-white">Back to top ↑</a>
         </div>
     </footer>
+    <script src="https://unpkg.com/lucide@1.81.0/dist/umd/lucide.min.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 
 </html>
