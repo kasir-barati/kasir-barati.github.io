@@ -1,14 +1,21 @@
 [
     {
         "id": "b42da6ac-f294-410e-aa59-3bb8d20bbbc5",
-        "title": "Go Concurrency × Data Races",
+        "title": "Go Concurrency & Data Races",
         "description": "A program can appear to work and still contain a data race. Use the race detector in your tests, and lint package-level globals to handle shared state more deliberately.",
         "href": "./golang-flashcards/concurrency-and-data-race.html",
         "tags": ["Golang", "Concurrency", "Race Detection", "Linter"]
     },
     {
+        "id": "f0a18a1c-7d6a-46f8-a3b5-f210f0d40204",
+        "title": "Modernise your Golang codebase",
+        "description": "When coding or using a coding agent you must make sure to write codes which adhere to latest Golang standards. We and even coding agents do not always know everything So it is a good idea to automate this and for that we have Golang team to thanks.",
+        "href": "./golang-flashcards/modernize-go-code.html",
+        "tags": ["Golang", "Modernise", "Clean Code", "Automation"]
+    },
+    {
         "id": "1527bf5c-ccde-469e-8ce7-3870d62a800e",
-        "title": "Goroutine Leaks × goleak",
+        "title": "Goroutine Leaks & goleak",
         "description": "Go happily compiles and runs code that never waits for its goroutines. Use goleak in your tests to catch the ones still running.",
         "href": "./golang-flashcards/goroutine-leaks.html",
         "tags": [
