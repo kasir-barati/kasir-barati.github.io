@@ -53,10 +53,10 @@
             class="flex w-full max-w-6xl flex-col items-center gap-4 sm:flex-row sm:items-start"
         >
             <div
-                class="flex w-full min-w-0 max-w-[1080px] flex-col overflow-hidden rounded-[2rem] border border-slate-800 bg-slate-950 shadow-2xl shadow-cyan-950/30"
+                class="flex w-full min-w-0 max-w-[1080px] flex-col aspect-square overflow-clip rounded-[2rem] border border-slate-800 bg-slate-950 shadow-2xl shadow-cyan-950/30"
             >
                 <header
-                    class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-950 to-cyan-950 px-8 py-4"
+                    class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-950 to-cyan-950 px-8 py-6"
                 >
                     <div
                         class="absolute -right-20 -top-44 h-80 w-80 rounded-full bg-cyan-400/10 blur-3xl"
@@ -78,7 +78,7 @@
 
                     <div class="relative max-w-4xl">
                         <h1
-                            class="text-3xl font-black tracking-tight text-white"
+                            class="text-4xl font-black tracking-tight text-white"
                         >
                             [Headline with an
                             <span class="text-cyan-300"
@@ -90,7 +90,7 @@
                 </header>
 
                 <section
-                    class="grid gap-5 bg-slate-900/70 p-3 grid-cols-2"
+                    class="grid flex-1 grid-cols-2 gap-5 bg-slate-900/70 p-3"
                 >
                     <article
                         class="flex flex-col rounded-3xl border border-rose-400/20 bg-slate-950 p-3"
@@ -118,7 +118,7 @@
                             </div>
                         </div>
                         <p
-                            class="mt-2 text-base leading-relaxed text-slate-300"
+                            class="mt-2 text-lg leading-relaxed text-slate-300"
                         >
                             [Problem explanation with a
                             <span class="font-semibold text-rose-300"
@@ -137,7 +137,7 @@
                                 Example pattern
                             </div>
                             <pre
-                                class="overflow-x-auto text-sm leading-7 text-slate-200 sm:text-base"
+                                class="overflow-x-auto text-sm leading-8 text-slate-200 sm:text-base"
                             ><code><span class="text-slate-500">[code snippet]</span></code></pre>
                         </div>
                     </article>
@@ -169,7 +169,7 @@
                         </div>
                         <div class="mt-2">
                             <div
-                                class="flex items-start gap-3 rounded-2xl bg-rose-400/10 p-4 text-sm leading-relaxed text-rose-100"
+                                class="flex items-start gap-3 rounded-2xl bg-rose-400/10 p-4 text-base leading-relaxed text-rose-100"
                             >
                                 <i
                                     data-lucide="lightbulb"
@@ -195,7 +195,7 @@
                             </div>
                             <!-- TODO: duplicate this block for each tool -->
                             <p
-                                class="mt-3 text-sm leading-relaxed text-slate-300"
+                                class="mt-3 text-base leading-relaxed text-slate-300"
                             >
                                 [What the tool does and its limits.]
                             </p>
@@ -208,7 +208,7 @@
                                     [filename or command label]
                                 </p>
                                 <code
-                                    class="text-sm font-semibold leading-6 text-emerald-300"
+                                    class="text-base font-semibold leading-7 text-emerald-300"
                                     >[snippet]</code
                                 >
                             </div>
@@ -236,7 +236,7 @@
                                     Takeaway
                                 </p>
                                 <p
-                                    class="mt-2 text-xl font-extrabold leading-snug text-white"
+                                    class="mt-2 text-2xl font-extrabold leading-snug text-white"
                                 >
                                     [Takeaway with an
                                     <span class="text-cyan-300"

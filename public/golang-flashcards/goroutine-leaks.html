@@ -52,10 +52,10 @@
             class="flex w-full max-w-6xl flex-col items-center gap-4 sm:flex-row sm:items-start"
         >
             <div
-                class="flex w-full min-w-0 max-w-[1080px] flex-col overflow-hidden rounded-[2rem] border border-slate-800 bg-slate-950 shadow-2xl shadow-cyan-950/30"
+                class="flex w-full min-w-0 max-w-[1080px] flex-col aspect-square overflow-clip rounded-[2rem] border border-slate-800 bg-slate-950 shadow-2xl shadow-cyan-950/30"
             >
                 <header
-                    class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-950 to-cyan-950 px-8 py-4"
+                    class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-950 to-cyan-950 px-8 py-6"
                 >
                     <div
                         class="absolute -right-20 -top-44 h-80 w-80 rounded-full bg-cyan-400/10 blur-3xl"
@@ -84,7 +84,7 @@
 
                     <div class="relative max-w-4xl">
                         <h1
-                            class="text-3xl font-black tracking-tight text-white"
+                            class="text-4xl font-black tracking-tight text-white"
                         >
                             Every goroutine needs an
                             <span class="text-cyan-300">exit</span>.
@@ -93,7 +93,7 @@
                 </header>
 
                 <section
-                    class="grid gap-5 bg-slate-900/70 p-3 grid-cols-2"
+                    class="grid flex-1 grid-cols-2 gap-5 bg-slate-900/70 p-3"
                 >
                     <article
                         class="flex flex-col rounded-3xl border border-rose-400/20 bg-slate-950 p-3"
@@ -121,7 +121,7 @@
                             </div>
                         </div>
                         <p
-                            class="mt-2 text-base leading-relaxed text-slate-300"
+                            class="mt-2 text-lg leading-relaxed text-slate-300"
                         >
                             Golang, compiles and runs code that never
                             waits for its goroutines! This is what
@@ -142,7 +142,7 @@
                                 main.go
                             </div>
                             <pre
-                                class="overflow-x-auto text-sm leading-7 text-slate-200 sm:text-base"
+                                class="overflow-x-auto text-sm leading-8 text-slate-200 sm:text-base"
                             ><code><span class="text-fuchsia-300">package</span> main
 
 <span class="text-fuchsia-300">import</span> <span class="text-emerald-300">"fmt"</span>
@@ -190,7 +190,7 @@
                         </div>
                         <div class="mt-2">
                             <div
-                                class="flex items-start gap-3 rounded-2xl bg-yellow-900/50 p-4 text-sm leading-relaxed text-rose-100"
+                                class="flex items-start gap-3 rounded-2xl bg-yellow-900/50 p-4 text-base leading-relaxed text-rose-100"
                             >
                                 <i
                                     data-lucide="lightbulb"
@@ -220,7 +220,7 @@
                                 ></i>
                             </div>
                             <p
-                                class="mt-3 text-sm leading-relaxed text-slate-300"
+                                class="mt-3 text-base leading-relaxed text-slate-300"
                             >
                                 Fails a single test if extra
                                 goroutines are still running when it
@@ -239,7 +239,7 @@
                                     notify_test.go
                                 </p>
                                 <pre
-                                    class="overflow-x-auto text-sm font-semibold leading-6 text-emerald-300"
+                                    class="overflow-x-auto text-base font-semibold leading-7 text-emerald-300"
                                 ><code>func TestNotify(t *testing.T) {
     defer goleak.VerifyNone(t)
     notify()
@@ -263,7 +263,7 @@
                                 ></i>
                             </div>
                             <p
-                                class="mt-3 text-sm leading-relaxed text-slate-300"
+                                class="mt-3 text-base leading-relaxed text-slate-300"
                             >
                                 Checks once after all tests in the
                                 package have passed. Use it for
@@ -278,7 +278,7 @@
                                     main_test.go
                                 </p>
                                 <pre
-                                    class="overflow-x-auto text-sm font-semibold leading-6 text-emerald-300"
+                                    class="overflow-x-auto text-base font-semibold leading-7 text-emerald-300"
                                 ><code>func TestMain(m *testing.M) {
     goleak.VerifyTestMain(m)
 }</code></pre>
@@ -307,7 +307,7 @@
                                     Takeaway
                                 </p>
                                 <p
-                                    class="mt-2 text-xl font-extrabold leading-snug text-white"
+                                    class="mt-2 text-2xl font-extrabold leading-snug text-white"
                                 >
                                     Wait for your goroutines. Verify
                                     with
