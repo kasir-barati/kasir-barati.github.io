@@ -2,6 +2,7 @@
     "name": "kasir.barati.github.io",
     "private": true,
     "version": "0.0.1",
+    "license": "GPL-3.0-only",
     "type": "module",
     "scripts": {
         "dev": "concurrently -k -n twin,web -c magenta,cyan \"make -C twin start\" \"vite\"",
